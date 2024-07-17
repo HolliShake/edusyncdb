@@ -1,0 +1,6 @@
+CLARIFY
+
+PortfolioDisciplinaryAction.actionTypeEnum
+PortfolioDisciplinaryAction.statusEnum
+PortfolioIncident.statusEnum
+PortfolioEntry.mapToSkillsId

@@ -1,0 +1,90 @@
+
+using APPLICATION.Dto.CurriculumDetail;
+using APPLICATION.IService;
+using DOMAIN.Model;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using API.Attributes;
+
+namespace API.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+[Casl("Admin:all")]
+public class CurriculumDetailController : GenericController<CurriculumDetail, ICurriculumDetailService, CurriculumDetailDto, GetCurriculumDetailDto>
+{
+    public CurriculumDetailController(IMapper mapper, ICurriculumDetailService repo):base(mapper, repo)
+    {
+    }
+
+    /****************** ACTION ROUTES ******************/
+    /// <summary>
+    /// Get all data.
+    /// </summary>
+    /// <returns>Array[CurriculumDetail]</returns>
+    [HttpGet("/Api/[controller]/all")]
+    public async Task<ActionResult> GetAllAction()
+    {
+        return await GenericGetAll();
+    }
+    
+    /// <summary>
+    /// Get CurriculumDetail by Course id.
+    /// </summary>
+    /// <returns>Array[CurriculumDetail]</returns>
+    [HttpGet("/Api/[controller]/Course/{courseId:int}")]
+    public async Task<ActionResult> GetByCurriculumDetailsByCourseId(int courseId)
+    {
+        return Ok(_mapper.Map<ICollection<GetCurriculumDetailDto>>(await _repo.GetCurriculumDetailsByCourseId(courseId)));
+    }
+    
+    /// <summary>
+    /// Get specific data (CurriculumDetail) by id.
+    /// </summary>
+    /// <returns>Array[CurriculumDetail]></returns>
+    [HttpGet("/Api/[controller]/{id:int}")]
+    public async Task<ActionResult> GetAction(int id)
+    {
+        return await GenericGet(id);
+    }
+    
+    /// <summary>
+    /// Creates new CurriculumDetail entry.
+    /// </summary>
+    /// <returns>CurriculumDetail</returns>
+    [HttpPost("/Api/[controller]/create")]
+    public async Task<ActionResult> CreateAction(CurriculumDetailDto item)
+    {
+        return await GenericCreate(item);
+    }
+    
+    /// <summary>
+    /// Creates multiple instance of CurriculumDetail.
+    /// </summary>
+    /// <returns>Array[CurriculumDetail]</returns>
+    [HttpPost("/Api/[controller]/insert")]
+    public async Task<ActionResult> CreateAllAction(List<CurriculumDetailDto> items)
+    {
+        return await GenericCreateAll(items);
+    }
+    
+    /// <summary>
+    /// Updates multiple property of CurriculumDetail.
+    /// </summary>
+    /// <returns>CurriculumDetail</returns>
+    [HttpPut("/Api/[controller]/update/{id:int}")]
+    public async Task<ActionResult> UpdateAction(int id, CurriculumDetailDto item)
+    {
+        return await GenericUpdate(id, item);
+    }
+    
+    /// <summary>
+    /// Deletes single CurriculumDetail entry.
+    /// </summary>
+    /// <returns>Null</returns>
+    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    public async Task<ActionResult> DeleteAction(int id)
+    {
+        return await GenericDelete(id);
+    }
+}

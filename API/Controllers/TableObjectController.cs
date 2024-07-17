@@ -1,0 +1,100 @@
+
+using APPLICATION.Dto.TableObject;
+using APPLICATION.IService;
+using DOMAIN.Model;
+using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using API.Attributes;
+
+namespace API.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+[Casl("Admin:all")]
+public class TableObjectController : GenericController<TableObject, ITableObjectService, TableObjectDto, GetTableObjectDto>
+{
+    public TableObjectController(IMapper mapper, ITableObjectService repo):base(mapper, repo)
+    {
+    }
+
+    /****************** ACTION ROUTES ******************/
+    /// <summary>
+    /// Get all data.
+    /// </summary>
+    /// <returns>Array[TableObject]</returns>
+    [HttpGet("/Api/[controller]/all")]
+    public async Task<ActionResult> GetAllAction()
+    {
+        return await GenericGetAll();
+    }
+
+    /// <summary>
+    /// Get TableObject without parent.
+    /// </summary>
+    /// <returns>Array[TableObject]</returns>
+    [HttpGet("/Api/[controller]/IsParent/all")]
+    public async Task<ActionResult> GetParentObject()
+    {
+        return Ok(_mapper.Map<ICollection<GetTableObjectDto>>(await _repo.GetParentObject()));
+    }
+
+    /// <summary>
+    /// Get TableObject by AccountGroup id.
+    /// </summary>
+    /// <returns>Array[TableObject]</returns>
+    [HttpGet("/Api/[controller]/AccountGroup/{accountGroupId:int}")]
+    public async Task<ActionResult> GetTableObjectByFundSourceId(int accountGroupId)
+    {
+        return Ok(_mapper.Map<ICollection<GetTableObjectDto>>(await _repo.GetObjectByAccountGroupId(accountGroupId)));
+    }
+
+    /// <summary>
+    /// Get specific data (TableObject) by id.
+    /// </summary>
+    /// <returns>Array[TableObject]></returns>
+    [HttpGet("/Api/[controller]/{id:int}")]
+    public async Task<ActionResult> GetAction(int id)
+    {
+        return await GenericGet(id);
+    }
+    
+    /// <summary>
+    /// Creates new TableObject entry.
+    /// </summary>
+    /// <returns>TableObject</returns>
+    [HttpPost("/Api/[controller]/create")]
+    public async Task<ActionResult> CreateAction(TableObjectDto item)
+    {
+        return await GenericCreate(item);
+    }
+    
+    /// <summary>
+    /// Creates multiple instance of TableObject.
+    /// </summary>
+    /// <returns>Array[TableObject]</returns>
+    [HttpPost("/Api/[controller]/insert")]
+    public async Task<ActionResult> CreateAllAction(List<TableObjectDto> items)
+    {
+        return await GenericCreateAll(items);
+    }
+    
+    /// <summary>
+    /// Updates multiple property of TableObject.
+    /// </summary>
+    /// <returns>TableObject</returns>
+    [HttpPut("/Api/[controller]/update/{id:int}")]
+    public async Task<ActionResult> UpdateAction(int id, TableObjectDto item)
+    {
+        return await GenericUpdate(id, item);
+    }
+    
+    /// <summary>
+    /// Deletes single TableObject entry.
+    /// </summary>
+    /// <returns>Null</returns>
+    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    public async Task<ActionResult> DeleteAction(int id)
+    {
+        return await GenericDelete(id);
+    }
+}
