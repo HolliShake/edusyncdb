@@ -5,18 +5,20 @@ using APPLICATION.IService;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper;
 
 namespace INFRASTRUCTURE.Service;
-public class UserAccessService(AppDbContext context) : GenericService<UserAccess>(context), IUserAccessService
+public class UserAccessService(AppDbContext context, IMapper mapper) : GenericService<UserAccess, GetUserAccessDto>(context, mapper), IUserAccessService
 {
-    public async Task<ICollection<UserAccess>> GetUserAccessByUserId(string userId)
+    public async Task<ICollection<GetUserAccessDto>> GetUserAccessByUserId(string userId)
     {
         
-        return (ICollection<UserAccess>) await _dbModel
+        return _mapper.Map<ICollection<GetUserAccessDto>>(await _dbModel
             .Include(ua => ua.AccessList)
             .Include(ua => ua.AccessListAction)
             .Where(ua => ua.UserId.Equals(userId))
-            .Select(ua => new UserAccess {
+            .Select(ua => new UserAccess
+            {
                 Id = ua.Id,
                 UserId = ua.UserId,
                 AccessListId = ua.AccessListId,
@@ -32,7 +34,7 @@ public class UserAccessService(AppDbContext context) : GenericService<UserAccess
                     Action = ua.AccessListAction.Action,
                 }
             })
-            .ToListAsync();
+            .ToListAsync());
     }
 
     public async Task<bool> CreateUserAccess(string userId, int accessListId, int accessListActionId)

@@ -1,7 +1,7 @@
-
+using APPLICATION.Dto.EducationalQualityAssuranceProgramObjectiveToJobRole;
 using DOMAIN.Model;
 
 namespace APPLICATION.IService;
-public interface IEducationalQualityAssuranceProgramObjectiveToJobRoleService:IGenericService<EducationalQualityAssuranceProgramObjectiveToJobRole>
+public interface IEducationalQualityAssuranceProgramObjectiveToJobRoleService:IGenericService<EducationalQualityAssuranceProgramObjectiveToJobRole, GetEducationalQualityAssuranceProgramObjectiveToJobRoleDto>
 {
 }

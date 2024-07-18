@@ -1,30 +1,32 @@
 
+using APPLICATION.Dto.Enrollment;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class EnrollmentService:GenericService<Enrollment>, IEnrollmentService
+public class EnrollmentService:GenericService<Enrollment, GetEnrollmentDto>, IEnrollmentService
 {
-    public EnrollmentService(AppDbContext context):base(context)
+    public EnrollmentService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<Enrollment>> GetEnrollmentsByEnrollmentRoleId(int enrollmentRoleId)
+    public async Task<ICollection<GetEnrollmentDto>> GetEnrollmentsByEnrollmentRoleId(int enrollmentRoleId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetEnrollmentDto>>(await _dbModel
             .Include(e => e.EnrollmentRole)
             .Where(e => e.EnrollmentRoleId == enrollmentRoleId)
-            .ToListAsync();
+            .ToListAsync());
     }
 
-    public async Task<ICollection<Enrollment>> GetEnrollmentsByScheduleId(int scheduleId)
+    public async Task<ICollection<GetEnrollmentDto>> GetEnrollmentsByScheduleId(int scheduleId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetEnrollmentDto>>(await _dbModel
             .Include(e => e.EnrollmentRole)
             .Include(e => e.Schedule)
             .Where(e => e.ScheduleId == scheduleId)
-            .ToListAsync();
+            .ToListAsync());
     }
 }

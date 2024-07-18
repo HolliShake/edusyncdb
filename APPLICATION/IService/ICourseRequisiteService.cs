@@ -1,7 +1,8 @@
+using APPLICATION.Dto.CourseRequisite;
 using DOMAIN.Model;
 
 namespace APPLICATION.IService;
-public interface ICourseRequisiteService:IGenericService<CourseRequisite>
+public interface ICourseRequisiteService:IGenericService<CourseRequisite, GetCourseRequisiteDto>
 {
-    public Task<ICollection<CourseRequisite>> GetCourseRequisitesByCourseIdAndType(int courseId, int type);
+    public Task<ICollection<GetCourseRequisiteDto>> GetCourseRequisitesByCourseIdAndType(int courseId, int type);
 }

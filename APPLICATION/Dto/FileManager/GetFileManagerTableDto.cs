@@ -2,7 +2,7 @@
 
 namespace APPLICATION.Dto.FileManager;
 
-public class GetFileTableDto
+public class GetFileManagerTableDto
 {
     public int Id { get; set; }
     public string Scope { get; set; }

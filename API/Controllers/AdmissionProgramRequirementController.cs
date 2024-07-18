@@ -35,7 +35,7 @@ public class AdmissionProgramRequirementController : GenericController<Admission
     [HttpGet("Enabled")]
     public async Task<ActionResult> GetEnabledAdmissionProgramRequirement()
     {
-        return Ok(_mapper.Map<ICollection<GetAdmissionProgramRequirementDto>>(await _repo.GetEnabledAdmissionProgramRequirements()));
+        return Ok(await _repo.GetEnabledAdmissionProgramRequirements());
     }
 
     /// <summary>

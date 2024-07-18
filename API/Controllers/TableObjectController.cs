@@ -35,7 +35,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     [HttpGet("IsParent/all")]
     public async Task<ActionResult> GetParentObject()
     {
-        return Ok(_mapper.Map<ICollection<GetTableObjectDto>>(await _repo.GetParentObject()));
+        return Ok(await _repo.GetParentObject());
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     [HttpGet("AccountGroup/{accountGroupId:int}")]
     public async Task<ActionResult> GetTableObjectByFundSourceId(int accountGroupId)
     {
-        return Ok(_mapper.Map<ICollection<GetTableObjectDto>>(await _repo.GetObjectByAccountGroupId(accountGroupId)));
+        return Ok(await _repo.GetObjectByAccountGroupId(accountGroupId));
     }
 
     /// <summary>

@@ -35,7 +35,7 @@ public class CycleController : GenericController<Cycle, ICycleService, CycleDto,
     [HttpGet("Campus/{campusId:int}")]
     public async Task<ActionResult> GetCycleByCampusId(int campusId)
     {
-        return Ok(_mapper.Map<ICollection<GetCycleDto>>(await _repo.GetCycleByCampusId(campusId)));
+        return Ok(await _repo.GetCycleByCampusId(campusId));
     }
 
     /// <summary>

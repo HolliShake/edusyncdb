@@ -35,7 +35,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     [HttpGet("EnrollmentRole/{enrollmentRoleId:int}")]
     public async Task<ActionResult> GetEnrollmentByEnrollmentRoleId(int enrollmentRoleId)
     {
-        return Ok(_mapper.Map<ICollection<GetEnrollmentDto>>(await _repo.GetEnrollmentsByEnrollmentRoleId(enrollmentRoleId)));
+        return Ok(await _repo.GetEnrollmentsByEnrollmentRoleId(enrollmentRoleId));
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     [HttpGet("Schedule/{scheduleId:int}")]
     public async Task<ActionResult> GetEnrollmentByScheduleId(int scheduleId)
     {
-        return Ok(_mapper.Map<ICollection<GetEnrollmentDto>>(await _repo.GetEnrollmentsByScheduleId(scheduleId)));
+        return Ok(await _repo.GetEnrollmentsByScheduleId(scheduleId));
     }
 
     /// <summary>

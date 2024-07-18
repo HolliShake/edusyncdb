@@ -35,7 +35,7 @@ public class AdmissionEvaluationScheduleController : GenericController<Admission
     [HttpGet("AdmissionSchedule/{admissionScheduleId:int}")]
     public async Task<ActionResult> GetAdmissionEvaluationScheduleByAdmissionScheduleId(int admissionScheduleId)
     {
-        return Ok(_mapper.Map<ICollection<GetAdmissionEvaluationScheduleDto>>(await _repo.GetAdmissionEvaluationSchedulesByAdmissionScheduleId(admissionScheduleId)));
+        return Ok(await _repo.GetAdmissionEvaluationSchedulesByAdmissionScheduleId(admissionScheduleId));
     }
     
     /// <summary>

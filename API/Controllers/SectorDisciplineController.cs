@@ -35,7 +35,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     [HttpGet("IsParent/all")]
     public async Task<ActionResult> GetParentSectorDiscipline()
     {
-        return Ok(_mapper.Map<ICollection<GetSectorDisciplineDto>>(await _repo.GetAllParentSectorDiscipline()));
+        return Ok(await _repo.GetAllParentSectorDiscipline());
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     [HttpGet("ParentSectorDiscipline/{parentSectorDisciplineId:int}")]
     public async Task<ActionResult> GetSectorDisciplineByParentSectorDisciplineId(int parentSectorDisciplineId)
     {
-        return Ok(_mapper.Map<ICollection<GetSectorDisciplineDto>>(await _repo.GetSectorDisciplineByParentSectorDisciplineId(parentSectorDisciplineId)));
+        return Ok(await _repo.GetSectorDisciplineByParentSectorDisciplineId(parentSectorDisciplineId));
     }
 
     /// <summary>

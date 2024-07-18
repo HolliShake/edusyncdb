@@ -38,7 +38,7 @@ public class CourseController : GenericController<Course, ICourseService, Course
         var result = /**/
             await _repo.GetAllWithRequisiteAsync();
 
-        return Ok(_mapper.Map<ICollection<GetCourseDto>>(result));
+        return Ok(result);
     }
 
     /// <summary>
@@ -48,7 +48,7 @@ public class CourseController : GenericController<Course, ICourseService, Course
     [HttpGet("EducationalQualityAssuranceType/{educationalQualityAssuranceTypeId:int}")]
     public async Task<ActionResult> GetCourseByEducationalQualityAssuranceId(int educationalQualityAssuranceTypeId)
     {
-        return Ok(_mapper.Map<ICollection<GetCourseDto>>(await _repo.GetCourseByEducationalQualityAssuranceType(educationalQualityAssuranceTypeId, false)));
+        return Ok(await _repo.GetCourseByEducationalQualityAssuranceType(educationalQualityAssuranceTypeId, false));
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ public class CourseController : GenericController<Course, ICourseService, Course
     [HttpGet("EducationalQualityAssuranceType/WithRequisite/{educationalQualityAssuranceTypeId:int}")]
     public async Task<ActionResult> GetCourseWithRequisiteByEducationalQualityAssuranceId(int educationalQualityAssuranceTypeId)
     {
-        return Ok(_mapper.Map<ICollection<GetCourseDto>>(await _repo.GetCourseByEducationalQualityAssuranceType(educationalQualityAssuranceTypeId, true)));
+        return Ok(await _repo.GetCourseByEducationalQualityAssuranceType(educationalQualityAssuranceTypeId, true));
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public class CourseController : GenericController<Course, ICourseService, Course
     [HttpGet("SkillsFrameworkTrackSpecialization/{trackSpecializationId:int}")]
     public async Task<ActionResult> GetCourseBySkillsFrameworkTrackSpecializationId(int trackSpecializationId)
     {
-        return Ok(_mapper.Map<ICollection<GetCourseDto>>(await _repo.GetCourseBySkillsFrameworkTrackSpecializationId(trackSpecializationId, false)));
+        return Ok(await _repo.GetCourseBySkillsFrameworkTrackSpecializationId(trackSpecializationId, false));
     }
 
     /// <summary>
@@ -78,7 +78,7 @@ public class CourseController : GenericController<Course, ICourseService, Course
     [HttpGet("SkillsFrameworkTrackSpecialization/WithRequisite/{trackSpecializationId:int}")]
     public async Task<ActionResult> GetCourseWithRequisiteBySkillsFrameworkTrackSpecializationId(int trackSpecializationId)
     {
-        return Ok(_mapper.Map<ICollection<GetCourseDto>>(await _repo.GetCourseBySkillsFrameworkTrackSpecializationId(trackSpecializationId, true)));
+        return Ok(await _repo.GetCourseBySkillsFrameworkTrackSpecializationId(trackSpecializationId, true));
     }
 
     /// <summary>
@@ -102,7 +102,7 @@ public class CourseController : GenericController<Course, ICourseService, Course
            await _repo.GetWithRequisiteAsync(id);
 
         return (result != null)
-            ? Ok(_mapper.Map<GetCourseDto>(result))
+            ? Ok(result)
             : NotFound();
     }
 

@@ -1,33 +1,36 @@
 ﻿using APPLICATION.IService;
+using AutoMapper;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
 
-public class GenericService <TModel> : IGenericService<TModel> where TModel : class
+public class GenericService <TModel, TGetter> : IGenericService<TModel, TGetter> where TModel : class where TGetter : class
 {
     protected readonly AppDbContext _dbContext;
     protected readonly DbSet<TModel> _dbModel;
+    protected readonly IMapper _mapper;
 
-    public GenericService(AppDbContext context)
+    public GenericService(AppDbContext context, IMapper mapper)
     {
         _dbContext = context;
         _dbModel = _dbContext.Set<TModel>();
+        _mapper = mapper;
     }
 
-    public async Task<ICollection<TModel>> GetAllAsync()
+    public async Task<ICollection<TGetter>> GetAllAsync()
     {
-        return await _dbModel.ToListAsync();
+        return _mapper.Map<ICollection<TGetter>>(await _dbModel.ToListAsync());
     }
     
-    public async Task<ICollection<TModel>> GetByChunk(int max)
+    public async Task<ICollection<TGetter>> GetByChunk(int max)
     {
-        return await _dbModel.Take(max).ToListAsync();
+        return _mapper.Map<ICollection<TGetter>>(await _dbModel.Take(max).ToListAsync());
     }
 
     public async Task<TModel?> GetAsync(int id)
     {
-        return await _dbModel.FindAsync(id);
+        return _mapper.Map<TModel?>(await _dbModel.FindAsync(id));
     }
 
     public async Task<bool> CreateAsync(TModel newItem)

@@ -49,7 +49,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     [HttpGet("Course/{courseId:int}/Type/{type:int}")]
     public async Task<ActionResult> GetCourseRequisiteByCourseAndType(int courseId, int type)
     {
-        return Ok(_mapper.Map<ICollection<GetCourseRequisiteDto>>(await _repo.GetCourseRequisitesByCourseIdAndType(courseId, type)));
+        return Ok(await _repo.GetCourseRequisitesByCourseIdAndType(courseId, type));
     }
     
     /// <summary>

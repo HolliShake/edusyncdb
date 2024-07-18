@@ -1,18 +1,19 @@
-
+using APPLICATION.Dto.AccessListAction;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class AccessListActionService:GenericService<AccessListAction>, IAccessListActionService
+public class AccessListActionService:GenericService<AccessListAction, GetAccessListActionDto>, IAccessListActionService
 {
-    public AccessListActionService(AppDbContext context):base(context)
+    public AccessListActionService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<AccessListAction>> GetAccessListActionsByAccessListId(int accessListId)
+    public async Task<ICollection<GetAccessListActionDto>> GetAccessListActionsByAccessListId(int accessListId)
     {
-        return await _dbModel.Where(ala => ala.AccessListId == accessListId).ToListAsync();
+        return _mapper.Map<ICollection<GetAccessListActionDto>>(await _dbModel.Where(ala => ala.AccessListId == accessListId).ToListAsync());
     }
 }

@@ -1,4 +1,3 @@
-
 using APPLICATION.Dto.AccessList;
 using APPLICATION.IService;
 using DOMAIN.Model;
@@ -37,7 +36,7 @@ public class AccessListController : GenericController<AccessList, IAccessListSer
     [HttpGet("Group/all")]
     public async Task<ActionResult> GetGroups()
     {
-        return Ok(_mapper.Map<ICollection<GetAccessListDto>>(await _repo.GetGroups()));
+        return Ok(await _repo.GetGroups());
     }
 
     /// <summary>

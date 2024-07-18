@@ -1,7 +1,7 @@
-
+using APPLICATION.Dto.SkillsFrameworkCourseToCompetency;
 using DOMAIN.Model;
 
 namespace APPLICATION.IService;
-public interface ISkillsFrameworkCourseToCompetencyService:IGenericService<SkillsFrameworkCourseToCompetency>
+public interface ISkillsFrameworkCourseToCompetencyService:IGenericService<SkillsFrameworkCourseToCompetency, GetSkillsFrameworkCourseToCompetencyDto>
 {
 }

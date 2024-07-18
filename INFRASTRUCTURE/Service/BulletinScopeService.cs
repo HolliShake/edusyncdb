@@ -1,31 +1,33 @@
 
+using APPLICATION.Dto.BulletinScope;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class BulletinScopeService:GenericService<BulletinScope>, IBulletinScopeService
+public class BulletinScopeService:GenericService<BulletinScope, GetBulletinScopeDto>, IBulletinScopeService
 {
-    public BulletinScopeService(AppDbContext context):base(context)
+    public BulletinScopeService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<BulletinScope>> GetBulletinScopesByAcademicProgramId(int academicProgramId)
+    public async Task<ICollection<GetBulletinScopeDto>> GetBulletinScopesByAcademicProgramId(int academicProgramId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetBulletinScopeDto>>(await _dbModel
             .Include(bs => bs.Bulletin)
             .Include(bs => bs.AcademicProgramId)
             .Where(bs => bs.AcademicProgramId == academicProgramId)
-            .ToListAsync();
+            .ToListAsync());
     }
 
-    public async Task<ICollection<BulletinScope>> GetBulletinScopesByBulletinId(int bulletinId)
+    public async Task<ICollection<GetBulletinScopeDto>> GetBulletinScopesByBulletinId(int bulletinId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetBulletinScopeDto>>(await _dbModel
             .Include(bs => bs.Bulletin)
             .Include(bs => bs.AcademicProgramId)
             .Where(bs => bs.BulletinId == bulletinId)
-            .ToListAsync();
+            .ToListAsync());
     }
 }

@@ -1,55 +1,56 @@
-
+using APPLICATION.Dto.Schedule;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class ScheduleService:GenericService<Schedule>, IScheduleService
+public class ScheduleService:GenericService<Schedule, GetScheduleDto>, IScheduleService
 {
-    public ScheduleService(AppDbContext context):base(context)
+    public ScheduleService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<Schedule>> GetSchedulesByAcademicProgramId(int academicProgramId)
+    public async Task<ICollection<GetScheduleDto>> GetSchedulesByAcademicProgramId(int academicProgramId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetScheduleDto>>(await _dbModel
             .Include(s => s.AcademicProgram)
             .Include(s => s.Course)
             .Include(s => s.Room)
             .Include(s => s.Cycle)
             .Where(s => s.AcademicProgramId == academicProgramId)
-            .ToListAsync();
+            .ToListAsync());
     }
 
-    public async Task<ICollection<Schedule>> GetSchedulesByRoomId(int roomId)
+    public async Task<ICollection<GetScheduleDto>> GetSchedulesByRoomId(int roomId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetScheduleDto>>(await _dbModel
             .Include(s => s.AcademicProgram)
             .Include(s => s.Course)
             .Include(s => s.Room)
             .Include(s => s.Cycle)
             .Where(s => s.RoomId == roomId)
-            .ToListAsync();
+            .ToListAsync());
     }
-    public async Task<ICollection<Schedule>> GetSchedulesByCycleId(int cycleId)
+    public async Task<ICollection<GetScheduleDto>> GetSchedulesByCycleId(int cycleId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetScheduleDto>>(await _dbModel
             .Include(s => s.AcademicProgram)
             .Include(s => s.Course)
             .Include(s => s.Room)
             .Include(s => s.Cycle)
             .Where(s => s.CycleId == cycleId)
-            .ToListAsync();
+            .ToListAsync());
     }
-    public async Task<ICollection<Schedule>> GetSchedulesByCourseId(int courseId)
+    public async Task<ICollection<GetScheduleDto>> GetSchedulesByCourseId(int courseId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetScheduleDto>>(await _dbModel
             .Include(s => s.AcademicProgram)
             .Include(s => s.Course)
             .Include(s => s.Room)
             .Include(s => s.Cycle)
             .Where(s => s.CourseId == courseId)
-            .ToListAsync();
+            .ToListAsync());
     }
 }

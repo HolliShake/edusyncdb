@@ -1,18 +1,19 @@
-
+using APPLICATION.Dto.AcademicCalendar;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class AcademicCalendarService:GenericService<AcademicCalendar>, IAcademicCalendarService
+public class AcademicCalendarService:GenericService<AcademicCalendar, GetAcademicCalendarDto>, IAcademicCalendarService
 {
-    public AcademicCalendarService(AppDbContext context):base(context)
+    public AcademicCalendarService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<AcademicCalendar>> GetAcademicCalendarsByGradingPeriodId(int gradingPeriodId)
+    public async Task<ICollection<GetAcademicCalendarDto>> GetAcademicCalendarsByGradingPeriodId(int gradingPeriodId)
     {
-        return await _dbModel.Where(ac => ac.GradingPeriodId == gradingPeriodId).ToListAsync();
+        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(await _dbModel.Where(ac => ac.GradingPeriodId == gradingPeriodId).ToListAsync());
     }
 }

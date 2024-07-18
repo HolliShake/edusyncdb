@@ -1,7 +1,7 @@
-
+using APPLICATION.Dto.EducationalQualityAssuranceAssessmentType;
 using DOMAIN.Model;
 
 namespace APPLICATION.IService;
-public interface IEducationalQualityAssuranceAssessmentTypeService:IGenericService<EducationalQualityAssuranceAssessmentType>
+public interface IEducationalQualityAssuranceAssessmentTypeService:IGenericService<EducationalQualityAssuranceAssessmentType, GetEducationalQualityAssuranceAssessmentTypeDto>
 {
 }

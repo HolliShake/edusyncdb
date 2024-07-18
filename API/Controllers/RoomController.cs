@@ -35,7 +35,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     [HttpGet("Building/{buildingId:int}")]
     public async Task<ActionResult> GetRoomByBuildingId(int buildingId)
     {
-        return Ok(_mapper.Map<ICollection<GetRoomDto>>(await _repo.GetRoomByBuildingId(buildingId)));
+        return Ok(await _repo.GetRoomByBuildingId(buildingId));
     }
     
     /// <summary>

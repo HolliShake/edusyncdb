@@ -36,7 +36,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     [HttpGet("AcademicPorgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetScheduleByAcademicPorgramId(int academicProgramId)
     {
-        return Ok(_mapper.Map<ICollection<GetScheduleDto>>(await _repo.GetSchedulesByAcademicProgramId(academicProgramId)));
+        return Ok(await _repo.GetSchedulesByAcademicProgramId(academicProgramId));
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     [HttpGet("Cycle/{cycleId:int}")]
     public async Task<ActionResult> GetScheduleByCycleId(int cycleId)
     {
-        return Ok(_mapper.Map<ICollection<GetScheduleDto>>(await _repo.GetSchedulesByCycleId(cycleId)));
+        return Ok(await _repo.GetSchedulesByCycleId(cycleId));
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     [HttpGet("Room/{roomId:int}")]
     public async Task<ActionResult> GetScheduleByRoomId(int roomId)
     {
-        return Ok(_mapper.Map<ICollection<GetScheduleDto>>(await _repo.GetSchedulesByRoomId(roomId)));
+        return Ok(await _repo.GetSchedulesByRoomId(roomId));
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     [HttpGet("Course/{courseId:int}")]
     public async Task<ActionResult> GetScheduleByCourseId(int courseId)
     {
-        return Ok(_mapper.Map<ICollection<GetScheduleDto>>(await _repo.GetSchedulesByCourseId(courseId)));
+        return Ok(await _repo.GetSchedulesByCourseId(courseId));
     }
 
     /// <summary>

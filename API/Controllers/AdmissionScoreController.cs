@@ -35,7 +35,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     [HttpGet("AdmissionEvaluationSchedule/{admissionEvaluationScheduleId:int}")]
     public async Task<ActionResult> GetAdmissionScoreByAdmissionEvaluationScheduleId(int admissionEvaluationScheduleId)
     {
-        return Ok(_mapper.Map<ICollection<GetAdmissionScoreDto>>(await _repo.GetAdmissionScoreByAdmissionEvaluationScheduleId(admissionEvaluationScheduleId)));
+        return Ok(await _repo.GetAdmissionScoreByAdmissionEvaluationScheduleId(admissionEvaluationScheduleId));
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     [HttpGet("AdmissionProgramRequirement/{admissionProgramRequirementId:int}")]
     public async Task<ActionResult> GetAdmissionScoreByAdmissionProgramRequirementId(int admissionProgramRequirementId)
     {
-        return Ok(_mapper.Map<ICollection<GetAdmissionScoreDto>>(await _repo.GetAdmissionScoreByAdmissionProgramRequirementId(admissionProgramRequirementId)));
+        return Ok(await _repo.GetAdmissionScoreByAdmissionProgramRequirementId(admissionProgramRequirementId));
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     [HttpGet("AdmissionApplicant/{admissionApplicantId:int}")]
     public async Task<ActionResult> GetAdmissionScoreByAdmissionApplicantId(int admissionApplicantId)
     {
-        return Ok(_mapper.Map<ICollection<GetAdmissionScoreDto>>(await _repo.GetAdmissionScoreByAdmissionApplicantId(admissionApplicantId)));
+        return Ok(await _repo.GetAdmissionScoreByAdmissionApplicantId(admissionApplicantId));
     }
 
     /// <summary>

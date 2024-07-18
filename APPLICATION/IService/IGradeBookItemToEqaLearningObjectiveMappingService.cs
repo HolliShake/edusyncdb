@@ -1,7 +1,7 @@
-
+using APPLICATION.Dto.GradeBookItemToEqaLearningObjectiveMapping;
 using DOMAIN.Model;
 
 namespace APPLICATION.IService;
-public interface IGradeBookItemToEqaLearningObjectiveMappingService:IGenericService<GradeBookItemToEqaLearningObjectiveMapping>
+public interface IGradeBookItemToEqaLearningObjectiveMappingService:IGenericService<GradeBookItemToEqaLearningObjectiveMapping, GetGradeBookItemToEqaLearningObjectiveMappingDto>
 {
 }

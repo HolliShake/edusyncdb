@@ -35,7 +35,7 @@ public class SkillsFrameworkTrackSpecializationController : GenericController<Sk
     [HttpGet("SectorDiscipline/{sectorDisciplineId:int}")]
     public async Task<ActionResult> GetSkillsFrameworkTrackSpecializationBySectorDisciplineId(int sectorDisciplineId)
     {
-        return Ok(_mapper.Map<ICollection<GetSkillsFrameworkTrackSpecializationDto>>(await _repo.GetSkillsFrameworkTrackSpecializationsBySectorDisciplineId(sectorDisciplineId)));
+        return Ok(await _repo.GetSkillsFrameworkTrackSpecializationsBySectorDisciplineId(sectorDisciplineId));
     }
     
     /// <summary>

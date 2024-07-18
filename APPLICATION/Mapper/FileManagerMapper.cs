@@ -9,6 +9,6 @@ public class FileManagerMapper : Profile
 {
     public FileManagerMapper()
     {
-        CreateMap<FileTable, GetFileTableDto>();
+        CreateMap<FileTable, GetFileManagerTableDto>();
     }
 }

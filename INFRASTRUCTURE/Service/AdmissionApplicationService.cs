@@ -1,18 +1,20 @@
 
+using APPLICATION.Dto.AdmissionApplication;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class AdmissionApplicationService:GenericService<AdmissionApplication>, IAdmissionApplicationService
+public class AdmissionApplicationService:GenericService<AdmissionApplication, GetAdmissionApplicationDto>, IAdmissionApplicationService
 {
-    public AdmissionApplicationService(AppDbContext context):base(context)
+    public AdmissionApplicationService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<AdmissionApplication>> GetAdmissionApplicationsByAdmissionScheduleId(int admissionScheduleId)
+    public async Task<ICollection<GetAdmissionApplicationDto>> GetAdmissionApplicationsByAdmissionScheduleId(int admissionScheduleId)
     {
-        return await _dbModel.Where(aa => aa.AdmissionScheduleId == admissionScheduleId).ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionApplicationDto>>(await _dbModel.Where(aa => aa.AdmissionScheduleId == admissionScheduleId).ToListAsync());
     }
 }

@@ -1,8 +1,9 @@
 
+using APPLICATION.Dto.AdmissionEvaluationSchedule;
 using DOMAIN.Model;
 
 namespace APPLICATION.IService;
-public interface IAdmissionEvaluationScheduleService:IGenericService<AdmissionEvaluationSchedule>
+public interface IAdmissionEvaluationScheduleService:IGenericService<AdmissionEvaluationSchedule, GetAdmissionEvaluationScheduleDto>
 {
-    public Task<ICollection<AdmissionEvaluationSchedule>> GetAdmissionEvaluationSchedulesByAdmissionScheduleId(int admissionSchedueId);
+    public Task<ICollection<GetAdmissionEvaluationScheduleDto>> GetAdmissionEvaluationSchedulesByAdmissionScheduleId(int admissionSchedueId);
 }

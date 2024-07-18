@@ -1,31 +1,33 @@
 
+using APPLICATION.Dto.AccessList;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class AccessListService:GenericService<AccessList>, IAccessListService
+public class AccessListService:GenericService<AccessList, GetAccessListDto>, IAccessListService
 {
-    public AccessListService(AppDbContext context):base(context)
+    public AccessListService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public new async Task<ICollection<AccessList>> GetAllAsync()
+    public new async Task<ICollection<GetAccessListDto>> GetAllAsync()
     {
-        return await _dbModel.Include(al => al.AccessListActions).ToListAsync();
+        return _mapper.Map<ICollection<GetAccessListDto>>(await _dbModel.Include(al => al.AccessListActions).ToListAsync());
     }
     
     public new async Task<AccessList?> GetAsync(int id)
     {
-        return await _dbModel.Include(al => al.AccessListActions).Where(al => al.Id == id).FirstOrDefaultAsync();
+        return _mapper.Map<AccessList?>(await _dbModel.Include(al => al.AccessListActions).Where(al => al.Id == id).FirstOrDefaultAsync());
     }
 
-    public async Task<ICollection<AccessList>> GetGroups()
+    public async Task<ICollection<GetAccessListDto>> GetGroups()
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetAccessListDto>>(await _dbModel
             .Include(al => al.AccessListActions)
             .Where(al => al.IsGroup)
-            .ToListAsync();
+            .ToListAsync());
     }
 }

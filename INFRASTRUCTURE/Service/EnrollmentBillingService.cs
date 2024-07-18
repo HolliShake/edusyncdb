@@ -1,54 +1,56 @@
-
+using APPLICATION.Dto.EnrollmentBilling;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class EnrollmentBillingService:GenericService<EnrollmentBilling>, IEnrollmentBillingService
+public class EnrollmentBillingService:GenericService<EnrollmentBilling, GetEnrollmentBillingDto>, IEnrollmentBillingService
 {
-    public EnrollmentBillingService(AppDbContext context):base(context)
+    public EnrollmentBillingService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<EnrollmentBilling>> GetEnrollmentBillingsByEnrollmentId(int enrollmentId)
+    public async Task<ICollection<GetEnrollmentBillingDto>> GetEnrollmentBillingsByEnrollmentId(int enrollmentId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(
+            await _dbModel
             .Include(eb => eb.Enrollment)
             .Include(eb => eb.EnrollmentFee)
             .Include(eb => eb.Cycle)
             .Include(eb => eb.Voucher)
             .Where(eb => eb.EnrollmentId == enrollmentId)
-            .ToListAsync();
+            .ToListAsync());
     }
-    public async Task<ICollection<EnrollmentBilling>> GetEnrollmentBillingsByEnrollmentFeeId(int enrollmenFeetId)
+    public async Task<ICollection<GetEnrollmentBillingDto>> GetEnrollmentBillingsByEnrollmentFeeId(int enrollmenFeetId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _dbModel
             .Include(eb => eb.Enrollment)
             .Include(eb => eb.EnrollmentFee)
             .Include(eb => eb.Cycle)
             .Include(eb => eb.Voucher)
             .Where(eb => eb.EnrollmentFeeId == enrollmenFeetId)
-            .ToListAsync();
+            .ToListAsync());
     }
-    public async Task<ICollection<EnrollmentBilling>> GetEnrollmentBillingsByCycleId(int cycleId)
+    public async Task<ICollection<GetEnrollmentBillingDto>> GetEnrollmentBillingsByCycleId(int cycleId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _dbModel
             .Include(eb => eb.Enrollment)
             .Include(eb => eb.EnrollmentFee)
             .Include(eb => eb.Cycle)
             .Include(eb => eb.Voucher)
             .Where(eb => eb.CycleId == cycleId)
-            .ToListAsync();
+            .ToListAsync());
     }
-    public async Task<ICollection<EnrollmentBilling>> GetEnrollmentBillingsByVoucherId(int voucherId)
+    public async Task<ICollection<GetEnrollmentBillingDto>> GetEnrollmentBillingsByVoucherId(int voucherId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _dbModel
             .Include(eb => eb.Enrollment)
             .Include(eb => eb.EnrollmentFee)
             .Include(eb => eb.Cycle)
             .Include(eb => eb.Voucher)
             .Where(eb => eb.VoucherId == voucherId)
-            .ToListAsync();
+            .ToListAsync());
     }
 }

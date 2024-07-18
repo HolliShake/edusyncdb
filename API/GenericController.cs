@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API;
 
-public class GenericController <TModel, IServiceProvider, ItemDto, GetDto> : ControllerBase where IServiceProvider : IGenericService<TModel>
+public class GenericController <TModel, IServiceProvider, ItemDto, GetDto> : ControllerBase where IServiceProvider : IGenericService<TModel, GetDto>
 {
     protected readonly IMapper _mapper;
     protected readonly IServiceProvider _repo;
@@ -20,7 +20,7 @@ public class GenericController <TModel, IServiceProvider, ItemDto, GetDto> : Con
         var result = /**/
             await _repo.GetAllAsync();
 
-        return Ok(_mapper.Map<ICollection<GetDto>>(result));
+        return Ok(result);
     }
     
     protected async Task<ActionResult> GenericGetByChunk(int sizeMax)
@@ -28,7 +28,7 @@ public class GenericController <TModel, IServiceProvider, ItemDto, GetDto> : Con
         var result = /**/
             await _repo.GetByChunk(sizeMax);
 
-        return Ok(_mapper.Map<ICollection<GetDto>>(result));
+        return Ok(result);
     }
 
     protected async Task<ActionResult> GenericGet(int id)

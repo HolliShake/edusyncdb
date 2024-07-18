@@ -35,7 +35,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     [HttpGet("AcademicProgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetAdmissionScheduleByAcademicProgramId(int academicProgramId)
     {
-        return Ok(_mapper.Map<ICollection<GetAdmissionScheduleDto>>(await _repo.GetAdmissionSchedulesByAcademicProgramId(academicProgramId)));
+        return Ok(await _repo.GetAdmissionSchedulesByAcademicProgramId(academicProgramId));
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     [HttpGet("Cycle/{cycleId:int}")]
     public async Task<ActionResult> GetAdmissionScheduleByCycleId(int cycleId)
     {
-        return Ok(_mapper.Map<ICollection<GetAdmissionScheduleDto>>(await _repo.GetAdmissionSchedulesByCycleId(cycleId)));
+        return Ok(await _repo.GetAdmissionSchedulesByCycleId(cycleId));
     }
     
     /// <summary>

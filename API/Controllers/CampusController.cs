@@ -35,7 +35,7 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     [HttpGet("Agency/{agencyId:int}")]
     public async Task<ActionResult> GetCampusesByAgencyId(int agencyId)
     {
-        return Ok(_mapper.Map<ICollection<GetCampusDto>>(await _repo.GetCampusByAgendyId(agencyId)));
+        return Ok(await _repo.GetCampusByAgendyId(agencyId));
     }
 
     /// <summary>

@@ -1,11 +1,11 @@
-
+using APPLICATION.Dto.Schedule;
 using DOMAIN.Model;
 
 namespace APPLICATION.IService;
-public interface IScheduleService:IGenericService<Schedule>
+public interface IScheduleService:IGenericService<Schedule, GetScheduleDto>
 {
-    public Task<ICollection<Schedule>> GetSchedulesByAcademicProgramId(int academicProgramId);
-    public Task<ICollection<Schedule>> GetSchedulesByRoomId(int roomId);
-    public Task<ICollection<Schedule>> GetSchedulesByCycleId(int cycleId);
-    public Task<ICollection<Schedule>> GetSchedulesByCourseId(int courseId);
+    public Task<ICollection<GetScheduleDto>> GetSchedulesByAcademicProgramId(int academicProgramId);
+    public Task<ICollection<GetScheduleDto>> GetSchedulesByRoomId(int roomId);
+    public Task<ICollection<GetScheduleDto>> GetSchedulesByCycleId(int cycleId);
+    public Task<ICollection<GetScheduleDto>> GetSchedulesByCourseId(int courseId);
 }

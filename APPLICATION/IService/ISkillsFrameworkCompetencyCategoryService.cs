@@ -1,7 +1,7 @@
-
+using APPLICATION.Dto.SkillsFrameworkCompetencyCategory;
 using DOMAIN.Model;
 
 namespace APPLICATION.IService;
-public interface ISkillsFrameworkCompetencyCategoryService:IGenericService<SkillsFrameworkCompetencyCategory>
+public interface ISkillsFrameworkCompetencyCategoryService:IGenericService<SkillsFrameworkCompetencyCategory, GetSkillsFrameworkCompetencyCategoryDto>
 {
 }

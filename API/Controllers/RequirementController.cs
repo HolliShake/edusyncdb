@@ -35,7 +35,7 @@ public class RequirementController : GenericController<Requirement, IRequirement
     [HttpGet("Active")]
     public async Task<ActionResult> GetActiveRequirement()
     {
-        return Ok(_mapper.Map<ICollection<GetRequirementDto>>(await _repo.GetActiveRequirement()));
+        return Ok(await _repo.GetActiveRequirement());
     }
     
     /// <summary>

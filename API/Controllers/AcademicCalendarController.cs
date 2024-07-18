@@ -36,7 +36,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     [HttpGet("GradingPeriod/{gradingPeriodId:int}")]
     public async Task<ActionResult> GetAcademicCalendarsByGradingPeriodId(int gradingPeriodId)
     {
-        return Ok(_mapper.Map<ICollection<GetAcademicCalendarDto>>(await _repo.GetAcademicCalendarsByGradingPeriodId(gradingPeriodId)));
+        return Ok(await _repo.GetAcademicCalendarsByGradingPeriodId(gradingPeriodId));
     }
 
     /// <summary>

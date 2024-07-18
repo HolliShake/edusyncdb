@@ -35,7 +35,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     [HttpGet("Bulletin/{bulletinId:int}")]
     public async Task<ActionResult> GetBulletinScopeByBulletinId(int bulletinId)
     {
-        return Ok(_mapper.Map<ICollection<GetBulletinScopeDto>>(await _repo.GetBulletinScopesByBulletinId(bulletinId)));
+        return Ok(await _repo.GetBulletinScopesByBulletinId(bulletinId));
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     [HttpGet("AcademicProgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetBulletinScopeByAcademicProgramId(int academicProgramId)
     {
-        return Ok(_mapper.Map<ICollection<GetBulletinScopeDto>>(await _repo.GetBulletinScopesByAcademicProgramId(academicProgramId)));
+        return Ok(await _repo.GetBulletinScopesByAcademicProgramId(academicProgramId));
     }
 
     /// <summary>

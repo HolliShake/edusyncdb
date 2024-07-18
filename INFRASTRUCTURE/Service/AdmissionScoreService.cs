@@ -1,37 +1,39 @@
 
+using APPLICATION.Dto.AdmissionScore;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class AdmissionScoreService:GenericService<AdmissionScore>, IAdmissionScoreService
+public class AdmissionScoreService:GenericService<AdmissionScore, GetAdmissionScoreDto>, IAdmissionScoreService
 {
-    public AdmissionScoreService(AppDbContext context):base(context)
+    public AdmissionScoreService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<AdmissionScore>> GetAdmissionScoreByAdmissionEvaluationScheduleId(int admissionEvaluationScheduleId)
+    public async Task<ICollection<GetAdmissionScoreDto>> GetAdmissionScoreByAdmissionEvaluationScheduleId(int admissionEvaluationScheduleId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetAdmissionScoreDto>>(await _dbModel
             .Include(ads => ads.AdmissionEvaluationSchedule)
             .Where(ads => ads.AdmissionEvaluationScheduleId == admissionEvaluationScheduleId)
-            .ToListAsync();
+            .ToListAsync());
     }
 
-    public async Task<ICollection<AdmissionScore>> GetAdmissionScoreByAdmissionProgramRequirementId(int admissionProgramRequirementId)
+    public async Task<ICollection<GetAdmissionScoreDto>> GetAdmissionScoreByAdmissionProgramRequirementId(int admissionProgramRequirementId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetAdmissionScoreDto>>(await _dbModel
             .Include(ads => ads.AdmissionProgramRequirement)
             .Where(ads => ads.AdmissionProgramRequirementId == admissionProgramRequirementId)
-            .ToListAsync();
+            .ToListAsync());
     }
 
-    public async Task<ICollection<AdmissionScore>> GetAdmissionScoreByAdmissionApplicantId(int admissionApplicantId)
+    public async Task<ICollection<GetAdmissionScoreDto>> GetAdmissionScoreByAdmissionApplicantId(int admissionApplicantId)
     {
-        return await _dbModel
+        return _mapper.Map<ICollection<GetAdmissionScoreDto>>(await _dbModel
            .Include(ads => ads.AdmissionApplicant)
            .Where(ads => ads.AdmissionApplicantId == admissionApplicantId)
-           .ToListAsync();
+           .ToListAsync());
     }
 }

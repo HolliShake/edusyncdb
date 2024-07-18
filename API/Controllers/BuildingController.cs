@@ -44,7 +44,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
     [HttpGet("Campus/{campusId:int}")]
     public async Task<ActionResult> GetBuildingByCampusId(int campusId)
     {
-        return Ok(_mapper.Map<ICollection<GetBuildingDto>>(await _repo.GetBuildingByCampusId(campusId)));
+        return Ok(await _repo.GetBuildingByCampusId(campusId));
     }
     
     /// <summary>
@@ -79,7 +79,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
         var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.BuildingImagesScope, model.Id, files);
         if (fileResult != null)
         {
-            data.Images = _mapper.Map<List<GetFileTableDto>>(fileResult.ToList());
+            data.Images = fileResult.ToList()!;
         }
 
         return Ok(data);
@@ -113,19 +113,18 @@ public class BuildingController : GenericController<Building, IBuildingService, 
 
         if (files.Count > 0)
         {
-            var default_files = _mapper.Map<ICollection<GetFileTableDto>>((await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.BuildingImagesScope, model.Id)));
+            var default_files = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.BuildingImagesScope, model.Id);
 
             var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.BuildingImagesScope, model.Id, files);
             if (fileResult != null)
             {
-                data.Images = _mapper.Map<List<GetFileTableDto>>(fileResult.ToList());
+                data.Images = fileResult.ToList()!;
                 data.Images.AddRange(default_files);
             }
         }
         else
         {
-            var default_files = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.BuildingImagesScope, model.Id);
-            data.Images = _mapper.Map<List<GetFileTableDto>>(default_files);
+            data.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.BuildingImagesScope, model.Id);
         }
 
         return Ok(data);

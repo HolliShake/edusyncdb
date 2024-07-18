@@ -7,7 +7,7 @@ namespace API;
 
 public class
     GenericActionController<TModel, IServiceProvider, ItemDto, GetDto> : GenericController<TModel, IServiceProvider,
-    ItemDto, GetDto> where IServiceProvider : IGenericService<TModel>
+    ItemDto, GetDto> where IServiceProvider : IGenericService<TModel, GetDto>
 {
     public GenericActionController(IMapper mapper, IServiceProvider repo):base(mapper, repo)
     {

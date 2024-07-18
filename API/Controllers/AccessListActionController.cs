@@ -35,7 +35,7 @@ public class AccessListActionController : GenericController<AccessListAction, IA
     [HttpGet("AccessList/{accessListId:int}")]
     public async Task<ActionResult> GetActionAccessListActionByAccessListId(int accessListId)
     {
-        return Ok(_mapper.Map<ICollection<GetAccessListActionDto>>(await _repo.GetAccessListActionsByAccessListId(accessListId)));
+        return Ok(await _repo.GetAccessListActionsByAccessListId(accessListId));
     }
 
     /// <summary>

@@ -10,7 +10,7 @@ public class GetBuildingDto
     public double Latitude { get; set; }
     public double Longitude { get; set; }
     // Images
-    public List<GetFileTableDto> Images { get; set; }
+    public List<GetFileManagerTableDto> Images { get; set; }
 
     // Fk Campus
     public int CampusId { get; set; }

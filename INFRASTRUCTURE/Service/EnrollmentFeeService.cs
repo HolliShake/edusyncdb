@@ -1,24 +1,26 @@
 
+using APPLICATION.Dto.EnrollmentFee;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace INFRASTRUCTURE.Service;
-public class EnrollmentFeeService:GenericService<EnrollmentFee>, IEnrollmentFeeService
+public class EnrollmentFeeService:GenericService<EnrollmentFee, GetEnrollmentFeeDto>, IEnrollmentFeeService
 {
-    public EnrollmentFeeService(AppDbContext context):base(context)
+    public EnrollmentFeeService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<EnrollmentFee>> GetEnrollmentFeesByObjectId(int objectId)
+    public async Task<ICollection<GetEnrollmentFeeDto>> GetEnrollmentFeesByObjectId(int objectId)
     {
-        return await _dbModel.Where(ef => ef.ObjectId == objectId).ToListAsync();
+        return _mapper.Map<ICollection<GetEnrollmentFeeDto>>(await _dbModel.Where(ef => ef.ObjectId == objectId).ToListAsync());
     }
 
-    public async Task<ICollection<EnrollmentFee>> GetEnrollmentFeesByFundSourceId(int fundSourceId)
+    public async Task<ICollection<GetEnrollmentFeeDto>> GetEnrollmentFeesByFundSourceId(int fundSourceId)
     {
-        return await _dbModel.Where(ef => ef.FundSourceId == fundSourceId).ToListAsync();
+        return _mapper.Map<ICollection<GetEnrollmentFeeDto>>(await _dbModel.Where(ef => ef.FundSourceId == fundSourceId).ToListAsync());
     }
 }

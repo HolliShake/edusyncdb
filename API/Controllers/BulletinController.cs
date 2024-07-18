@@ -35,7 +35,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
     [HttpGet("BulletinCategory/{bulletinCategoryId:int}")]
     public async Task<ActionResult> GetBulletinByBulletinCategory(int bulletinCategoryId)
     {
-        return Ok(_mapper.Map<ICollection<GetBulletinDto>>(await _repo.GetBulletinsByBulletinCategoryId(bulletinCategoryId)));
+        return Ok(await _repo.GetBulletinsByBulletinCategoryId(bulletinCategoryId));
     }
     
     /// <summary>

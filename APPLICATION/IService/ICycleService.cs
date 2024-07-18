@@ -1,8 +1,9 @@
 
+using APPLICATION.Dto.Cycle;
 using DOMAIN.Model;
 
 namespace APPLICATION.IService;
-public interface ICycleService:IGenericService<Cycle>
+public interface ICycleService:IGenericService<Cycle, GetCycleDto>
 {
-    public Task<ICollection<Cycle>> GetCycleByCampusId(int campusId);
+    public Task<ICollection<GetCycleDto>> GetCycleByCampusId(int campusId);
 }

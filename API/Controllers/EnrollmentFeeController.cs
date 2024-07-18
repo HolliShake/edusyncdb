@@ -35,7 +35,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     [HttpGet("Object/{objectId:int}")]
     public async Task<ActionResult> GetEnrollmentFeeByObjectId(int objectId)
     {
-        return Ok(_mapper.Map<ICollection<GetEnrollmentFeeDto>>(await _repo.GetEnrollmentFeesByObjectId(objectId)));
+        return Ok(await _repo.GetEnrollmentFeesByObjectId(objectId));
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     [HttpGet("FundSource/{fundSourceId:int}")]
     public async Task<ActionResult> GetEnrollmentFeeByFundSourceId(int fundSourceId)
     {
-        return Ok(_mapper.Map<ICollection<GetEnrollmentFeeDto>>(await _repo.GetEnrollmentFeesByFundSourceId(fundSourceId)));
+        return Ok(await _repo.GetEnrollmentFeesByFundSourceId(fundSourceId));
     }
 
     /// <summary>

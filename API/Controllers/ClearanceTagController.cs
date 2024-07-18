@@ -35,7 +35,7 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
     [HttpGet("ClearanceType/{clearanceTypeId:int}")]
     public async Task<ActionResult> GetClearanceTagByClearanceTypeId(int clearanceTypeId)
     {
-        return Ok(_mapper.Map<ICollection<GetClearanceTagDto>>(await _repo.GetClearanceTagsByClearanceTypeId(clearanceTypeId)));
+        return Ok(await _repo.GetClearanceTagsByClearanceTypeId(clearanceTypeId));
     }
 
     /// <summary>

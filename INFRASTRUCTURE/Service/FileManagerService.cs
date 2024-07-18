@@ -1,5 +1,7 @@
 ﻿using System.Runtime.InteropServices;
+using APPLICATION.Dto.FileManager;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.AspNetCore.Http;
@@ -8,23 +10,23 @@ using Microsoft.Extensions.Configuration;
 
 namespace INFRASTRUCTURE.Service;
 
-public class FileManagerService : GenericService<FileTable>, IFileManagerService
+public class FileManagerService : GenericService<FileTable, GetFileManagerTableDto>, IFileManagerService
 {
-    public FileManagerService(AppDbContext dbContext) : base(dbContext)
+    public FileManagerService(AppDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
     {
     }
 
-    public async Task<List<FileTable>> GetFileByScope(string scope)
+    public async Task<List<GetFileManagerTableDto>> GetFileByScope(string scope)
     {
-        return await _dbModel.Where(file => file.Scope.Equals(scope)).ToListAsync();
+        return _mapper.Map<List<GetFileManagerTableDto>>(await _dbModel.Where(file => file.Scope.Equals(scope)).ToListAsync());
     }
 
-    public async Task<List<FileTable>> GetFileByScopeAndReferenceId(string scope, int referenceId)
+    public async Task<List<GetFileManagerTableDto>> GetFileByScopeAndReferenceId(string scope, int referenceId)
     {
-        return await _dbModel.Where(file => file.Scope.Equals(scope) && file.ReferenceId.Equals(referenceId.ToString())).ToListAsync();
+        return _mapper.Map<List<GetFileManagerTableDto>>(await _dbModel.Where(file => file.Scope.Equals(scope) && file.ReferenceId.Equals(referenceId.ToString())).ToListAsync());
     }
 
-    public async Task<FileTable?> UploadFile(ConfigurationManager configuration, string scope, int referenceId, IFormFile file)
+    public async Task<GetFileManagerTableDto?> UploadFile(ConfigurationManager configuration, string scope, int referenceId, IFormFile file)
     {
         var uploadPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             ? Path.Combine(configuration["File:LocationWIN32"], configuration["File:DestinationWIN32"])
@@ -77,12 +79,12 @@ public class FileManagerService : GenericService<FileTable>, IFileManagerService
             ReferenceId = referenceId.ToString()
         });
 
-        return (await Save())
+        return _mapper.Map<GetFileManagerTableDto?>((await Save())
             ? result.Entity
-            : null;
+            : null);
     }
 
-    public async Task<ICollection<FileTable>?> UploadMultipleFile(ConfigurationManager configuration, string scope, int referenceId, List<IFormFile> files)
+    public async Task<ICollection<GetFileManagerTableDto>?> UploadMultipleFile(ConfigurationManager configuration, string scope, int referenceId, List<IFormFile> files)
     {
         var uploadPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             ? Path.Combine(configuration["File:LocationWIN32"], configuration["File:DestinationWIN32"])
@@ -148,7 +150,7 @@ public class FileManagerService : GenericService<FileTable>, IFileManagerService
         await _dbModel.AddRangeAsync(items);
 
         return (await Save())
-            ? items
+            ? _mapper.Map<ICollection<GetFileManagerTableDto>>(items)
             : null;
     }
 }

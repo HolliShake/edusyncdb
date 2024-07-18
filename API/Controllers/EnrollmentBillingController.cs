@@ -35,7 +35,7 @@ public class EnrollmentBillingController : GenericController<EnrollmentBilling, 
     [HttpGet("Enrollment/{enrollmentId:int}")]
     public async Task<ActionResult> GetEnrollmentBillingByEnrollmentId(int enrollmentId)
     {
-        return Ok(_mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _repo.GetEnrollmentBillingsByEnrollmentId(enrollmentId)));
+        return Ok(await _repo.GetEnrollmentBillingsByEnrollmentId(enrollmentId));
     }
 
     /// <summary>
@@ -45,7 +45,7 @@ public class EnrollmentBillingController : GenericController<EnrollmentBilling, 
     [HttpGet("EnrollmentFee/{enrollmentFeeId:int}")]
     public async Task<ActionResult> GetEnrollmentBillingByEnrollmenFeetId(int enrollmentFeeId)
     {
-        return Ok(_mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _repo.GetEnrollmentBillingsByEnrollmentFeeId(enrollmentFeeId)));
+        return Ok(await _repo.GetEnrollmentBillingsByEnrollmentFeeId(enrollmentFeeId));
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ public class EnrollmentBillingController : GenericController<EnrollmentBilling, 
     [HttpGet("Cycle/{cycleId:int}")]
     public async Task<ActionResult> GetEnrollmentBillingByCycleId(int cycleId)
     {
-        return Ok(_mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _repo.GetEnrollmentBillingsByCycleId(cycleId)));
+        return Ok(await _repo.GetEnrollmentBillingsByCycleId(cycleId));
     }
 
     /// <summary>
@@ -65,7 +65,7 @@ public class EnrollmentBillingController : GenericController<EnrollmentBilling, 
     [HttpGet("Voucher/{voucherId:int}")]
     public async Task<ActionResult> GetEnrollmentBillingByVoucherId(int voucherId)
     {
-        return Ok(_mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _repo.GetEnrollmentBillingsByVoucherId(voucherId)));
+        return Ok(await _repo.GetEnrollmentBillingsByVoucherId(voucherId));
     }
 
     /// <summary>

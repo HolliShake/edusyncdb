@@ -1,33 +1,35 @@
 
+using APPLICATION.Dto.AdmissionProgramRequirement;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class AdmissionProgramRequirementService:GenericService<AdmissionProgramRequirement>, IAdmissionProgramRequirementService
+public class AdmissionProgramRequirementService:GenericService<AdmissionProgramRequirement, GetAdmissionProgramRequirementDto>, IAdmissionProgramRequirementService
 {
-    public AdmissionProgramRequirementService(AppDbContext context):base(context)
+    public AdmissionProgramRequirementService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public new async Task<ICollection<AdmissionProgramRequirement>> GetAllAsync()
+    public new async Task<ICollection<GetAdmissionProgramRequirementDto>> GetAllAsync()
     {
-        return await _dbModel.Include(apr => apr.Requirement).ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionProgramRequirementDto>>(await _dbModel.Include(apr => apr.Requirement).ToListAsync());
     }
 
-    public new async Task<ICollection<AdmissionProgramRequirement>> GetByChunk(int max)
+    public new async Task<ICollection<GetAdmissionProgramRequirementDto>> GetByChunk(int max)
     {
-        return await _dbModel.Include(apr => apr.Requirement).Take(max).ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionProgramRequirementDto>>(await _dbModel.Include(apr => apr.Requirement).Take(max).ToListAsync());
     }
 
     public new async Task<AdmissionProgramRequirement?> GetAsync(int id)
     {
-        return await _dbModel.Include(apr => apr.Requirement).Where(apr => apr.Id == id).FirstOrDefaultAsync();
+        return _mapper.Map<AdmissionProgramRequirement?>(await _dbModel.Include(apr => apr.Requirement).Where(apr => apr.Id == id).FirstOrDefaultAsync());
     }
 
-    public async Task<ICollection<AdmissionProgramRequirement>> GetEnabledAdmissionProgramRequirements()
+    public async Task<ICollection<GetAdmissionProgramRequirementDto>> GetEnabledAdmissionProgramRequirements()
     {
-        return await _dbModel.Include(apr => apr.Requirement).Where(apr => apr.IsEnabled).ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionProgramRequirementDto>>(await _dbModel.Include(apr => apr.Requirement).Where(apr => apr.IsEnabled).ToListAsync());
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace APPLICATION.IService;
 
-public interface IGenericService<TModel>
+public interface IGenericService<TModel, TGetter>
 {
-    public Task<ICollection<TModel>> GetAllAsync();
-    public Task<ICollection<TModel>> GetByChunk(int max);
+    public Task<ICollection<TGetter>> GetAllAsync();
+    public Task<ICollection<TGetter>> GetByChunk(int max);
     public Task<TModel?> GetAsync(int id);
     public Task<bool> CreateAsync(TModel newItem);
     public Task<bool> CreateAllAsync(IList<TModel> newItems);

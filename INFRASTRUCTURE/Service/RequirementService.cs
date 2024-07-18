@@ -1,18 +1,20 @@
 
+using APPLICATION.Dto.Requirement;
 using APPLICATION.IService;
+using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
-public class RequirementService:GenericService<Requirement>, IRequirementService
+public class RequirementService:GenericService<Requirement, GetRequirementDto>, IRequirementService
 {
-    public RequirementService(AppDbContext context):base(context)
+    public RequirementService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
     }
 
-    public async Task<ICollection<Requirement>> GetActiveRequirement()
+    public async Task<ICollection<GetRequirementDto>> GetActiveRequirement()
     {
-        return await _dbModel.Where(r => r.IsActive).ToListAsync();
+        return _mapper.Map<ICollection<GetRequirementDto>>(await _dbModel.Where(r => r.IsActive).ToListAsync());
     }
 }

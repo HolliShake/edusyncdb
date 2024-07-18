@@ -11,6 +11,8 @@ namespace API.Controllers;
 [ApiController]
 [Route("Api/[controller]")]
 [Casl("SuperAdmin:all")]
+
+//FileTable, GetFileTableDto
 public class FileTableController : GenericController<FileTable, IFileTableService, FileTableDto, GetFileTableDto>
 {
     public FileTableController(IMapper mapper, IFileTableService repo):base(mapper, repo)

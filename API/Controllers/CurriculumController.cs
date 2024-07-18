@@ -34,7 +34,7 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
     [HttpGet("AcademicProgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetCurriculumByAcademicProgramId(int academicProgramId)
     {
-        return Ok(_mapper.Map<ICollection<GetCurriculumDto>>(await _repo.GetCurriculumByAcademicProgramId(academicProgramId)));
+        return Ok(await _repo.GetCurriculumByAcademicProgramId(academicProgramId));
     }
     
     /// <summary>
