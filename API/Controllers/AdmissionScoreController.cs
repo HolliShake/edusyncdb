@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class AdmissionScoreController : GenericController<AdmissionScore, IAdmissionScoreService, AdmissionScoreDto, GetAdmissionScoreDto>
 {
     public AdmissionScoreController(IMapper mapper, IAdmissionScoreService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get all data.
     /// </summary>
     /// <returns>Array[AdmissionScore]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get AdmissionScore by AdmissionEvaluationSchedule id.
     /// </summary>
     /// <returns>Array[AdmissionScore]</returns>
-    [HttpGet("/Api/[controller]/AdmissionEvaluationSchedule/{admissionEvaluationScheduleId:int}")]
+    [HttpGet("AdmissionEvaluationSchedule/{admissionEvaluationScheduleId:int}")]
     public async Task<ActionResult> GetAdmissionScoreByAdmissionEvaluationScheduleId(int admissionEvaluationScheduleId)
     {
         return Ok(_mapper.Map<ICollection<GetAdmissionScoreDto>>(await _repo.GetAdmissionScoreByAdmissionEvaluationScheduleId(admissionEvaluationScheduleId)));
@@ -42,7 +42,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get AdmissionScore by AdmissionProgramRequirement id.
     /// </summary>
     /// <returns>Array[AdmissionScore]</returns>
-    [HttpGet("/Api/[controller]/AdmissionProgramRequirement/{admissionProgramRequirementId:int}")]
+    [HttpGet("AdmissionProgramRequirement/{admissionProgramRequirementId:int}")]
     public async Task<ActionResult> GetAdmissionScoreByAdmissionProgramRequirementId(int admissionProgramRequirementId)
     {
         return Ok(_mapper.Map<ICollection<GetAdmissionScoreDto>>(await _repo.GetAdmissionScoreByAdmissionProgramRequirementId(admissionProgramRequirementId)));
@@ -52,7 +52,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get AdmissionScore by AdmissionApplicant id.
     /// </summary>
     /// <returns>Array[AdmissionScore]</returns>
-    [HttpGet("/Api/[controller]/AdmissionApplicant/{admissionApplicantId:int}")]
+    [HttpGet("AdmissionApplicant/{admissionApplicantId:int}")]
     public async Task<ActionResult> GetAdmissionScoreByAdmissionApplicantId(int admissionApplicantId)
     {
         return Ok(_mapper.Map<ICollection<GetAdmissionScoreDto>>(await _repo.GetAdmissionScoreByAdmissionApplicantId(admissionApplicantId)));
@@ -62,7 +62,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get specific data (AdmissionScore) by id.
     /// </summary>
     /// <returns>Array[AdmissionScore]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -72,7 +72,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Creates new AdmissionScore entry.
     /// </summary>
     /// <returns>AdmissionScore</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AdmissionScoreDto item)
     {
         return await GenericCreate(item);
@@ -82,7 +82,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Creates multiple instance of AdmissionScore.
     /// </summary>
     /// <returns>Array[AdmissionScore]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<AdmissionScoreDto> items)
     {
         return await GenericCreateAll(items);
@@ -92,7 +92,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Updates multiple property of AdmissionScore.
     /// </summary>
     /// <returns>AdmissionScore</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AdmissionScoreDto item)
     {
         return await GenericUpdate(id, item);
@@ -102,7 +102,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Deletes single AdmissionScore entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

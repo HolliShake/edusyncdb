@@ -5,16 +5,16 @@ using APPLICATION.Jwt;
 using DOMAIN.Model;
 using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
-using API.Attributes;
+using APPLICATION.Dto.UserAccess;
+using API.Constant;
+using APPLICATION.IService;
 
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("Api/[controller]")]
 public class AuthController:ControllerBase
 {
     private readonly ConfigurationManager _config;
@@ -22,21 +22,23 @@ public class AuthController:ControllerBase
     private readonly IJwtAuthManager _jwtAuthManager;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
+    private readonly IUserAccessService _userAccessService;
     
-    public AuthController(ConfigurationManager config, IMapper mapper, IJwtAuthManager jwtAuthManager, UserManager<User> userManager, SignInManager<User> signInManager)
+    public AuthController(ConfigurationManager config, IMapper mapper, IJwtAuthManager jwtAuthManager, UserManager<User> userManager, SignInManager<User> signInManager, IUserAccessService userAccessService)
     {
         _config = config;
         _mapper = mapper;
         _jwtAuthManager = jwtAuthManager;
         _userManager = userManager;
         _signInManager = signInManager;
+        _userAccessService = userAccessService;
     }
     
     /// <summary>
     /// Login attempt.
     /// </summary>
     /// <returns>AuthData</returns>
-    [HttpPost("/Api/[controller]/login")]
+    [HttpPost("login")]
     public async Task<ActionResult> LoginAttempt(AuthDto credential)
     {
         var user = await _userManager.FindByEmailAsync(credential.Email);
@@ -57,21 +59,28 @@ public class AuthController:ControllerBase
         // Set as alternative to Not Found to prevent brute forcing...
         return BadRequest("Invalid username or password");
 
-        Ok:;
+    Ok:;
         // If allow email verification
-        if (!user.EmailConfirmed)
-        {
-            return Unauthorized("Email is not authorized");
-        }
-
-        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role);
+        // if (!user.EmailConfirmed)
+        // {
+        // return Unauthorized("Email is not authorized");
+        // }
 
         var userData = _mapper.Map<AuthDataDto>(user);
+        var access = await _userAccessService.GetUserAccessByUserId(user.Id);
+
+        userData.AccessList = _mapper.Map<ICollection<GetUserAccessDto>>(access);
+
+        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, userData.AccessListString);
+      
         userData.IsGoogle = false;
         userData.AccessToken = /**/
             token.AccessToken;
         userData.RefreshToken = /**/
             token.RefreshToken.TokenString;
+
+        userData.AccessListString = "";
+        userData.AccessList = [];
 
         return Ok(userData);
     }
@@ -80,7 +89,7 @@ public class AuthController:ControllerBase
     /// Login attempt via google.
     /// </summary>
     /// <returns>AuthData</returns>
-    [HttpPost("/Api/[controller]/google-signin")]
+    [HttpPost("google-signin")]
     public async Task<ActionResult> GoogleLogin(GoogleDto google)
     {
         var settings = new GoogleJsonWebSignature.ValidationSettings
@@ -119,7 +128,7 @@ public class AuthController:ControllerBase
             FirstName = payload.GivenName,
             LastName = payload.FamilyName,
             EmailConfirmed = payload.EmailVerified,
-            Role = "[{ \"subject\": \"Auth\", \"action\": \"read\" }]"
+            Role = Role.User
         };
 
         var result = await _userManager.CreateAsync(user);
@@ -128,22 +137,51 @@ public class AuthController:ControllerBase
         {
             goto error;
         }
+        else
+        {
+            try
+            {
+                // Auth := 1
+                // all 1
+                // read 2
+                // create 3
+                // update 4
+                // delete 5
+                await _userAccessService.CreateUserAccess(user.Id, 1, 1);
+                await _userAccessService.CreateUserAccess(user.Id, 1, 2);
+                await _userAccessService.CreateUserAccess(user.Id, 1, 3);
+                await _userAccessService.CreateUserAccess(user.Id, 1, 4);
+                await _userAccessService.CreateUserAccess(user.Id, 1, 5);
+            }
+            catch (Exception)
+            {
+            }
+        }
         
         final:;
+        /*
         if (!user.EmailConfirmed)
         {
             return Unauthorized("Email is not authorized");
         }
-        
-        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role);
-        
+        */
+
         var userData = _mapper.Map<AuthDataDto>(user);
+        var access = await _userAccessService.GetUserAccessByUserId(userData.Id);
+
+        userData.AccessList = _mapper.Map<ICollection<GetUserAccessDto>>(access);
+
+        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, userData.AccessListString);
+        
         userData.IsGoogle = true;
         userData.AccessToken = /**/
             token.AccessToken;
         userData.RefreshToken = /**/
             token.RefreshToken.TokenString;
-        
+
+        userData.AccessListString = "";
+        userData.AccessList = [];
+
         return Ok(userData);
     }
     
@@ -152,7 +190,7 @@ public class AuthController:ControllerBase
     /// </summary>
     /// <returns>Null|Errors</returns>
     /*
-    [HttpPost("/Api/[controller]/register")]
+    [HttpPost("register")]
     public async Task<ActionResult> Register(AuthRegisterDto registrationForm)
     {
         var result = await _userManager.CreateAsync(_mapper.Map<User>(registrationForm), registrationForm.Password);
@@ -166,7 +204,7 @@ public class AuthController:ControllerBase
     }
     */
 
-    [HttpPost("/Api/[controller]/generate/{secret}")]
+    [HttpPost("generate/{secret}")]
     public async Task<ActionResult> GenerateAdmin(string secret)
     {
         var old = await _userManager.FindByEmailAsync(_config["Admin:Email"]);
@@ -177,6 +215,8 @@ public class AuthController:ControllerBase
             FirstName = _config["Admin:Firstname"],
             LastName = _config["Admin:Lastname"],
             EmailConfirmed = true,
+            Role = Role.SuperAdmin
+            /*
             Role = "[" +
                    "{ \"subject\": \"Auth\" , \"action\": \"read\"   }," +
                    "{ \"subject\": \"Admin\", \"action\": \"all\"    }," +
@@ -185,6 +225,7 @@ public class AuthController:ControllerBase
                    "{ \"subject\": \"Admin\", \"action\": \"update\" }," +
                    "{ \"subject\": \"Admin\", \"action\": \"delete\" }"  +
                    "]"
+            */
         };
         
         if (!secret.SequenceEqual(_config["Admin:Secret"]))
@@ -213,16 +254,33 @@ public class AuthController:ControllerBase
         
         bad:;
         return BadRequest("Failed to create admin user.");
-        
-        ok:;
-        return Ok(old ?? user);
+
+    ok:;
+        var actualData = old ?? user;
+        try
+        {
+            // SuperAdmin := 3
+                // all 11
+                // read 12
+                // create 13
+                // update 14
+                // delete 15
+            await _userAccessService.CreateUserAccess(actualData.Id, 3, 11);
+            await _userAccessService.CreateUserAccess(actualData.Id, 3, 12);
+            await _userAccessService.CreateUserAccess(actualData.Id, 3, 13);
+            await _userAccessService.CreateUserAccess(actualData.Id, 3, 14);
+            await _userAccessService.CreateUserAccess(actualData.Id, 3, 15);
+        } catch (Exception)
+        {
+        }
+        return Ok(actualData);
     }
     
     /// <summary>
     /// ReAuthenticate every page refresh (must use authentication context in UI).
     /// </summary>
     /// <returns>AuthData|Errors</returns>
-    [HttpGet("/Api/[controller]/session")]
+    [HttpGet("session")]
     public async Task<ActionResult> Session()
     {
         var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
@@ -251,13 +309,20 @@ public class AuthController:ControllerBase
         return Unauthorized();
         
         ok:;
-        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role);
-        
         var userData = _mapper.Map<AuthDataDto>(user);
+        var access = await _userAccessService.GetUserAccessByUserId(userData.Id);
+
+        userData.AccessList = _mapper.Map<ICollection<GetUserAccessDto>>(access);
+
+        var token = JwtGenerator.GenerateToken(_jwtAuthManager, userData.Id, userData.Email, userData.Role, userData.AccessListString);
+        
         userData.AccessToken = /**/
             token.AccessToken;
         userData.RefreshToken = /**/
             token.RefreshToken.TokenString;
+
+        userData.AccessListString = "";
+        userData.AccessList = [];
         
         return Ok(userData);
     }

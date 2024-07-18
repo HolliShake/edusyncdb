@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class AdmissionScheduleController : GenericController<AdmissionSchedule, IAdmissionScheduleService, AdmissionScheduleDto, GetAdmissionScheduleDto>
 {
     public AdmissionScheduleController(IMapper mapper, IAdmissionScheduleService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     /// Get all data.
     /// </summary>
     /// <returns>Array[AdmissionSchedule]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     /// Get AdmissionSchedule by AcademicProgram id.
     /// </summary>
     /// <returns>Array[AdmissionSchedule]</returns>
-    [HttpGet("/Api/[controller]/AcademicProgram/{academicProgramId:int}")]
+    [HttpGet("AcademicProgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetAdmissionScheduleByAcademicProgramId(int academicProgramId)
     {
         return Ok(_mapper.Map<ICollection<GetAdmissionScheduleDto>>(await _repo.GetAdmissionSchedulesByAcademicProgramId(academicProgramId)));
@@ -42,7 +42,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     /// Get AdmissionSchedule by Cycle id.
     /// </summary>
     /// <returns>Array[AdmissionSchedule]</returns>
-    [HttpGet("/Api/[controller]/Cycle/{cycleId:int}")]
+    [HttpGet("Cycle/{cycleId:int}")]
     public async Task<ActionResult> GetAdmissionScheduleByCycleId(int cycleId)
     {
         return Ok(_mapper.Map<ICollection<GetAdmissionScheduleDto>>(await _repo.GetAdmissionSchedulesByCycleId(cycleId)));
@@ -52,7 +52,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     /// Get specific data (AdmissionSchedule) by id.
     /// </summary>
     /// <returns>Array[AdmissionSchedule]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -62,7 +62,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     /// Creates new AdmissionSchedule entry.
     /// </summary>
     /// <returns>AdmissionSchedule</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AdmissionScheduleDto item)
     {
         return await GenericCreate(item);
@@ -72,7 +72,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     /// Creates multiple instance of AdmissionSchedule.
     /// </summary>
     /// <returns>Array[AdmissionSchedule]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<AdmissionScheduleDto> items)
     {
         return await GenericCreateAll(items);
@@ -82,7 +82,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     /// Updates multiple property of AdmissionSchedule.
     /// </summary>
     /// <returns>AdmissionSchedule</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AdmissionScheduleDto item)
     {
         return await GenericUpdate(id, item);
@@ -92,7 +92,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     /// Deletes single AdmissionSchedule entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

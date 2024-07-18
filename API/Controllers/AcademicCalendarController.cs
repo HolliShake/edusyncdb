@@ -10,8 +10,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:create")]
 public class AcademicCalendarController : GenericController<AcademicCalendar, IAcademicCalendarService, AcademicCalendarDto, GetAcademicCalendarDto>
 {
     public AcademicCalendarController(IMapper mapper, IAcademicCalendarService repo):base(mapper, repo)
@@ -23,7 +23,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     /// Get all data.
     /// </summary>
     /// <returns>Array[AcademicCalendar]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -33,7 +33,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     /// Get AcademiCalendar by GradingPeriod Id.
     /// </summary>
     /// <returns>Array[AcademicCalendar]</returns>
-    [HttpGet("/Api/[controller]/GradingPeriod/{gradingPeriodId:int}")]
+    [HttpGet("GradingPeriod/{gradingPeriodId:int}")]
     public async Task<ActionResult> GetAcademicCalendarsByGradingPeriodId(int gradingPeriodId)
     {
         return Ok(_mapper.Map<ICollection<GetAcademicCalendarDto>>(await _repo.GetAcademicCalendarsByGradingPeriodId(gradingPeriodId)));
@@ -43,7 +43,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     /// Get specific data (AcademicCalendar) by id.
     /// </summary>
     /// <returns>Array[AcademicCalendar]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -53,7 +53,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     /// Creates new AcademicCalendar entry.
     /// </summary>
     /// <returns>AcademicCalendar</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AcademicCalendarDto item)
     {
         return await GenericCreate(item);
@@ -63,7 +63,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     /// Creates multiple instance of AcademicCalendar.
     /// </summary>
     /// <returns>Array[AcademicCalendar]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<AcademicCalendarDto> items)
     {
         return await GenericCreateAll(items);
@@ -73,7 +73,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     /// Updates multiple property of AcademicCalendar.
     /// </summary>
     /// <returns>AcademicCalendar</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AcademicCalendarDto item)
     {
         return await GenericUpdate(id, item);
@@ -83,7 +83,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     /// Deletes single AcademicCalendar entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

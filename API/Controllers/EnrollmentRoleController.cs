@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class EnrollmentRoleController : GenericController<EnrollmentRole, IEnrollmentRoleService, EnrollmentRoleDto, GetEnrollmentRoleDto>
 {
     public EnrollmentRoleController(IMapper mapper, IEnrollmentRoleService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class EnrollmentRoleController : GenericController<EnrollmentRole, IEnrol
     /// Get all data.
     /// </summary>
     /// <returns>Array[EnrollmentRole]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class EnrollmentRoleController : GenericController<EnrollmentRole, IEnrol
     /// Get specific data (EnrollmentRole) by id.
     /// </summary>
     /// <returns>Array[EnrollmentRole]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class EnrollmentRoleController : GenericController<EnrollmentRole, IEnrol
     /// Creates new EnrollmentRole entry.
     /// </summary>
     /// <returns>EnrollmentRole</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(EnrollmentRoleDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class EnrollmentRoleController : GenericController<EnrollmentRole, IEnrol
     /// Creates multiple instance of EnrollmentRole.
     /// </summary>
     /// <returns>Array[EnrollmentRole]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<EnrollmentRoleDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class EnrollmentRoleController : GenericController<EnrollmentRole, IEnrol
     /// Updates multiple property of EnrollmentRole.
     /// </summary>
     /// <returns>EnrollmentRole</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, EnrollmentRoleDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class EnrollmentRoleController : GenericController<EnrollmentRole, IEnrol
     /// Deletes single EnrollmentRole entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

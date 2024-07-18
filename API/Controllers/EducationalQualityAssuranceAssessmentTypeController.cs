@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class EducationalQualityAssuranceAssessmentTypeController : GenericController<EducationalQualityAssuranceAssessmentType, IEducationalQualityAssuranceAssessmentTypeService, EducationalQualityAssuranceAssessmentTypeDto, GetEducationalQualityAssuranceAssessmentTypeDto>
 {
     public EducationalQualityAssuranceAssessmentTypeController(IMapper mapper, IEducationalQualityAssuranceAssessmentTypeService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
     /// Get all data.
     /// </summary>
     /// <returns>Array[EducationalQualityAssuranceAssessmentType]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
     /// Get 1st to n (where n := size(parameter)) data.
     /// </summary>
     /// <returns>Array[EducationalQualityAssuranceAssessmentType]</returns>
-    [HttpGet("/Api/[controller]/chunk/{size:int}")]
+    [HttpGet("chunk/{size:int}")]
     public async Task<ActionResult> GetByChunk(int size)
     {
         return await GenericGetByChunk(size);
@@ -42,7 +42,7 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
     /// Get specific data (EducationalQualityAssuranceAssessmentType) by id.
     /// </summary>
     /// <returns>Array[EducationalQualityAssuranceAssessmentType]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -52,7 +52,7 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
     /// Creates new EducationalQualityAssuranceAssessmentType entry.
     /// </summary>
     /// <returns>EducationalQualityAssuranceAssessmentType</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(EducationalQualityAssuranceAssessmentTypeDto item)
     {
         return await GenericCreate(item);
@@ -62,7 +62,7 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
     /// Creates multiple instance of EducationalQualityAssuranceAssessmentType.
     /// </summary>
     /// <returns>Array[EducationalQualityAssuranceAssessmentType]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<EducationalQualityAssuranceAssessmentTypeDto> items)
     {
         return await GenericCreateAll(items);
@@ -72,7 +72,7 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
     /// Updates multiple property of EducationalQualityAssuranceAssessmentType.
     /// </summary>
     /// <returns>EducationalQualityAssuranceAssessmentType</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, EducationalQualityAssuranceAssessmentTypeDto item)
     {
         return await GenericUpdate(id, item);
@@ -82,7 +82,7 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
     /// Deletes single EducationalQualityAssuranceAssessmentType entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

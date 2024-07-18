@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class PortfolioSessionTypeController : GenericController<PortfolioSessionType, IPortfolioSessionTypeService, PortfolioSessionTypeDto, GetPortfolioSessionTypeDto>
 {
     public PortfolioSessionTypeController(IMapper mapper, IPortfolioSessionTypeService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class PortfolioSessionTypeController : GenericController<PortfolioSession
     /// Get all data.
     /// </summary>
     /// <returns>Array[PortfolioSessionType]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class PortfolioSessionTypeController : GenericController<PortfolioSession
     /// Get specific data (PortfolioSessionType) by id.
     /// </summary>
     /// <returns>Array[PortfolioSessionType]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class PortfolioSessionTypeController : GenericController<PortfolioSession
     /// Creates new PortfolioSessionType entry.
     /// </summary>
     /// <returns>PortfolioSessionType</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(PortfolioSessionTypeDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class PortfolioSessionTypeController : GenericController<PortfolioSession
     /// Creates multiple instance of PortfolioSessionType.
     /// </summary>
     /// <returns>Array[PortfolioSessionType]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<PortfolioSessionTypeDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class PortfolioSessionTypeController : GenericController<PortfolioSession
     /// Updates multiple property of PortfolioSessionType.
     /// </summary>
     /// <returns>PortfolioSessionType</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, PortfolioSessionTypeDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class PortfolioSessionTypeController : GenericController<PortfolioSession
     /// Deletes single PortfolioSessionType entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

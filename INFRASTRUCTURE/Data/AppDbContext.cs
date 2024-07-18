@@ -1,5 +1,7 @@
 ﻿using DOMAIN.Model;
+using INFRASTRUCTURE.Seeder;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace INFRASTRUCTURE.Data;
 
@@ -7,6 +9,7 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> option) : base(option)
     {
+        this.ChangeTracker.LazyLoadingEnabled = false;
     }
 
     // A
@@ -14,6 +17,8 @@ public class AppDbContext : DbContext
     public DbSet<AcademicProgram> AcademicPrograms { get; set; }
     public DbSet<AcademicTerm> AcademicTerms { get; set; }
     public DbSet<AccountGroup> AccountGroups { get; set; }
+    public DbSet<AccessList> AccessLists { get; set; }
+    public DbSet<AccessListAction> AccessListActions { get; set; }
     public DbSet<AdmissionApplicant> AdmissionApplicants { get; set; }
     public DbSet<AdmissionApplication> AdmissionApplications { get; set; }
     public DbSet<AdmissionEvaluationSchedule> AdmissionEvaluationSchedules { get; set; }
@@ -77,7 +82,7 @@ public class AppDbContext : DbContext
     // O
     public DbSet<OtherSchool> OtherSchools { get; set; }
     // P
-    public DbSet<Parameter> Parameters { get; set; }
+    public DbSet<DOMAIN.Model.Parameter> Parameters { get; set; }
     public DbSet<ParameterCategory> ParameterCategories { get; set; }
     public DbSet<ParameterSubCategory> ParameterSubCategories { get; set; }
     public DbSet<PetitionCourses> PetitionCourses { get; set; }
@@ -126,7 +131,18 @@ public class AppDbContext : DbContext
     public DbSet<TableObject> TableObjects { get; set; }
     // U
     public DbSet<User> Users { get; set; }
+    public DbSet<UserAccess> UserAccesses { get; set; }
     // V
     public DbSet<Voucher> Vouchers { get; set; }
     public DbSet<VoucherApplied> VoucherApplied { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AccessList>()
+           .HasIndex(entity => entity.Subject)
+           .IsUnique();
+
+        base.OnModelCreating(modelBuilder);
+        new DbInitializer(modelBuilder).Seed();
+    }
 }

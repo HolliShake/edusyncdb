@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class EnrollmentController : GenericController<Enrollment, IEnrollmentService, EnrollmentDto, GetEnrollmentDto>
 {
     public EnrollmentController(IMapper mapper, IEnrollmentService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     /// Get all data.
     /// </summary>
     /// <returns>Array[Enrollment]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     /// Get Enrollment by EnrollmentRole id.
     /// </summary>
     /// <returns>Array[Enrollment]</returns>
-    [HttpGet("/Api/[controller]/EnrollmentRole/{enrollmentRoleId:int}")]
+    [HttpGet("EnrollmentRole/{enrollmentRoleId:int}")]
     public async Task<ActionResult> GetEnrollmentByEnrollmentRoleId(int enrollmentRoleId)
     {
         return Ok(_mapper.Map<ICollection<GetEnrollmentDto>>(await _repo.GetEnrollmentsByEnrollmentRoleId(enrollmentRoleId)));
@@ -42,7 +42,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     /// Get Enrollment by Schedule id.
     /// </summary>
     /// <returns>Array[Enrollment]</returns>
-    [HttpGet("/Api/[controller]/Schedule/{scheduleId:int}")]
+    [HttpGet("Schedule/{scheduleId:int}")]
     public async Task<ActionResult> GetEnrollmentByScheduleId(int scheduleId)
     {
         return Ok(_mapper.Map<ICollection<GetEnrollmentDto>>(await _repo.GetEnrollmentsByScheduleId(scheduleId)));
@@ -52,7 +52,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     /// Get specific data (Enrollment) by id.
     /// </summary>
     /// <returns>Array[Enrollment]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -62,7 +62,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     /// Creates new Enrollment entry.
     /// </summary>
     /// <returns>Enrollment</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(EnrollmentDto item)
     {
         return await GenericCreate(item);
@@ -72,7 +72,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     /// Creates multiple instance of Enrollment.
     /// </summary>
     /// <returns>Array[Enrollment]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<EnrollmentDto> items)
     {
         return await GenericCreateAll(items);
@@ -82,7 +82,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     /// Updates multiple property of Enrollment.
     /// </summary>
     /// <returns>Enrollment</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, EnrollmentDto item)
     {
         return await GenericUpdate(id, item);
@@ -92,7 +92,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     /// Deletes single Enrollment entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

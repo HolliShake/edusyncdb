@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class EducationalQualityAssuranceEducationalGoalController : GenericController<EducationalQualityAssuranceEducationalGoal, IEducationalQualityAssuranceEducationalGoalService, EducationalQualityAssuranceEducationalGoalDto, GetEducationalQualityAssuranceEducationalGoalDto>
 {
     public EducationalQualityAssuranceEducationalGoalController(IMapper mapper, IEducationalQualityAssuranceEducationalGoalService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class EducationalQualityAssuranceEducationalGoalController : GenericContr
     /// Get all data.
     /// </summary>
     /// <returns>Array[EducationalQualityAssuranceEducationalGoal]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class EducationalQualityAssuranceEducationalGoalController : GenericContr
     /// Get specific data (EducationalQualityAssuranceEducationalGoal) by id.
     /// </summary>
     /// <returns>Array[EducationalQualityAssuranceEducationalGoal]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class EducationalQualityAssuranceEducationalGoalController : GenericContr
     /// Creates new EducationalQualityAssuranceEducationalGoal entry.
     /// </summary>
     /// <returns>EducationalQualityAssuranceEducationalGoal</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(EducationalQualityAssuranceEducationalGoalDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class EducationalQualityAssuranceEducationalGoalController : GenericContr
     /// Creates multiple instance of EducationalQualityAssuranceEducationalGoal.
     /// </summary>
     /// <returns>Array[EducationalQualityAssuranceEducationalGoal]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<EducationalQualityAssuranceEducationalGoalDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class EducationalQualityAssuranceEducationalGoalController : GenericContr
     /// Updates multiple property of EducationalQualityAssuranceEducationalGoal.
     /// </summary>
     /// <returns>EducationalQualityAssuranceEducationalGoal</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, EducationalQualityAssuranceEducationalGoalDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class EducationalQualityAssuranceEducationalGoalController : GenericContr
     /// Deletes single EducationalQualityAssuranceEducationalGoal entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class ScheduleMergeController : GenericController<ScheduleMerge, IScheduleMergeService, ScheduleMergeDto, GetScheduleMergeDto>
 {
     public ScheduleMergeController(IMapper mapper, IScheduleMergeService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class ScheduleMergeController : GenericController<ScheduleMerge, ISchedul
     /// Get all data.
     /// </summary>
     /// <returns>Array[ScheduleMerge]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class ScheduleMergeController : GenericController<ScheduleMerge, ISchedul
     /// Get specific data (ScheduleMerge) by id.
     /// </summary>
     /// <returns>Array[ScheduleMerge]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class ScheduleMergeController : GenericController<ScheduleMerge, ISchedul
     /// Creates new ScheduleMerge entry.
     /// </summary>
     /// <returns>ScheduleMerge</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(ScheduleMergeDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class ScheduleMergeController : GenericController<ScheduleMerge, ISchedul
     /// Creates multiple instance of ScheduleMerge.
     /// </summary>
     /// <returns>Array[ScheduleMerge]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<ScheduleMergeDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class ScheduleMergeController : GenericController<ScheduleMerge, ISchedul
     /// Updates multiple property of ScheduleMerge.
     /// </summary>
     /// <returns>ScheduleMerge</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, ScheduleMergeDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class ScheduleMergeController : GenericController<ScheduleMerge, ISchedul
     /// Deletes single ScheduleMerge entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

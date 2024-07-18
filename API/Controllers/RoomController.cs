@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class RoomController : GenericController<Room, IRoomService, RoomDto, GetRoomDto>
 {
     public RoomController(IMapper mapper, IRoomService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     /// Get all data.
     /// </summary>
     /// <returns>Array[Room]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     /// Get Room by Building id.
     /// </summary>
     /// <returns>Array[Room]</returns>
-    [HttpGet("/Api/[controller]/Building/{buildingId:int}")]
+    [HttpGet("Building/{buildingId:int}")]
     public async Task<ActionResult> GetRoomByBuildingId(int buildingId)
     {
         return Ok(_mapper.Map<ICollection<GetRoomDto>>(await _repo.GetRoomByBuildingId(buildingId)));
@@ -42,7 +42,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     /// Get specific data (Room) by id.
     /// </summary>
     /// <returns>Array[Room]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -52,7 +52,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     /// Creates new Room entry.
     /// </summary>
     /// <returns>Room</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(RoomDto item)
     {
         return await GenericCreate(item);
@@ -62,7 +62,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     /// Creates multiple instance of Room.
     /// </summary>
     /// <returns>Array[Room]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<RoomDto> items)
     {
         return await GenericCreateAll(items);
@@ -72,7 +72,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     /// Updates multiple property of Room.
     /// </summary>
     /// <returns>Room</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, RoomDto item)
     {
         return await GenericUpdate(id, item);
@@ -82,7 +82,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     /// Deletes single Room entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

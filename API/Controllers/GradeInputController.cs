@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class GradeInputController : GenericController<GradeInput, IGradeInputService, GradeInputDto, GetGradeInputDto>
 {
     public GradeInputController(IMapper mapper, IGradeInputService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class GradeInputController : GenericController<GradeInput, IGradeInputSer
     /// Get all data.
     /// </summary>
     /// <returns>Array[GradeInput]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class GradeInputController : GenericController<GradeInput, IGradeInputSer
     /// Get specific data (GradeInput) by id.
     /// </summary>
     /// <returns>Array[GradeInput]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class GradeInputController : GenericController<GradeInput, IGradeInputSer
     /// Creates new GradeInput entry.
     /// </summary>
     /// <returns>GradeInput</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(GradeInputDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class GradeInputController : GenericController<GradeInput, IGradeInputSer
     /// Creates multiple instance of GradeInput.
     /// </summary>
     /// <returns>Array[GradeInput]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<GradeInputDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class GradeInputController : GenericController<GradeInput, IGradeInputSer
     /// Updates multiple property of GradeInput.
     /// </summary>
     /// <returns>GradeInput</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, GradeInputDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class GradeInputController : GenericController<GradeInput, IGradeInputSer
     /// Deletes single GradeInput entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

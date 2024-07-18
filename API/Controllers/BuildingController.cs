@@ -13,8 +13,8 @@ using Microsoft.AspNetCore.Rewrite;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class BuildingController : GenericController<Building, IBuildingService, BuildingDto, GetBuildingDto>
 {
     private readonly ConfigurationManager _configurationManager;
@@ -31,7 +31,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
     /// Get all data.
     /// </summary>
     /// <returns>Array[Building]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -41,7 +41,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
     /// Get Building by Campus id.
     /// </summary>
     /// <returns>Array[Building]</returns>
-    [HttpGet("/Api/[controller]/Campus/{campusId:int}")]
+    [HttpGet("Campus/{campusId:int}")]
     public async Task<ActionResult> GetBuildingByCampusId(int campusId)
     {
         return Ok(_mapper.Map<ICollection<GetBuildingDto>>(await _repo.GetBuildingByCampusId(campusId)));
@@ -51,7 +51,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
     /// Get specific data (Building) by id.
     /// </summary>
     /// <returns>Array[Building]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -61,7 +61,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
     /// Creates new Building entry.
     /// </summary>
     /// <returns>Building</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction([FromForm] BuildingDto item, [FromForm] List<IFormFile> files)
     {
         var model = _mapper.Map<Building>(item);
@@ -89,7 +89,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
     /// Updates multiple property of Building.
     /// </summary>
     /// <returns>Building</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, [FromForm] BuildingDto item, [FromForm] List<IFormFile> files)
     {
         var record = await _repo.GetAsync(id);
@@ -135,7 +135,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
     /// Deletes single Building entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

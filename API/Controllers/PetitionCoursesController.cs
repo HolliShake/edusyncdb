@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class PetitionCoursesController : GenericController<PetitionCourses, IPetitionCoursesService, PetitionCoursesDto, GetPetitionCoursesDto>
 {
     public PetitionCoursesController(IMapper mapper, IPetitionCoursesService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class PetitionCoursesController : GenericController<PetitionCourses, IPet
     /// Get all data.
     /// </summary>
     /// <returns>Array[PetitionCourses]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class PetitionCoursesController : GenericController<PetitionCourses, IPet
     /// Get specific data (PetitionCourses) by id.
     /// </summary>
     /// <returns>Array[PetitionCourses]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class PetitionCoursesController : GenericController<PetitionCourses, IPet
     /// Creates new PetitionCourses entry.
     /// </summary>
     /// <returns>PetitionCourses</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(PetitionCoursesDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class PetitionCoursesController : GenericController<PetitionCourses, IPet
     /// Creates multiple instance of PetitionCourses.
     /// </summary>
     /// <returns>Array[PetitionCourses]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<PetitionCoursesDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class PetitionCoursesController : GenericController<PetitionCourses, IPet
     /// Updates multiple property of PetitionCourses.
     /// </summary>
     /// <returns>PetitionCourses</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, PetitionCoursesDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class PetitionCoursesController : GenericController<PetitionCourses, IPet
     /// Deletes single PetitionCourses entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

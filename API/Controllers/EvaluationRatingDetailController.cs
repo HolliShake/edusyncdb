@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class EvaluationRatingDetailController : GenericController<EvaluationRatingDetail, IEvaluationRatingDetailService, EvaluationRatingDetailDto, GetEvaluationRatingDetailDto>
 {
     public EvaluationRatingDetailController(IMapper mapper, IEvaluationRatingDetailService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class EvaluationRatingDetailController : GenericController<EvaluationRati
     /// Get all data.
     /// </summary>
     /// <returns>Array[EvaluationRatingDetail]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class EvaluationRatingDetailController : GenericController<EvaluationRati
     /// Get specific data (EvaluationRatingDetail) by id.
     /// </summary>
     /// <returns>Array[EvaluationRatingDetail]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class EvaluationRatingDetailController : GenericController<EvaluationRati
     /// Creates new EvaluationRatingDetail entry.
     /// </summary>
     /// <returns>EvaluationRatingDetail</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(EvaluationRatingDetailDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class EvaluationRatingDetailController : GenericController<EvaluationRati
     /// Creates multiple instance of EvaluationRatingDetail.
     /// </summary>
     /// <returns>Array[EvaluationRatingDetail]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<EvaluationRatingDetailDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class EvaluationRatingDetailController : GenericController<EvaluationRati
     /// Updates multiple property of EvaluationRatingDetail.
     /// </summary>
     /// <returns>EvaluationRatingDetail</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, EvaluationRatingDetailDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class EvaluationRatingDetailController : GenericController<EvaluationRati
     /// Deletes single EvaluationRatingDetail entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

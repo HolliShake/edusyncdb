@@ -30,7 +30,7 @@ var app = builder.Build();
 app.UseDeveloperExceptionPage();
 
 app.UseCors(x => x
-    .WithOrigins("https://localhost:5173", "https://127.0.0.1:5173", "https://localhost:4000")
+    .WithOrigins("https://*:3001", "https://*:3001")
     .AllowAnyMethod()
     .AllowAnyHeader()
     .WithExposedHeaders("*")
@@ -51,8 +51,19 @@ app.UseSwaggerAuthorized();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.DocumentTitle = app.Configuration["App"];
-    c.SwaggerEndpoint("v1/swagger.json", app.Configuration["App"]);
+    var title = app.Configuration["App"];
+
+    c.DocumentTitle = title;
+
+    if (app.Environment.IsProduction() || app.Environment.IsDevelopment())
+    {
+        c.SwaggerEndpoint($"/swagger/{title}/swagger.json", title);
+    }
+    else
+    {
+        c.SwaggerEndpoint($"/dev/swagger/{title}/swagger.json", title);
+    }
+
     c.ConfigObject.AdditionalItems.Add("persistAuthorization", "true");
 });
 

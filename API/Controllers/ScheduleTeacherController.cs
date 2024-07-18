@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class ScheduleTeacherController : GenericController<ScheduleTeacher, IScheduleTeacherService, ScheduleTeacherDto, GetScheduleTeacherDto>
 {
     public ScheduleTeacherController(IMapper mapper, IScheduleTeacherService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class ScheduleTeacherController : GenericController<ScheduleTeacher, ISch
     /// Get all data.
     /// </summary>
     /// <returns>Array[ScheduleTeacher]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class ScheduleTeacherController : GenericController<ScheduleTeacher, ISch
     /// Get specific data (ScheduleTeacher) by id.
     /// </summary>
     /// <returns>Array[ScheduleTeacher]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class ScheduleTeacherController : GenericController<ScheduleTeacher, ISch
     /// Creates new ScheduleTeacher entry.
     /// </summary>
     /// <returns>ScheduleTeacher</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(ScheduleTeacherDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class ScheduleTeacherController : GenericController<ScheduleTeacher, ISch
     /// Creates multiple instance of ScheduleTeacher.
     /// </summary>
     /// <returns>Array[ScheduleTeacher]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<ScheduleTeacherDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class ScheduleTeacherController : GenericController<ScheduleTeacher, ISch
     /// Updates multiple property of ScheduleTeacher.
     /// </summary>
     /// <returns>ScheduleTeacher</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, ScheduleTeacherDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class ScheduleTeacherController : GenericController<ScheduleTeacher, ISch
     /// Deletes single ScheduleTeacher entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class CourseCreditingController : GenericController<CourseCrediting, ICourseCreditingService, CourseCreditingDto, GetCourseCreditingDto>
 {
     public CourseCreditingController(IMapper mapper, ICourseCreditingService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     /// Get all data.
     /// </summary>
     /// <returns>Array[CourseCrediting]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     /// Creates new CourseCrediting entry.
     /// </summary>
     /// <returns>CourseCrediting</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(CourseCreditingDto item)
     {
         return await GenericCreate(item);
@@ -42,7 +42,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     /// Creates multiple instance of CourseCrediting.
     /// </summary>
     /// <returns>Array[CourseCrediting]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<CourseCreditingDto> items)
     {
         return await GenericCreateAll(items);
@@ -52,7 +52,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     /// Updates multiple property of CourseCrediting.
     /// </summary>
     /// <returns>CourseCrediting</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, CourseCreditingDto item)
     {
         return await GenericUpdate(id, item);
@@ -62,7 +62,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     /// Deletes single CourseCrediting entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

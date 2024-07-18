@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class SectorDisciplineController : GenericController<SectorDiscipline, ISectorDisciplineService, SectorDisciplineDto, GetSectorDisciplineDto>
 {
     public SectorDisciplineController(IMapper mapper, ISectorDisciplineService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     /// Get all data.
     /// </summary>
     /// <returns>Array[SectorDiscipline]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     /// Get all SectorDiscipline without parent.
     /// </summary>
     /// <returns>Array[SectorDiscipline]</returns>
-    [HttpGet("/Api/[controller]/IsParent/all")]
+    [HttpGet("IsParent/all")]
     public async Task<ActionResult> GetParentSectorDiscipline()
     {
         return Ok(_mapper.Map<ICollection<GetSectorDisciplineDto>>(await _repo.GetAllParentSectorDiscipline()));
@@ -42,7 +42,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     /// Get SectorDiscipline by ParentSectorDiscipline id.
     /// </summary>
     /// <returns>Array[SectorDiscipline]</returns>
-    [HttpGet("/Api/[controller]/ParentSectorDiscipline/{parentSectorDisciplineId:int}")]
+    [HttpGet("ParentSectorDiscipline/{parentSectorDisciplineId:int}")]
     public async Task<ActionResult> GetSectorDisciplineByParentSectorDisciplineId(int parentSectorDisciplineId)
     {
         return Ok(_mapper.Map<ICollection<GetSectorDisciplineDto>>(await _repo.GetSectorDisciplineByParentSectorDisciplineId(parentSectorDisciplineId)));
@@ -52,7 +52,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     /// Get specific data (SectorDiscipline) by id.
     /// </summary>
     /// <returns>Array[SectorDiscipline]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -62,7 +62,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     /// Creates new SectorDiscipline entry.
     /// </summary>
     /// <returns>SectorDiscipline</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(SectorDisciplineDto item)
     {
         return await GenericCreate(item);
@@ -72,7 +72,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     /// Creates multiple instance of SectorDiscipline.
     /// </summary>
     /// <returns>Array[SectorDiscipline]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<SectorDisciplineDto> items)
     {
         return await GenericCreateAll(items);
@@ -82,7 +82,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     /// Updates multiple property of SectorDiscipline.
     /// </summary>
     /// <returns>SectorDiscipline</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, SectorDisciplineDto item)
     {
         return await GenericUpdate(id, item);
@@ -92,7 +92,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     /// Deletes single SectorDiscipline entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

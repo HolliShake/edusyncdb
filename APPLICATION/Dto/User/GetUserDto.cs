@@ -1,3 +1,5 @@
+using APPLICATION.Dto.UserAccess;
+
 namespace APPLICATION.Dto.User;
 
 public class GetUserDto
@@ -12,4 +14,5 @@ public class GetUserDto
     public string Address { get; set; }
     public DateTime BirthDate { get; set; }
     public string Role { get; set; }
+    public ICollection<GetUserAccessDto> AccessList { get; set; }
 }

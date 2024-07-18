@@ -11,13 +11,10 @@ public class ApiInjector
 {
     public static void Inject(IServiceCollection services, ConfigurationManager configuration)
     {
-        // Sql
-        services.AddDbContext<AppDbContext>(option => option.UseSqlServer(
-            (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) 
-                ? configuration.GetConnectionString("win32")
-                : configuration.GetConnectionString("linux")
-        ));
+        // Sql PRODUCTION
+        services.AddDbContext<AppDbContext>(option => option.UseSqlServer(configuration.GetConnectionString("Database")));
         
+
         // Authentication
         services.AddAuthentication(
                 options =>
@@ -61,8 +58,18 @@ public class ApiInjector
                 }
             };
             
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = configuration["App"], Description = "Api description here...", Version = "v1" });
-          
+            options.SwaggerDoc(configuration["App"], new OpenApiInfo { Title = configuration["App"], Description = configuration["Description"], Version = "v1" });
+            
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
+            if (env.Equals("Staging"))
+            {
+                options.AddServer(new OpenApiServer
+                {
+                    Url = "/dev",
+                    Description = "Development"
+                });
+            }
+
             var filePath = Path.Combine(System.AppContext.BaseDirectory, "API.xml");
             options.IncludeXmlComments(filePath);
             options.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);

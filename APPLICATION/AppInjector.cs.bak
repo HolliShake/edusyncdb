@@ -37,7 +37,6 @@ public class AppInjector
 			services.AddAutoMapper(typeof(EducationalQualityAssuranceTypeMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(CourseMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(SectorDisciplineMapper)); /* added by make.py */
-			services.AddAutoMapper(typeof(SkillsFrameworkTrackSpecializationMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(CourseRequisiteMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(TableObjectMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(AccountGroupMapper)); /* added by make.py */
@@ -120,6 +119,7 @@ public class AppInjector
 			services.AddAutoMapper(typeof(SkillsFrameworkSkillsToCompetencyMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(SkillsFrameworkTrackSpecializationMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(VoucherMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(VoucherAppliedMapper)); /* added by make.py */
 		#endregion
 
         // Jwt

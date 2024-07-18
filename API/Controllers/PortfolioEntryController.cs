@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class PortfolioEntryController : GenericController<PortfolioEntry, IPortfolioEntryService, PortfolioEntryDto, GetPortfolioEntryDto>
 {
     public PortfolioEntryController(IMapper mapper, IPortfolioEntryService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class PortfolioEntryController : GenericController<PortfolioEntry, IPortf
     /// Get all data.
     /// </summary>
     /// <returns>Array[PortfolioEntry]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class PortfolioEntryController : GenericController<PortfolioEntry, IPortf
     /// Get specific data (PortfolioEntry) by id.
     /// </summary>
     /// <returns>Array[PortfolioEntry]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class PortfolioEntryController : GenericController<PortfolioEntry, IPortf
     /// Creates new PortfolioEntry entry.
     /// </summary>
     /// <returns>PortfolioEntry</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(PortfolioEntryDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class PortfolioEntryController : GenericController<PortfolioEntry, IPortf
     /// Creates multiple instance of PortfolioEntry.
     /// </summary>
     /// <returns>Array[PortfolioEntry]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<PortfolioEntryDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class PortfolioEntryController : GenericController<PortfolioEntry, IPortf
     /// Updates multiple property of PortfolioEntry.
     /// </summary>
     /// <returns>PortfolioEntry</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, PortfolioEntryDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class PortfolioEntryController : GenericController<PortfolioEntry, IPortf
     /// Deletes single PortfolioEntry entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

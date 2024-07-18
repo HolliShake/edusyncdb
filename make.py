@@ -290,7 +290,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace {controller-namespace};
 
 [ApiController]
-[Route("[controller]")]
+[Route("Api/[controller]")]
 public class {controller-name}Controller : {generic-name}<{controller-name}, I{controller-name}Service, {controller-name}Dto, Get{controller-name}Dto>
 {
     public {controller-name}Controller(IMapper mapper, I{controller-name}Service repo):base(mapper, repo)
@@ -302,7 +302,7 @@ public class {controller-name}Controller : {generic-name}<{controller-name}, I{c
     /// Get all data.
     /// </summary>
     /// <returns>Array[{controller-name}]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -312,7 +312,7 @@ public class {controller-name}Controller : {generic-name}<{controller-name}, I{c
     /// Get specific data ({controller-name}) by id.
     /// </summary>
     /// <returns>Array[{controller-name}]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -322,7 +322,7 @@ public class {controller-name}Controller : {generic-name}<{controller-name}, I{c
     /// Creates new {controller-name} entry.
     /// </summary>
     /// <returns>{controller-name}</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction({controller-name}Dto item)
     {
         return await GenericCreate(item);
@@ -332,7 +332,7 @@ public class {controller-name}Controller : {generic-name}<{controller-name}, I{c
     /// Creates multiple instance of {controller-name}.
     /// </summary>
     /// <returns>Array[{controller-name}]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<{controller-name}Dto> items)
     {
         return await GenericCreateAll(items);
@@ -342,7 +342,7 @@ public class {controller-name}Controller : {generic-name}<{controller-name}, I{c
     /// Updates multiple property of {controller-name}.
     /// </summary>
     /// <returns>{controller-name}</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, {controller-name}Dto item)
     {
         return await GenericUpdate(id, item);
@@ -352,7 +352,7 @@ public class {controller-name}Controller : {generic-name}<{controller-name}, I{c
     /// Deletes single {controller-name} entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

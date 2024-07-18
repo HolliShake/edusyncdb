@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class AccessListActionController : GenericController<AccessListAction, IAccessListActionService, AccessListActionDto, GetAccessListActionDto>
 {
     public AccessListActionController(IMapper mapper, IAccessListActionService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class AccessListActionController : GenericController<AccessListAction, IA
     /// Get all data.
     /// </summary>
     /// <returns>Array[AccessListAction]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class AccessListActionController : GenericController<AccessListAction, IA
     /// Get AccessListAction by AccessList id.
     /// </summary>
     /// <returns>Array[AccessListAction]</returns>
-    [HttpGet("/Api/[controller]/AccessList/{accessListId:int}")]
+    [HttpGet("AccessList/{accessListId:int}")]
     public async Task<ActionResult> GetActionAccessListActionByAccessListId(int accessListId)
     {
         return Ok(_mapper.Map<ICollection<GetAccessListActionDto>>(await _repo.GetAccessListActionsByAccessListId(accessListId)));
@@ -42,7 +42,7 @@ public class AccessListActionController : GenericController<AccessListAction, IA
     /// Get specific data (AccessListAction) by id.
     /// </summary>
     /// <returns>Array[AccessListAction]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -52,7 +52,7 @@ public class AccessListActionController : GenericController<AccessListAction, IA
     /// Creates new AccessListAction entry.
     /// </summary>
     /// <returns>AccessListAction</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AccessListActionDto item)
     {
         return await GenericCreate(item);
@@ -62,7 +62,7 @@ public class AccessListActionController : GenericController<AccessListAction, IA
     /// Creates multiple instance of AccessListAction.
     /// </summary>
     /// <returns>Array[AccessListAction]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<AccessListActionDto> items)
     {
         return await GenericCreateAll(items);
@@ -72,7 +72,7 @@ public class AccessListActionController : GenericController<AccessListAction, IA
     /// Updates multiple property of AccessListAction.
     /// </summary>
     /// <returns>AccessListAction</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AccessListActionDto item)
     {
         return await GenericUpdate(id, item);
@@ -82,7 +82,7 @@ public class AccessListActionController : GenericController<AccessListAction, IA
     /// Deletes single AccessListAction entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

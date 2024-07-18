@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class SkillsFrameworkSkillsController : GenericController<SkillsFrameworkSkills, ISkillsFrameworkSkillsService, SkillsFrameworkSkillsDto, GetSkillsFrameworkSkillsDto>
 {
     public SkillsFrameworkSkillsController(IMapper mapper, ISkillsFrameworkSkillsService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class SkillsFrameworkSkillsController : GenericController<SkillsFramework
     /// Get all data.
     /// </summary>
     /// <returns>Array[SkillsFrameworkSkills]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class SkillsFrameworkSkillsController : GenericController<SkillsFramework
     /// Get specific data (SkillsFrameworkSkills) by id.
     /// </summary>
     /// <returns>Array[SkillsFrameworkSkills]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class SkillsFrameworkSkillsController : GenericController<SkillsFramework
     /// Creates new SkillsFrameworkSkills entry.
     /// </summary>
     /// <returns>SkillsFrameworkSkills</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(SkillsFrameworkSkillsDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class SkillsFrameworkSkillsController : GenericController<SkillsFramework
     /// Creates multiple instance of SkillsFrameworkSkills.
     /// </summary>
     /// <returns>Array[SkillsFrameworkSkills]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<SkillsFrameworkSkillsDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class SkillsFrameworkSkillsController : GenericController<SkillsFramework
     /// Updates multiple property of SkillsFrameworkSkills.
     /// </summary>
     /// <returns>SkillsFrameworkSkills</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, SkillsFrameworkSkillsDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class SkillsFrameworkSkillsController : GenericController<SkillsFramework
     /// Deletes single SkillsFrameworkSkills entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

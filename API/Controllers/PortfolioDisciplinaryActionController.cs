@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class PortfolioDisciplinaryActionController : GenericController<PortfolioDisciplinaryAction, IPortfolioDisciplinaryActionService, PortfolioDisciplinaryActionDto, GetPortfolioDisciplinaryActionDto>
 {
     public PortfolioDisciplinaryActionController(IMapper mapper, IPortfolioDisciplinaryActionService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class PortfolioDisciplinaryActionController : GenericController<Portfolio
     /// Get all data.
     /// </summary>
     /// <returns>Array[PortfolioDisciplinaryAction]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class PortfolioDisciplinaryActionController : GenericController<Portfolio
     /// Get specific data (PortfolioDisciplinaryAction) by id.
     /// </summary>
     /// <returns>Array[PortfolioDisciplinaryAction]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class PortfolioDisciplinaryActionController : GenericController<Portfolio
     /// Creates new PortfolioDisciplinaryAction entry.
     /// </summary>
     /// <returns>PortfolioDisciplinaryAction</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(PortfolioDisciplinaryActionDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class PortfolioDisciplinaryActionController : GenericController<Portfolio
     /// Creates multiple instance of PortfolioDisciplinaryAction.
     /// </summary>
     /// <returns>Array[PortfolioDisciplinaryAction]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<PortfolioDisciplinaryActionDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class PortfolioDisciplinaryActionController : GenericController<Portfolio
     /// Updates multiple property of PortfolioDisciplinaryAction.
     /// </summary>
     /// <returns>PortfolioDisciplinaryAction</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, PortfolioDisciplinaryActionDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class PortfolioDisciplinaryActionController : GenericController<Portfolio
     /// Deletes single PortfolioDisciplinaryAction entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

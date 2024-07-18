@@ -123,6 +123,7 @@ public class InfraInjector
 			services.AddScoped<ISkillsFrameworkSkillsToCompetencyService, SkillsFrameworkSkillsToCompetencyService>(); /* added by make.py */
 			services.AddScoped<ISkillsFrameworkTrackSpecializationService, SkillsFrameworkTrackSpecializationService>(); /* added by make.py */
 			services.AddScoped<IVoucherService, VoucherService>(); /* added by make.py */
+			services.AddScoped<IVoucherAppliedService, VoucherAppliedService>(); /* added by make.py */
 		#endregion
 
         // Identity

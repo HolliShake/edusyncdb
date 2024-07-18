@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class GradeBookItemDetailController : GenericController<GradeBookItemDetail, IGradeBookItemDetailService, GradeBookItemDetailDto, GetGradeBookItemDetailDto>
 {
     public GradeBookItemDetailController(IMapper mapper, IGradeBookItemDetailService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class GradeBookItemDetailController : GenericController<GradeBookItemDeta
     /// Get all data.
     /// </summary>
     /// <returns>Array[GradeBookItemDetail]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class GradeBookItemDetailController : GenericController<GradeBookItemDeta
     /// Get specific data (GradeBookItemDetail) by id.
     /// </summary>
     /// <returns>Array[GradeBookItemDetail]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class GradeBookItemDetailController : GenericController<GradeBookItemDeta
     /// Creates new GradeBookItemDetail entry.
     /// </summary>
     /// <returns>GradeBookItemDetail</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(GradeBookItemDetailDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class GradeBookItemDetailController : GenericController<GradeBookItemDeta
     /// Creates multiple instance of GradeBookItemDetail.
     /// </summary>
     /// <returns>Array[GradeBookItemDetail]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<GradeBookItemDetailDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class GradeBookItemDetailController : GenericController<GradeBookItemDeta
     /// Updates multiple property of GradeBookItemDetail.
     /// </summary>
     /// <returns>GradeBookItemDetail</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, GradeBookItemDetailDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class GradeBookItemDetailController : GenericController<GradeBookItemDeta
     /// Deletes single GradeBookItemDetail entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

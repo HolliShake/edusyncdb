@@ -8,8 +8,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class CurriculumController : GenericController<Curriculum, ICurriculumService, CurriculumDto, GetCurriculumDto>
 {
     public CurriculumController(IMapper mapper, ICurriculumService repo):base(mapper, repo)
@@ -21,7 +21,7 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
     /// Get all data.
     /// </summary>
     /// <returns>Array[Curriculum]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -31,7 +31,7 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
     /// Get Curriculum by AcademicProgram id.
     /// </summary>
     /// <returns>Array[Curriculum]</returns>
-    [HttpGet("/Api/[controller]/AcademicProgram/{academicProgramId:int}")]
+    [HttpGet("AcademicProgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetCurriculumByAcademicProgramId(int academicProgramId)
     {
         return Ok(_mapper.Map<ICollection<GetCurriculumDto>>(await _repo.GetCurriculumByAcademicProgramId(academicProgramId)));
@@ -41,7 +41,7 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
     /// Get specific data (Curriculum) by id.
     /// </summary>
     /// <returns>Array[Curriculum]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -51,7 +51,7 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
     /// Creates new Curriculum entry.
     /// </summary>
     /// <returns>Curriculum</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(CurriculumDto item)
     {
         return await GenericCreate(item);
@@ -61,7 +61,7 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
     /// Creates multiple instance of Curriculum.
     /// </summary>
     /// <returns>Array[Curriculum]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<CurriculumDto> items)
     {
         return await GenericCreateAll(items);
@@ -71,7 +71,7 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
     /// Updates multiple property of Curriculum.
     /// </summary>
     /// <returns>Curriculum</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, CurriculumDto item)
     {
         return await GenericUpdate(id, item);
@@ -81,7 +81,7 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
     /// Deletes single Curriculum entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

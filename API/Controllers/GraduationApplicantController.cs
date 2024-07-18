@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class GraduationApplicantController : GenericController<GraduationApplicant, IGraduationApplicantService, GraduationApplicantDto, GetGraduationApplicantDto>
 {
     public GraduationApplicantController(IMapper mapper, IGraduationApplicantService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class GraduationApplicantController : GenericController<GraduationApplica
     /// Get all data.
     /// </summary>
     /// <returns>Array[GraduationApplicant]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class GraduationApplicantController : GenericController<GraduationApplica
     /// Get specific data (GraduationApplicant) by id.
     /// </summary>
     /// <returns>Array[GraduationApplicant]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class GraduationApplicantController : GenericController<GraduationApplica
     /// Creates new GraduationApplicant entry.
     /// </summary>
     /// <returns>GraduationApplicant</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(GraduationApplicantDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class GraduationApplicantController : GenericController<GraduationApplica
     /// Creates multiple instance of GraduationApplicant.
     /// </summary>
     /// <returns>Array[GraduationApplicant]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<GraduationApplicantDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class GraduationApplicantController : GenericController<GraduationApplica
     /// Updates multiple property of GraduationApplicant.
     /// </summary>
     /// <returns>GraduationApplicant</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, GraduationApplicantDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class GraduationApplicantController : GenericController<GraduationApplica
     /// Deletes single GraduationApplicant entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

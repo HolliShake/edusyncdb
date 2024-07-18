@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class ParameterSubCategoryController : GenericController<ParameterSubCategory, IParameterSubCategoryService, ParameterSubCategoryDto, GetParameterSubCategoryDto>
 {
     public ParameterSubCategoryController(IMapper mapper, IParameterSubCategoryService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class ParameterSubCategoryController : GenericController<ParameterSubCate
     /// Get all data.
     /// </summary>
     /// <returns>Array[ParameterSubCategory]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class ParameterSubCategoryController : GenericController<ParameterSubCate
     /// Get specific data (ParameterSubCategory) by id.
     /// </summary>
     /// <returns>Array[ParameterSubCategory]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class ParameterSubCategoryController : GenericController<ParameterSubCate
     /// Creates new ParameterSubCategory entry.
     /// </summary>
     /// <returns>ParameterSubCategory</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(ParameterSubCategoryDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class ParameterSubCategoryController : GenericController<ParameterSubCate
     /// Creates multiple instance of ParameterSubCategory.
     /// </summary>
     /// <returns>Array[ParameterSubCategory]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<ParameterSubCategoryDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class ParameterSubCategoryController : GenericController<ParameterSubCate
     /// Updates multiple property of ParameterSubCategory.
     /// </summary>
     /// <returns>ParameterSubCategory</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, ParameterSubCategoryDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class ParameterSubCategoryController : GenericController<ParameterSubCate
     /// Deletes single ParameterSubCategory entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

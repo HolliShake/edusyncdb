@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class SkillsFrameworkPerformaceExpectationToJobRoleController : GenericController<SkillsFrameworkPerformaceExpectationToJobRole, ISkillsFrameworkPerformaceExpectationToJobRoleService, SkillsFrameworkPerformaceExpectationToJobRoleDto, GetSkillsFrameworkPerformaceExpectationToJobRoleDto>
 {
     public SkillsFrameworkPerformaceExpectationToJobRoleController(IMapper mapper, ISkillsFrameworkPerformaceExpectationToJobRoleService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class SkillsFrameworkPerformaceExpectationToJobRoleController : GenericCo
     /// Get all data.
     /// </summary>
     /// <returns>Array[SkillsFrameworkPerformaceExpectationToJobRole]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class SkillsFrameworkPerformaceExpectationToJobRoleController : GenericCo
     /// Get specific data (SkillsFrameworkPerformaceExpectationToJobRole) by id.
     /// </summary>
     /// <returns>Array[SkillsFrameworkPerformaceExpectationToJobRole]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class SkillsFrameworkPerformaceExpectationToJobRoleController : GenericCo
     /// Creates new SkillsFrameworkPerformaceExpectationToJobRole entry.
     /// </summary>
     /// <returns>SkillsFrameworkPerformaceExpectationToJobRole</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(SkillsFrameworkPerformaceExpectationToJobRoleDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class SkillsFrameworkPerformaceExpectationToJobRoleController : GenericCo
     /// Creates multiple instance of SkillsFrameworkPerformaceExpectationToJobRole.
     /// </summary>
     /// <returns>Array[SkillsFrameworkPerformaceExpectationToJobRole]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<SkillsFrameworkPerformaceExpectationToJobRoleDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class SkillsFrameworkPerformaceExpectationToJobRoleController : GenericCo
     /// Updates multiple property of SkillsFrameworkPerformaceExpectationToJobRole.
     /// </summary>
     /// <returns>SkillsFrameworkPerformaceExpectationToJobRole</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, SkillsFrameworkPerformaceExpectationToJobRoleDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class SkillsFrameworkPerformaceExpectationToJobRoleController : GenericCo
     /// Deletes single SkillsFrameworkPerformaceExpectationToJobRole entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

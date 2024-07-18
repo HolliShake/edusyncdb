@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class ScholarshipRequirementController : GenericController<ScholarshipRequirement, IScholarshipRequirementService, ScholarshipRequirementDto, GetScholarshipRequirementDto>
 {
     public ScholarshipRequirementController(IMapper mapper, IScholarshipRequirementService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class ScholarshipRequirementController : GenericController<ScholarshipReq
     /// Get all data.
     /// </summary>
     /// <returns>Array[ScholarshipRequirement]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class ScholarshipRequirementController : GenericController<ScholarshipReq
     /// Get specific data (ScholarshipRequirement) by id.
     /// </summary>
     /// <returns>Array[ScholarshipRequirement]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class ScholarshipRequirementController : GenericController<ScholarshipReq
     /// Creates new ScholarshipRequirement entry.
     /// </summary>
     /// <returns>ScholarshipRequirement</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(ScholarshipRequirementDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class ScholarshipRequirementController : GenericController<ScholarshipReq
     /// Creates multiple instance of ScholarshipRequirement.
     /// </summary>
     /// <returns>Array[ScholarshipRequirement]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<ScholarshipRequirementDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class ScholarshipRequirementController : GenericController<ScholarshipReq
     /// Updates multiple property of ScholarshipRequirement.
     /// </summary>
     /// <returns>ScholarshipRequirement</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, ScholarshipRequirementDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class ScholarshipRequirementController : GenericController<ScholarshipReq
     /// Deletes single ScholarshipRequirement entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

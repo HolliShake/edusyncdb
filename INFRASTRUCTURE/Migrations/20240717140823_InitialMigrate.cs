@@ -3,10 +3,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace INFRASTRUCTURE.Migrations
 {
-    public partial class FinishedInitialEduSyncDb : Migration
+    /// <inheritdoc />
+    public partial class InitialMigrate : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -22,6 +26,20 @@ namespace INFRASTRUCTURE.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AcademicTerms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccessLists",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Subject = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IsGroup = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccessLists", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -475,6 +493,26 @@ namespace INFRASTRUCTURE.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AccessListActions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Action = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AccessListId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccessListActions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AccessListActions_AccessLists_AccessListId",
+                        column: x => x.AccessListId,
+                        principalTable: "AccessLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "TableObjects",
                 columns: table => new
                 {
@@ -851,6 +889,38 @@ namespace INFRASTRUCTURE.Migrations
                     table.ForeignKey(
                         name: "FK_PortfolioIncidents_Users_EncodedByUserId",
                         column: x => x.EncodedByUserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAccesses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    AccessListId = table.Column<int>(type: "int", nullable: false),
+                    AccessListActionId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAccesses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserAccesses_AccessListActions_AccessListActionId",
+                        column: x => x.AccessListActionId,
+                        principalTable: "AccessListActions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_UserAccesses_AccessLists_AccessListId",
+                        column: x => x.AccessListId,
+                        principalTable: "AccessLists",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_UserAccesses_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
@@ -1289,16 +1359,16 @@ namespace INFRASTRUCTURE.Migrations
                 {
                     table.PrimaryKey("PK_Parameters", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Parameters_Parameters_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "Parameters",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Parameters_ParameterSubCategories_ParameterSubCategoryId",
                         column: x => x.ParameterSubCategoryId,
                         principalTable: "ParameterSubCategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.NoAction);
+                    table.ForeignKey(
+                        name: "FK_Parameters_Parameters_ParentId",
+                        column: x => x.ParentId,
+                        principalTable: "Parameters",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -2682,6 +2752,38 @@ namespace INFRASTRUCTURE.Migrations
                         onDelete: ReferentialAction.NoAction);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AccessLists",
+                columns: new[] { "Id", "IsGroup", "Subject" },
+                values: new object[,]
+                {
+                    { 1, true, "Auth" },
+                    { 2, true, "Admin" },
+                    { 3, true, "SuperAdmin" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AccessListActions",
+                columns: new[] { "Id", "AccessListId", "Action" },
+                values: new object[,]
+                {
+                    { 1, 1, "all" },
+                    { 2, 1, "read" },
+                    { 3, 1, "create" },
+                    { 4, 1, "update" },
+                    { 5, 1, "delete" },
+                    { 6, 2, "all" },
+                    { 7, 2, "read" },
+                    { 8, 2, "create" },
+                    { 9, 2, "update" },
+                    { 10, 2, "delete" },
+                    { 11, 3, "all" },
+                    { 12, 3, "read" },
+                    { 13, 3, "create" },
+                    { 14, 3, "update" },
+                    { 15, 3, "delete" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AcademicCalendars_CycleId",
                 table: "AcademicCalendars",
@@ -2696,6 +2798,18 @@ namespace INFRASTRUCTURE.Migrations
                 name: "IX_AcademicPrograms_CollegeId",
                 table: "AcademicPrograms",
                 column: "CollegeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccessListActions_AccessListId",
+                table: "AccessListActions",
+                column: "AccessListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AccessLists_Subject",
+                table: "AccessLists",
+                column: "Subject",
+                unique: true,
+                filter: "[Subject] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AdmissionApplications_AdmissionApplicantId",
@@ -3453,6 +3567,21 @@ namespace INFRASTRUCTURE.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_UserAccesses_AccessListActionId",
+                table: "UserAccesses",
+                column: "AccessListActionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccesses_AccessListId",
+                table: "UserAccesses",
+                column: "AccessListId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccesses_UserId",
+                table: "UserAccesses",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_VoucherApplied_EnrollmentBillingId",
                 table: "VoucherApplied",
                 column: "EnrollmentBillingId");
@@ -3463,6 +3592,7 @@ namespace INFRASTRUCTURE.Migrations
                 column: "VoucherId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -3559,6 +3689,9 @@ namespace INFRASTRUCTURE.Migrations
                 name: "SkillsFrameworkPerformaceExpectationToJobRoles");
 
             migrationBuilder.DropTable(
+                name: "UserAccesses");
+
+            migrationBuilder.DropTable(
                 name: "VoucherApplied");
 
             migrationBuilder.DropTable(
@@ -3628,6 +3761,9 @@ namespace INFRASTRUCTURE.Migrations
                 name: "SkillsFrameworkPerformanceExpectations");
 
             migrationBuilder.DropTable(
+                name: "AccessListActions");
+
+            migrationBuilder.DropTable(
                 name: "EnrollmentBillings");
 
             migrationBuilder.DropTable(
@@ -3686,6 +3822,9 @@ namespace INFRASTRUCTURE.Migrations
 
             migrationBuilder.DropTable(
                 name: "SkillsFrameworkJobRoleJobRoles");
+
+            migrationBuilder.DropTable(
+                name: "AccessLists");
 
             migrationBuilder.DropTable(
                 name: "EnrollmentFees");

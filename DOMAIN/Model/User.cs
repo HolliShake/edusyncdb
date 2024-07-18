@@ -14,4 +14,5 @@ public class User : IdentityUser
     public string Address { get; set; }
     public DateTime BirthDate { get; set; }
     public string Role { get; set; }
+    public ICollection<UserAccess> AccessList { get; set; }
 }

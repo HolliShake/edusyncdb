@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollmentFeeService, EnrollmentFeeDto, GetEnrollmentFeeDto>
 {
     public EnrollmentFeeController(IMapper mapper, IEnrollmentFeeService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     /// Get all data.
     /// </summary>
     /// <returns>Array[EnrollmentFee]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     /// Get EnrollmentFee by TableObject id.
     /// </summary>
     /// <returns>Array[EnrollmentFee]</returns>
-    [HttpGet("/Api/[controller]/Object/{objectId:int}")]
+    [HttpGet("Object/{objectId:int}")]
     public async Task<ActionResult> GetEnrollmentFeeByObjectId(int objectId)
     {
         return Ok(_mapper.Map<ICollection<GetEnrollmentFeeDto>>(await _repo.GetEnrollmentFeesByObjectId(objectId)));
@@ -42,7 +42,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     /// Get EnrollmentFee by FundSource id.
     /// </summary>
     /// <returns>Array[EnrollmentFee]</returns>
-    [HttpGet("/Api/[controller]/FundSource/{fundSourceId:int}")]
+    [HttpGet("FundSource/{fundSourceId:int}")]
     public async Task<ActionResult> GetEnrollmentFeeByFundSourceId(int fundSourceId)
     {
         return Ok(_mapper.Map<ICollection<GetEnrollmentFeeDto>>(await _repo.GetEnrollmentFeesByFundSourceId(fundSourceId)));
@@ -52,7 +52,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     /// Get specific data (EnrollmentFee) by id.
     /// </summary>
     /// <returns>Array[EnrollmentFee]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -62,7 +62,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     /// Creates new EnrollmentFee entry.
     /// </summary>
     /// <returns>EnrollmentFee</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(EnrollmentFeeDto item)
     {
         return await GenericCreate(item);
@@ -72,7 +72,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     /// Creates multiple instance of EnrollmentFee.
     /// </summary>
     /// <returns>Array[EnrollmentFee]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<EnrollmentFeeDto> items)
     {
         return await GenericCreateAll(items);
@@ -82,7 +82,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     /// Updates multiple property of EnrollmentFee.
     /// </summary>
     /// <returns>EnrollmentFee</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, EnrollmentFeeDto item)
     {
         return await GenericUpdate(id, item);
@@ -92,7 +92,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     /// Deletes single EnrollmentFee entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class GradeBookScoreController : GenericController<GradeBookScore, IGradeBookScoreService, GradeBookScoreDto, GetGradeBookScoreDto>
 {
     public GradeBookScoreController(IMapper mapper, IGradeBookScoreService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     /// Get all data.
     /// </summary>
     /// <returns>Array[GradeBookScore]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     /// Get specific data (GradeBookScore) by id.
     /// </summary>
     /// <returns>Array[GradeBookScore]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     /// Creates new GradeBookScore entry.
     /// </summary>
     /// <returns>GradeBookScore</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(GradeBookScoreDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     /// Creates multiple instance of GradeBookScore.
     /// </summary>
     /// <returns>Array[GradeBookScore]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<GradeBookScoreDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     /// Updates multiple property of GradeBookScore.
     /// </summary>
     /// <returns>GradeBookScore</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, GradeBookScoreDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     /// Deletes single GradeBookScore entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

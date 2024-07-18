@@ -120,6 +120,7 @@ public class AppInjector
 			services.AddAutoMapper(typeof(SkillsFrameworkTrackSpecializationMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(VoucherMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(VoucherAppliedMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(UserAccessMapper)); /* added by make.py */
 		#endregion
 
         // Jwt

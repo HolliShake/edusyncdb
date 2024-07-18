@@ -10,8 +10,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class ScheduleController : GenericController<Schedule, IScheduleService, ScheduleDto, GetScheduleDto>
 {
     public ScheduleController(IMapper mapper, IScheduleService repo):base(mapper, repo)
@@ -33,7 +33,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     /// Get Schedule by AcademicPorgram id.
     /// </summary>
     /// <returns>Array[Schedule]</returns>
-    [HttpGet("/Api/[controller]/AcademicPorgram/{academicProgramId:int}")]
+    [HttpGet("AcademicPorgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetScheduleByAcademicPorgramId(int academicProgramId)
     {
         return Ok(_mapper.Map<ICollection<GetScheduleDto>>(await _repo.GetSchedulesByAcademicProgramId(academicProgramId)));
@@ -43,7 +43,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     /// Get Schedule by Cycle id.
     /// </summary>
     /// <returns>Array[Schedule]</returns>
-    [HttpGet("/Api/[controller]/Cycle/{cycleId:int}")]
+    [HttpGet("Cycle/{cycleId:int}")]
     public async Task<ActionResult> GetScheduleByCycleId(int cycleId)
     {
         return Ok(_mapper.Map<ICollection<GetScheduleDto>>(await _repo.GetSchedulesByCycleId(cycleId)));
@@ -53,7 +53,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     /// Get Schedule by Room id.
     /// </summary>
     /// <returns>Array[Schedule]</returns>
-    [HttpGet("/Api/[controller]/Room/{roomId:int}")]
+    [HttpGet("Room/{roomId:int}")]
     public async Task<ActionResult> GetScheduleByRoomId(int roomId)
     {
         return Ok(_mapper.Map<ICollection<GetScheduleDto>>(await _repo.GetSchedulesByRoomId(roomId)));
@@ -63,7 +63,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     /// Get Schedule by Course id.
     /// </summary>
     /// <returns>Array[Schedule]</returns>
-    [HttpGet("/Api/[controller]/Course/{courseId:int}")]
+    [HttpGet("Course/{courseId:int}")]
     public async Task<ActionResult> GetScheduleByCourseId(int courseId)
     {
         return Ok(_mapper.Map<ICollection<GetScheduleDto>>(await _repo.GetSchedulesByCourseId(courseId)));
@@ -73,7 +73,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     /// Get specific data (Schedule) by id.
     /// </summary>
     /// <returns>Array[Schedule]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -83,7 +83,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     /// Creates new Schedule entry.
     /// </summary>
     /// <returns>Schedule</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(ScheduleDto item)
     {
         return await GenericCreate(item);
@@ -93,7 +93,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     /// Creates multiple instance of Schedule.
     /// </summary>
     /// <returns>Array[Schedule]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<ScheduleDto> items)
     {
         return await GenericCreateAll(items);
@@ -103,7 +103,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     /// Updates multiple property of Schedule.
     /// </summary>
     /// <returns>Schedule</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, ScheduleDto item)
     {
         return await GenericUpdate(id, item);
@@ -113,7 +113,7 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     /// Deletes single Schedule entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

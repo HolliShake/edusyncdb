@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class TableObjectController : GenericController<TableObject, ITableObjectService, TableObjectDto, GetTableObjectDto>
 {
     public TableObjectController(IMapper mapper, ITableObjectService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     /// Get all data.
     /// </summary>
     /// <returns>Array[TableObject]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     /// Get TableObject without parent.
     /// </summary>
     /// <returns>Array[TableObject]</returns>
-    [HttpGet("/Api/[controller]/IsParent/all")]
+    [HttpGet("IsParent/all")]
     public async Task<ActionResult> GetParentObject()
     {
         return Ok(_mapper.Map<ICollection<GetTableObjectDto>>(await _repo.GetParentObject()));
@@ -42,7 +42,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     /// Get TableObject by AccountGroup id.
     /// </summary>
     /// <returns>Array[TableObject]</returns>
-    [HttpGet("/Api/[controller]/AccountGroup/{accountGroupId:int}")]
+    [HttpGet("AccountGroup/{accountGroupId:int}")]
     public async Task<ActionResult> GetTableObjectByFundSourceId(int accountGroupId)
     {
         return Ok(_mapper.Map<ICollection<GetTableObjectDto>>(await _repo.GetObjectByAccountGroupId(accountGroupId)));
@@ -52,7 +52,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     /// Get specific data (TableObject) by id.
     /// </summary>
     /// <returns>Array[TableObject]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -62,7 +62,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     /// Creates new TableObject entry.
     /// </summary>
     /// <returns>TableObject</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(TableObjectDto item)
     {
         return await GenericCreate(item);
@@ -72,7 +72,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     /// Creates multiple instance of TableObject.
     /// </summary>
     /// <returns>Array[TableObject]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<TableObjectDto> items)
     {
         return await GenericCreateAll(items);
@@ -82,7 +82,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     /// Updates multiple property of TableObject.
     /// </summary>
     /// <returns>TableObject</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, TableObjectDto item)
     {
         return await GenericUpdate(id, item);
@@ -92,7 +92,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     /// Deletes single TableObject entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

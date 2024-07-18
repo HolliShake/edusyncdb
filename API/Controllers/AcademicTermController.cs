@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class AcademicTermController : GenericController<AcademicTerm, IAcademicTermService, AcademicTermDto, GetAcademicTermDto>
 {
     public AcademicTermController(IMapper mapper, IAcademicTermService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
     /// Get all data.
     /// </summary>
     /// <returns>Array[AcademicTerm]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
     /// Get specific data (AcademicTerm) by id.
     /// </summary>
     /// <returns>Array[AcademicTerm]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -42,7 +42,7 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
     /// Creates new AcademicTerm entry.
     /// </summary>
     /// <returns>AcademicTerm</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AcademicTermDto item)
     {
         return await GenericCreate(item);
@@ -52,7 +52,7 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
     /// Creates multiple instance of AcademicTerm.
     /// </summary>
     /// <returns>Array[AcademicTerm]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<AcademicTermDto> items)
     {
         return await GenericCreateAll(items);
@@ -62,7 +62,7 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
     /// Updates multiple property of AcademicTerm.
     /// </summary>
     /// <returns>AcademicTerm</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AcademicTermDto item)
     {
         return await GenericUpdate(id, item);
@@ -72,7 +72,7 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
     /// Deletes single AcademicTerm entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

@@ -55,7 +55,7 @@ public class CaslAttribute:Attribute, IAuthorizationFilter
         try
         {
             var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-            role = principal.Item1.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+            role = principal.Item1.FindFirst(c => c.Type.Equals("AccessList"))?.Value;
         }
         catch (Exception)
         {

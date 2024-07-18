@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class BulletinScopeController : GenericController<BulletinScope, IBulletinScopeService, BulletinScopeDto, GetBulletinScopeDto>
 {
     public BulletinScopeController(IMapper mapper, IBulletinScopeService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Get all data.
     /// </summary>
     /// <returns>Array[BulletinScope]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Get BulletinScope by Bulletin id.
     /// </summary>
     /// <returns>Array[BulletinScope]</returns>
-    [HttpGet("/Api/[controller]/Bulletin/{bulletinId:int}")]
+    [HttpGet("Bulletin/{bulletinId:int}")]
     public async Task<ActionResult> GetBulletinScopeByBulletinId(int bulletinId)
     {
         return Ok(_mapper.Map<ICollection<GetBulletinScopeDto>>(await _repo.GetBulletinScopesByBulletinId(bulletinId)));
@@ -42,7 +42,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Get BulletinScope by AcademicProgram id.
     /// </summary>
     /// <returns>Array[BulletinScope]</returns>
-    [HttpGet("/Api/[controller]/AcademicProgram/{academicProgramId:int}")]
+    [HttpGet("AcademicProgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetBulletinScopeByAcademicProgramId(int academicProgramId)
     {
         return Ok(_mapper.Map<ICollection<GetBulletinScopeDto>>(await _repo.GetBulletinScopesByAcademicProgramId(academicProgramId)));
@@ -52,7 +52,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Get specific data (BulletinScope) by id.
     /// </summary>
     /// <returns>Array[BulletinScope]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -62,7 +62,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Creates new BulletinScope entry.
     /// </summary>
     /// <returns>BulletinScope</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(BulletinScopeDto item)
     {
         return await GenericCreate(item);
@@ -72,7 +72,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Creates multiple instance of BulletinScope.
     /// </summary>
     /// <returns>Array[BulletinScope]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<BulletinScopeDto> items)
     {
         return await GenericCreateAll(items);
@@ -82,7 +82,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Updates multiple property of BulletinScope.
     /// </summary>
     /// <returns>BulletinScope</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, BulletinScopeDto item)
     {
         return await GenericUpdate(id, item);
@@ -92,7 +92,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Deletes single BulletinScope entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

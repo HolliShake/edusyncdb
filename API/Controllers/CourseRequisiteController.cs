@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class CourseRequisiteController : GenericController<CourseRequisite, ICourseRequisiteService, CourseRequisiteDto, GetCourseRequisiteDto>
 {
     public CourseRequisiteController(IMapper mapper, ICourseRequisiteService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     /// Get all data.
     /// </summary>
     /// <returns>Array[CourseRequisite]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     /// Get CourseRequisiteType list.
     /// </summary>
     /// <returns>Array[CourseRequisite]</returns>
-    [HttpGet("/Api/[controller]/ValidTypes")]
+    [HttpGet("ValidTypes")]
     public Task<ActionResult> GetCoursRequisiteTypes()
     {
         return Task.FromResult<ActionResult>(Ok(new List<CourseRequisiteValue> { 
@@ -46,7 +46,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     /// Get CourseRequisite by Course id and type.
     /// </summary>
     /// <returns>Array[CourseRequisite]</returns>
-    [HttpGet("/Api/[controller]/Course/{courseId:int}/Type/{type:int}")]
+    [HttpGet("Course/{courseId:int}/Type/{type:int}")]
     public async Task<ActionResult> GetCourseRequisiteByCourseAndType(int courseId, int type)
     {
         return Ok(_mapper.Map<ICollection<GetCourseRequisiteDto>>(await _repo.GetCourseRequisitesByCourseIdAndType(courseId, type)));
@@ -56,7 +56,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     /// Get specific data (CourseRequisite) by id.
     /// </summary>
     /// <returns>Array[CourseRequisite]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -66,7 +66,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     /// Creates new CourseRequisite entry.
     /// </summary>
     /// <returns>CourseRequisite</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(CourseRequisiteDto item)
     {
         return await GenericCreate(item);
@@ -76,7 +76,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     /// Creates multiple instance of CourseRequisite.
     /// </summary>
     /// <returns>Array[CourseRequisite]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<CourseRequisiteDto> items)
     {
         return await GenericCreateAll(items);
@@ -86,7 +86,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     /// Updates multiple property of CourseRequisite.
     /// </summary>
     /// <returns>CourseRequisite</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, CourseRequisiteDto item)
     {
         return await GenericUpdate(id, item);
@@ -96,7 +96,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     /// Deletes single CourseRequisite entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);

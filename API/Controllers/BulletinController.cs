@@ -9,8 +9,8 @@ using API.Attributes;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Casl("Admin:all")]
+[Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class BulletinController : GenericController<Bulletin, IBulletinService, BulletinDto, GetBulletinDto>
 {
     public BulletinController(IMapper mapper, IBulletinService repo):base(mapper, repo)
@@ -22,7 +22,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
     /// Get all data.
     /// </summary>
     /// <returns>Array[Bulletin]</returns>
-    [HttpGet("/Api/[controller]/all")]
+    [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
@@ -32,7 +32,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
     /// Get Bulletin by BulletinCategory id.
     /// </summary>
     /// <returns>Array[Bulletin]</returns>
-    [HttpGet("/Api/[controller]/BulletinCategory/{bulletinCategoryId:int}")]
+    [HttpGet("BulletinCategory/{bulletinCategoryId:int}")]
     public async Task<ActionResult> GetBulletinByBulletinCategory(int bulletinCategoryId)
     {
         return Ok(_mapper.Map<ICollection<GetBulletinDto>>(await _repo.GetBulletinsByBulletinCategoryId(bulletinCategoryId)));
@@ -42,7 +42,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
     /// Get specific data (Bulletin) by id.
     /// </summary>
     /// <returns>Array[Bulletin]></returns>
-    [HttpGet("/Api/[controller]/{id:int}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
@@ -52,7 +52,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
     /// Creates new Bulletin entry.
     /// </summary>
     /// <returns>Bulletin</returns>
-    [HttpPost("/Api/[controller]/create")]
+    [HttpPost("create")]
     public async Task<ActionResult> CreateAction(BulletinDto item)
     {
         return await GenericCreate(item);
@@ -62,7 +62,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
     /// Creates multiple instance of Bulletin.
     /// </summary>
     /// <returns>Array[Bulletin]</returns>
-    [HttpPost("/Api/[controller]/insert")]
+    [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<BulletinDto> items)
     {
         return await GenericCreateAll(items);
@@ -72,7 +72,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
     /// Updates multiple property of Bulletin.
     /// </summary>
     /// <returns>Bulletin</returns>
-    [HttpPut("/Api/[controller]/update/{id:int}")]
+    [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, BulletinDto item)
     {
         return await GenericUpdate(id, item);
@@ -82,7 +82,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
     /// Deletes single Bulletin entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("/Api/[controller]/delete/{id:int}")]
+    [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);
