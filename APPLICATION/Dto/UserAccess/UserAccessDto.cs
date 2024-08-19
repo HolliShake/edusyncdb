@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace APPLICATION.Dto.UserAccess;
 public class UserAccessDto
 {
-    public int Id { get; set; }
+    // public int Id { get; set; }
 
     // Fk User
     public string UserId { get; set; }

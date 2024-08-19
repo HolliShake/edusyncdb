@@ -364,7 +364,7 @@ ISERVICE_TEMPLATE = """
 using {model-namespace};
 
 namespace {iservice-namespace};
-public interface I{service-name}Service:{igeneric-name}<{service-name}>
+public interface I{service-name}Service:{igeneric-name}<{service-name}, Get{service-name}Dto>
 {
 }
 """
@@ -375,7 +375,7 @@ using {model-namespace};
 using {data-namespace};
 
 namespace {service-namespace};
-public class {service-name}Service:{generic-name}<{service-name}>, I{service-name}Service
+public class {service-name}Service:{generic-name}<{service-name}, Get{service-name}Dto>, I{service-name}Service
 {
     public {service-name}Service(AppDbContext context):base(context)
     {

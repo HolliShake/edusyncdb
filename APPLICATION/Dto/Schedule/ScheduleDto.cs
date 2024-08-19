@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations;
 namespace APPLICATION.Dto.Schedule;
 public class ScheduleDto
 {
-    public int Id { get; set; }
     public String GeneratedReference { get; set; }
     public String GeneratedSection { get; set; }
 

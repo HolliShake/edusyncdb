@@ -32,4 +32,7 @@ public class CourseDto
     // Fk EducationalQualityAssuranceType
     [Required]
     public int EducationalQualityAssuranceTypeId { get; set; }
+
+    // Fk SkillsFrameworkTrackSpecialization
+    public int SfTrackSpecializationId { get; set; }
 }

@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 namespace APPLICATION.Dto.EvaluationRating;
 public class EvaluationRatingDto
 {
-    public int Id { get; set; }
     public string OverallComment { get; set; }
     public bool IsPosted { get; set; }
     public DateTime RatingDateTime { get; set; }

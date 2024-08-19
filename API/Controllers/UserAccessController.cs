@@ -4,11 +4,13 @@ using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using API.Attributes;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("Api/[controller]")]
+[Casl("SuperAdmin:all")]
 public class UserAccessController : GenericController<UserAccess, IUserAccessService, UserAccessDto, GetUserAccessDto>
 {
     public UserAccessController(IMapper mapper, IUserAccessService repo):base(mapper, repo)
@@ -54,6 +56,23 @@ public class UserAccessController : GenericController<UserAccess, IUserAccessSer
     public async Task<ActionResult> CreateAllAction(List<UserAccessDto> items)
     {
         return await GenericCreateAll(items);
+    }
+
+    /// <summary>
+    /// Updates multiple property of UserAccess.
+    /// mode:
+    ///      0 := CREATE
+    ///      1 := UPATE
+    ///      2 := DELETE
+    /// </summary>
+    /// <returns>UserAccess</returns>
+    [HttpPost("update/multiple")]
+    public async Task<ActionResult> UpdateAccess(List<UpdateUserAccessDto> items)
+    {
+        var result = await _repo.UpdateUserAccess(items);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest();
     }
     
     /// <summary>

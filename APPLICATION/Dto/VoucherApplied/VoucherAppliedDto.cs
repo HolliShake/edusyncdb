@@ -1,6 +1,3 @@
-using APPLICATION.Dto.EnrollmentBilling;
-using System.ComponentModel.DataAnnotations;
-
 namespace APPLICATION.Dto.VoucherApplied;
 public class VoucherAppliedDto
 {

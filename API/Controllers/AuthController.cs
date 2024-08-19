@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using APPLICATION.Dto.UserAccess;
 using API.Constant;
 using APPLICATION.IService;
+using API.Attributes;
 
 namespace API.Controllers;
 
@@ -131,7 +132,7 @@ public class AuthController:ControllerBase
             Role = Role.User
         };
 
-        var result = await _userManager.CreateAsync(user);
+        var result = await _userManager.CreateAsync(user, payload.Email);
 
         if (!result.Succeeded)
         {
@@ -152,6 +153,17 @@ public class AuthController:ControllerBase
                 await _userAccessService.CreateUserAccess(user.Id, 1, 3);
                 await _userAccessService.CreateUserAccess(user.Id, 1, 4);
                 await _userAccessService.CreateUserAccess(user.Id, 1, 5);
+                // User := 2
+                // all 6
+                // read 7
+                // create 8
+                // update 9
+                // delete 10
+                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
+                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
+                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
+                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
+                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
             }
             catch (Exception)
             {
@@ -259,17 +271,28 @@ public class AuthController:ControllerBase
         var actualData = old ?? user;
         try
         {
-            // SuperAdmin := 3
-                // all 11
-                // read 12
-                // create 13
-                // update 14
-                // delete 15
-            await _userAccessService.CreateUserAccess(actualData.Id, 3, 11);
-            await _userAccessService.CreateUserAccess(actualData.Id, 3, 12);
-            await _userAccessService.CreateUserAccess(actualData.Id, 3, 13);
-            await _userAccessService.CreateUserAccess(actualData.Id, 3, 14);
-            await _userAccessService.CreateUserAccess(actualData.Id, 3, 15);
+            // Auth := 1
+            // all 1
+            // read 2
+            // create 3
+            // update 4
+            // delete 5
+            await _userAccessService.CreateUserAccess(actualData.Id, 1, 1);
+            await _userAccessService.CreateUserAccess(actualData.Id, 1, 2);
+            await _userAccessService.CreateUserAccess(actualData.Id, 1, 3);
+            await _userAccessService.CreateUserAccess(actualData.Id, 1, 4);
+            await _userAccessService.CreateUserAccess(actualData.Id, 1, 5);
+            // SuperAdmin := 5
+            //  all   11
+            //  read  12
+            // create 13
+            // update 14
+            // delete 15
+            await _userAccessService.CreateUserAccess(actualData.Id, 5, 21);
+            await _userAccessService.CreateUserAccess(actualData.Id, 5, 22);
+            await _userAccessService.CreateUserAccess(actualData.Id, 5, 23);
+            await _userAccessService.CreateUserAccess(actualData.Id, 5, 24);
+            await _userAccessService.CreateUserAccess(actualData.Id, 5, 25);
         } catch (Exception)
         {
         }
@@ -281,6 +304,7 @@ public class AuthController:ControllerBase
     /// </summary>
     /// <returns>AuthData|Errors</returns>
     [HttpGet("session")]
+    [Casl("Auth:all")]
     public async Task<ActionResult> Session()
     {
         var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);

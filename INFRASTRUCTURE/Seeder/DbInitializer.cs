@@ -25,12 +25,24 @@ public class DbInitializer
                new AccessList
                {
                    Id = 2,
-                   Subject = "Admin",
+                   Subject = "User",
                    IsGroup = true
                },
                new AccessList
                {
                    Id = 3,
+                   Subject = "Student",
+                   IsGroup = true
+               },
+               new AccessList
+               {
+                   Id = 4,
+                   Subject = "Admin",
+                   IsGroup = true
+               },
+               new AccessList
+               {
+                   Id = 5,
                    Subject = "SuperAdmin",
                    IsGroup = true
                }
@@ -68,7 +80,7 @@ public class DbInitializer
                 Action = "delete",
                 AccessListId = 1
             },
-            // Admin
+            // User
             new AccessListAction
             {
                 Id = 6,
@@ -99,7 +111,7 @@ public class DbInitializer
                 Action = "delete",
                 AccessListId = 2
             },
-            // SuperAdmin
+            // Student
             new AccessListAction
             {
                 Id = 11,
@@ -129,6 +141,68 @@ public class DbInitializer
                 Id = 15,
                 Action = "delete",
                 AccessListId = 3
+            },
+            // Admin
+            new AccessListAction
+            {
+                Id = 16,
+                Action = "all",
+                AccessListId = 4
+            },
+            new AccessListAction
+            {
+                Id = 17,
+                Action = "read",
+                AccessListId = 4
+            },
+            new AccessListAction
+            {
+                Id = 18,
+                Action = "create",
+                AccessListId = 4
+            },
+            new AccessListAction
+            {
+                Id = 19,
+                Action = "update",
+                AccessListId = 4
+            },
+            new AccessListAction
+            {
+                Id = 20,
+                Action = "delete",
+                AccessListId = 4
+            },
+            // SuperAdmin
+            new AccessListAction
+            {
+                Id = 21,
+                Action = "all",
+                AccessListId = 5
+            },
+            new AccessListAction
+            {
+                Id = 22,
+                Action = "read",
+                AccessListId = 5
+            },
+            new AccessListAction
+            {
+                Id = 23,
+                Action = "create",
+                AccessListId = 5
+            },
+            new AccessListAction
+            {
+                Id = 24,
+                Action = "update",
+                AccessListId = 5
+            },
+            new AccessListAction
+            {
+                Id = 25,
+                Action = "delete",
+                AccessListId = 5
             }
         );
     }

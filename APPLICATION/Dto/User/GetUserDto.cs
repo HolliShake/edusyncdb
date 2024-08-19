@@ -15,4 +15,18 @@ public class GetUserDto
     public DateTime BirthDate { get; set; }
     public string Role { get; set; }
     public ICollection<GetUserAccessDto> AccessList { get; set; }
+
+    public string FullName
+    {
+        get
+        {
+            if (FirstName != null && LastName != null)
+            {
+                return $"{LastName} {FirstName}";
+            }
+            
+            return UserName;
+
+        }
+    }
 }

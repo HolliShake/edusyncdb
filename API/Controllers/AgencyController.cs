@@ -5,6 +5,10 @@ using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using APPLICATION.Jwt;
+using API.Constant;
 
 namespace API.Controllers;
 
@@ -13,8 +17,10 @@ namespace API.Controllers;
 [Casl("SuperAdmin:all")]
 public class AgencyController : GenericController<Agency, IAgencyService, AgencyDto, GetAgencyDto>
 {
-    public AgencyController(IMapper mapper, IAgencyService repo):base(mapper, repo)
+    private IJwtAuthManager _jwtAuthManager;
+    public AgencyController(IMapper mapper, IAgencyService repo, IJwtAuthManager jwtAuthManager) :base(mapper, repo)
     {
+        _jwtAuthManager = jwtAuthManager;
     }
 
     /****************** ACTION ROUTES ******************/
@@ -36,6 +42,24 @@ public class AgencyController : GenericController<Agency, IAgencyService, Agency
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
+    }
+
+    /// <summary>
+    /// Get My accessible agencies.
+    /// </summary>
+    /// <returns>Array[Agency]></returns>
+    [HttpGet("My")]
+    [Casl("SuperAdmin:all", "SuperAdmin:read")]
+    public async Task<ActionResult> GetMyAgencies()
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        var role = principal.Item1.FindFirst(c => c.Type.Equals("AccessList"))?.Value;
+        if (String.IsNullOrEmpty(role) || String.IsNullOrWhiteSpace(role))
+        {
+            return Unauthorized();
+        }
+        return Ok(await _repo.GetMyAccessibleAgencies(role));
     }
     
     /// <summary>

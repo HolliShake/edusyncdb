@@ -8,7 +8,7 @@ public class BulletinDto
     [MaxLength(50)]
     public string Title { get; set; }
     [Required]
-    [MaxLength(1 << 32)]
+    [MaxLength(5000)]
     public string Content { get; set; }
     [Required]
     [MinLength(4)]

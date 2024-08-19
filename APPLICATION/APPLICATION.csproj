@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="..\DOMAIN\Model\PortfolioDisciplinaryActionType.cs" Link="PortfolioDisciplinaryActionType.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  <Folder Include="Jwt\" />
   </ItemGroup>
 

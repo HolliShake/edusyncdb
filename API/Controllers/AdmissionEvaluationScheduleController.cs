@@ -29,7 +29,7 @@ public class AdmissionEvaluationScheduleController : GenericController<Admission
     }
 
     /// <summary>
-    /// Get AdmissionEvaluationSchedule by dmissionSchedule id.
+    /// Get AdmissionEvaluationSchedule by AdmissionSchedule id.
     /// </summary>
     /// <returns>Array[AdmissionEvaluationSchedule]</returns>
     [HttpGet("AdmissionSchedule/{admissionScheduleId:int}")]

@@ -6,6 +6,7 @@ using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using System.Collections.Generic;
 
 namespace INFRASTRUCTURE.Service;
 public class UserAccessService(AppDbContext context, IMapper mapper) : GenericService<UserAccess, GetUserAccessDto>(context, mapper), IUserAccessService
@@ -45,5 +46,59 @@ public class UserAccessService(AppDbContext context, IMapper mapper) : GenericSe
             AccessListId = accessListId,
             AccessListActionId = accessListActionId
         });
+    }
+
+    public async Task<List<GetUserAccessDto>?> UpdateUserAccess(List<UpdateUserAccessDto> items)
+    {
+        List<GetUserAccessDto> newItems = new();
+        int success = 0;
+        foreach (var item in items)
+        {
+            switch (item.Mode)
+            {
+                case UserAccessUpdateMode.CREATE:
+                    {
+                        UserAccess current;
+                        var result = await this.CreateAsync(current = new UserAccess
+                        {
+                            UserId = item.UserId,
+                            AccessListId = item.AccessListId,
+                            AccessListActionId = item.AccessListActionId
+                        });
+                        newItems.Add(_mapper.Map<GetUserAccessDto>(current));
+                        if (result) ++success;
+                        break;
+                    }
+                case UserAccessUpdateMode.UPDATE:
+                    {
+                        var userAccess = await _dbModel.FindAsync(item.Id);
+                        if (userAccess == null)
+                        {
+                            break;
+                        }
+                        userAccess.UserId = item.UserId;
+                        userAccess.AccessListId = item.AccessListId;
+                        userAccess.AccessListActionId = item.AccessListActionId;
+                        var result = await this.UpdateSync(userAccess);
+                        if (result) ++success;
+                        break;
+                    }
+                case UserAccessUpdateMode.DELETE:
+                    {
+                        var userAccess = await _dbModel.FindAsync(item.Id);
+                        if (userAccess == null)
+                        {
+                            break;
+                        }
+                        var result = await this.DeleteSync(userAccess);
+                        if (result) ++success;
+                        break;
+                    }
+            }
+        }
+
+        return (success == items.Count)
+            ? newItems
+            : null;
     }
 }

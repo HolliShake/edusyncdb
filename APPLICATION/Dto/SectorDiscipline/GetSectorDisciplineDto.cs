@@ -9,4 +9,7 @@ public class GetSectorDisciplineDto
     // Fk SectorDiscipline
     public int? ParentId { get; set; }
     public GetSectorDisciplineDto? Parent { get; set; }
+
+    // Nav
+    public ICollection<GetSectorDisciplineDto> Children { get; set; }
 }

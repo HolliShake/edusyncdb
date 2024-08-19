@@ -8,7 +8,7 @@ public class CycleDto
     [MaxLength(255)]
     public string CycleDescription { get; set; }
     [Required]
-    public int CylceNumber { get; set; }
+    public int CycleNumber { get; set; }
     [Required]
     [MinLength(4)]
     [MaxLength(50)]

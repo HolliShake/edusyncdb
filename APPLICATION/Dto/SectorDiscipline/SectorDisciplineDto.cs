@@ -9,6 +9,5 @@ public class SectorDisciplineDto
     public string DisciplineDescription { get; set; }
 
     // Fk SectorDiscipline
-    [Required]
     public int? ParentId { get; set; }
 }

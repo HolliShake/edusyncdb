@@ -1,5 +1,6 @@
 using APPLICATION.Dto.CourseRequisite;
 using APPLICATION.Dto.EducationalQualityAssuranceType;
+using APPLICATION.Dto.SkillsFrameworkTrackSpecialization;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -22,6 +23,10 @@ public class GetCourseDto
     // Fk EducationalQualityAssuranceType
     public int EducationalQualityAssuranceTypeId { get; set; }
     public GetEducationalQualityAssuranceTypeDto EducationalQualityAssuranceType { get; set; }
+
+    // Fk SkillsFrameworkTrackSpecialization
+    public int SfTrackSpecializationId { get; set; }
+    public GetSkillsFrameworkTrackSpecializationDto SfTrackSpecialization { get; set; }
 
     // Nav
     public ICollection<GetCourseRequisiteDto> CourseRequisites { get; set; }

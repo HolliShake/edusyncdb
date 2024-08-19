@@ -13,9 +13,17 @@ public class SectorDisciplineService:GenericService<SectorDiscipline, GetSectorD
     {
     }
 
+    public async new Task<ICollection<GetSectorDisciplineDto>> GetAllAsync()
+    {
+        return _mapper.Map<ICollection<GetSectorDisciplineDto>>(
+            await _dbModel.Include(sd => sd.Children).ToListAsync()
+        );
+    }
+
     public async Task<ICollection<GetSectorDisciplineDto>> GetAllParentSectorDiscipline()
     {
         return _mapper.Map<ICollection<GetSectorDisciplineDto>>(await _dbModel
+           .Include(sd => sd.Children)
            .Where(sd => sd.ParentId == null)
            .ToListAsync());
     }

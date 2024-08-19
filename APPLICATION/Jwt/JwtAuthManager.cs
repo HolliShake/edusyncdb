@@ -52,7 +52,7 @@ public class JwtAuthManager : IJwtAuthManager
             _tokenConfig.Issuer,
             shouldAddAudienceClaim ? _tokenConfig.Audience : string.Empty,
             claims,
-            expires: now.AddYears(1),
+            expires: now.AddDays(7),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(_tokenConfig.SecurityKey), SecurityAlgorithms.HmacSha256Signature));
         var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
 
@@ -61,7 +61,7 @@ public class JwtAuthManager : IJwtAuthManager
             UserName = userEmail,
             TokenString = GenerateRefreshTokenString(),
             // ExpireAt = now.AddDays(_jwtTokenConfig.RefreshTokenExpiration)
-            ExpireAt = now.AddDays(1)
+            ExpireAt = now.AddDays(7)
         };
         _usersRefreshTokens.AddOrUpdate(refreshToken.TokenString, refreshToken, (_, _) => refreshToken);
 

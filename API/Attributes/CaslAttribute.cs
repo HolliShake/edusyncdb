@@ -1,6 +1,7 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
+using API.Constant;
 using APPLICATION.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -72,6 +73,11 @@ public class CaslAttribute:Attribute, IAuthorizationFilter
                 var key = json[i].subject;
                 var val = json[i].action;
                 var access = $"{key}:{val}";
+
+                if (access.Equals($"{Role.SuperAdmin}:all"))
+                {
+                    return;
+                }
 
                 if (_validAccessList.Contains(access))
                 {

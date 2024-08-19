@@ -3,8 +3,6 @@ using System.ComponentModel.DataAnnotations;
 namespace APPLICATION.Dto.GradeBookItem;
 public class GradeBookItemDto
 {
-    public int Id { get; set; }
-
     public decimal Weight { get; set; }
 
     // Fk GradeBook
