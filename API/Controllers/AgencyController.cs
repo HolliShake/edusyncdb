@@ -9,6 +9,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using APPLICATION.Jwt;
 using API.Constant;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -17,10 +18,12 @@ namespace API.Controllers;
 [Casl("SuperAdmin:all")]
 public class AgencyController : GenericController<Agency, IAgencyService, AgencyDto, GetAgencyDto>
 {
-    private IJwtAuthManager _jwtAuthManager;
-    public AgencyController(IMapper mapper, IAgencyService repo, IJwtAuthManager jwtAuthManager) :base(mapper, repo)
+    private readonly IJwtAuthManager _jwtAuthManager;
+    private readonly IUserAccessService _userAccessRepo;
+    public AgencyController(IMapper mapper, IAgencyService repo, IUserAccessService userAccess, IJwtAuthManager jwtAuthManager) :base(mapper, repo)
     {
         _jwtAuthManager = jwtAuthManager;
+        _userAccessRepo = userAccess;
     }
 
     /****************** ACTION ROUTES ******************/
@@ -54,8 +57,10 @@ public class AgencyController : GenericController<Agency, IAgencyService, Agency
     {
         var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
         var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var role = principal.Item1.FindFirst(c => c.Type.Equals("AccessList"))?.Value;
-        if (String.IsNullOrEmpty(role) || String.IsNullOrWhiteSpace(role))
+        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userAccess = await _userAccessRepo.GetUserAccessByUserId(userId);
+        var role = userAccess;
+        if (role == null)
         {
             return Unauthorized();
         }

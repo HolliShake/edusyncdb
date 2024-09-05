@@ -30,36 +30,13 @@ public class AccessListController : GenericController<AccessList, IAccessListSer
     }
 
     /// <summary>
-    /// Get all parent access with children.
+    /// Get specific data (AccessList) by id.
     /// </summary>
-    /// <returns>Array[AccessList]</returns>
-    [HttpGet("parent/all")]
-    public async Task<ActionResult> GetParentAccessList()
+    /// <returns>Array[AccessList]></returns>
+    [HttpGet("AccessGroup/{accessGroupId:int}")]
+    public async Task<ActionResult> GetByAccessGroup(int accessGroupId)
     {
-        return Ok(await _repo.GetParentAccess());
-    }
-
-    /// <summary>
-    /// Import agencies to existing access list.
-    /// </summary>
-    /// <param name="accessListId"></param>
-    /// <returns></returns>
-    [HttpPost("import/agencies")]
-    public async Task<ActionResult> ImportAgencie()
-    {
-        return (await _repo.ImportAgencies())
-            ? Ok("Successfully imported")
-            : BadRequest("Failed to import agency");
-    }
-
-    /// <summary>
-    /// Get Group.
-    /// </summary>
-    /// <returns>Array[AccessList]</returns>
-    [HttpGet("Group/all")]
-    public async Task<ActionResult> GetGroups()
-    {
-        return Ok(await _repo.GetGroups());
+        return Ok(await _repo.GetByAccessGroupId(accessGroupId));
     }
 
     /// <summary>

@@ -51,7 +51,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("GradingPeriodId");
 
-                    b.ToTable("AcademicCalendars", (string)null);
+                    b.ToTable("AcademicCalendars");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AcademicProgram", b =>
@@ -78,7 +78,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("CollegeId");
 
-                    b.ToTable("AcademicPrograms", (string)null);
+                    b.ToTable("AcademicPrograms");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AcademicTerm", b =>
@@ -100,7 +100,23 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AcademicTerms", (string)null);
+                    b.ToTable("AcademicTerms");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.AccessGroup", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AccessGroupName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccessGroups");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AccessList", b =>
@@ -111,67 +127,21 @@ namespace INFRASTRUCTURE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("IsGroup")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReferenceId")
+                    b.Property<int>("AccessGroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("Subject")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("AccessGroupId");
 
                     b.HasIndex("Subject")
                         .IsUnique()
                         .HasFilter("[Subject] IS NOT NULL");
 
-                    b.ToTable("AccessLists", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            IsGroup = true,
-                            Subject = "Auth",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            IsGroup = true,
-                            Subject = "User",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            IsGroup = true,
-                            Subject = "Student",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 4,
-                            IsGroup = true,
-                            Subject = "Admin",
-                            Type = 1
-                        },
-                        new
-                        {
-                            Id = 5,
-                            IsGroup = true,
-                            Subject = "SuperAdmin",
-                            Type = 1
-                        });
+                    b.ToTable("AccessLists");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AccessListAction", b =>
@@ -192,159 +162,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("AccessListId");
 
-                    b.ToTable("AccessListActions", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AccessListId = 1,
-                            Action = "all"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AccessListId = 1,
-                            Action = "read"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AccessListId = 1,
-                            Action = "create"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AccessListId = 1,
-                            Action = "update"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            AccessListId = 1,
-                            Action = "delete"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            AccessListId = 2,
-                            Action = "all"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            AccessListId = 2,
-                            Action = "read"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            AccessListId = 2,
-                            Action = "create"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            AccessListId = 2,
-                            Action = "update"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            AccessListId = 2,
-                            Action = "delete"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            AccessListId = 3,
-                            Action = "all"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            AccessListId = 3,
-                            Action = "read"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            AccessListId = 3,
-                            Action = "create"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            AccessListId = 3,
-                            Action = "update"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            AccessListId = 3,
-                            Action = "delete"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            AccessListId = 4,
-                            Action = "all"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            AccessListId = 4,
-                            Action = "read"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            AccessListId = 4,
-                            Action = "create"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            AccessListId = 4,
-                            Action = "update"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            AccessListId = 4,
-                            Action = "delete"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            AccessListId = 5,
-                            Action = "all"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            AccessListId = 5,
-                            Action = "read"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            AccessListId = 5,
-                            Action = "create"
-                        },
-                        new
-                        {
-                            Id = 24,
-                            AccessListId = 5,
-                            Action = "update"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            AccessListId = 5,
-                            Action = "delete"
-                        });
+                    b.ToTable("AccessListActions");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AccountGroup", b =>
@@ -360,7 +178,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccountGroups", (string)null);
+                    b.ToTable("AccountGroups");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AdmissionApplicant", b =>
@@ -394,7 +212,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AdmissionApplicants", (string)null);
+                    b.ToTable("AdmissionApplicants");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AdmissionApplication", b =>
@@ -429,7 +247,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("AdmissionScheduleId");
 
-                    b.ToTable("AdmissionApplications", (string)null);
+                    b.ToTable("AdmissionApplications");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AdmissionEvaluationSchedule", b =>
@@ -468,7 +286,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("AdmissionScheduleId");
 
-                    b.ToTable("AdmissionEvaluationSchedules", (string)null);
+                    b.ToTable("AdmissionEvaluationSchedules");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AdmissionProgramRequirement", b =>
@@ -497,7 +315,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("RequirementId");
 
-                    b.ToTable("AdmissionProgramRequirements", (string)null);
+                    b.ToTable("AdmissionProgramRequirements");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AdmissionSchedule", b =>
@@ -532,7 +350,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("CycleId");
 
-                    b.ToTable("AdmissionSchedules", (string)null);
+                    b.ToTable("AdmissionSchedules");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AdmissionScore", b =>
@@ -577,7 +395,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EvaluatorId");
 
-                    b.ToTable("AdmissionScores", (string)null);
+                    b.ToTable("AdmissionScores");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Agency", b =>
@@ -596,7 +414,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Agencies", (string)null);
+                    b.ToTable("Agencies");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Building", b =>
@@ -623,7 +441,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("CampusId");
 
-                    b.ToTable("Buildings", (string)null);
+                    b.ToTable("Buildings");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Bulletin", b =>
@@ -670,7 +488,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("PostedByUserId");
 
-                    b.ToTable("Bulletins", (string)null);
+                    b.ToTable("Bulletins");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.BulletinCategory", b =>
@@ -686,7 +504,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BulletinCategories", (string)null);
+                    b.ToTable("BulletinCategories");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.BulletinScope", b =>
@@ -709,7 +527,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("BulletinId");
 
-                    b.ToTable("BulletinScopes", (string)null);
+                    b.ToTable("BulletinScopes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Campus", b =>
@@ -739,7 +557,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("AgencyId");
 
-                    b.ToTable("Campuses", (string)null);
+                    b.ToTable("Campuses");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ClearanceTag", b =>
@@ -805,7 +623,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("UserWhoClearedId");
 
-                    b.ToTable("ClearanceTags", (string)null);
+                    b.ToTable("ClearanceTags");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ClearanceType", b =>
@@ -821,7 +639,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ClearanceTypes", (string)null);
+                    b.ToTable("ClearanceTypes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.College", b =>
@@ -842,7 +660,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("CampusId");
 
-                    b.ToTable("Colleges", (string)null);
+                    b.ToTable("Colleges");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Course", b =>
@@ -877,6 +695,9 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<decimal>("LectureUnits")
                         .HasColumnType("decimal(18,4)");
 
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
                     b.Property<int>("SfTrackSpecializationId")
                         .HasColumnType("int");
 
@@ -887,9 +708,11 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EducationalQualityAssuranceTypeId");
 
+                    b.HasIndex("ParentId");
+
                     b.HasIndex("SfTrackSpecializationId");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.CourseCrediting", b =>
@@ -946,7 +769,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("OtherSchoolId");
 
-                    b.ToTable("CourseCreditings", (string)null);
+                    b.ToTable("CourseCreditings");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.CourseFee", b =>
@@ -969,7 +792,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("FeeId");
 
-                    b.ToTable("CourseFees", (string)null);
+                    b.ToTable("CourseFees");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.CourseRequisite", b =>
@@ -995,7 +818,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("RequisiteCourseId");
 
-                    b.ToTable("CourseRequisites", (string)null);
+                    b.ToTable("CourseRequisites");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.CourseToLearningObjectiveMapping", b =>
@@ -1021,7 +844,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EducationalQualityAssuranceLearningObjectiveId");
 
-                    b.ToTable("CourseToLearningObjectiveMappings", (string)null);
+                    b.ToTable("CourseToLearningObjectiveMappings");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Curriculum", b =>
@@ -1090,7 +913,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ProgramTypeId");
 
-                    b.ToTable("Curricula", (string)null);
+                    b.ToTable("Curricula");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.CurriculumDetail", b =>
@@ -1122,7 +945,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("CurriculumId");
 
-                    b.ToTable("CurriculumDetails", (string)null);
+                    b.ToTable("CurriculumDetails");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Cycle", b =>
@@ -1155,7 +978,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("CampusId");
 
-                    b.ToTable("Cycles", (string)null);
+                    b.ToTable("Cycles");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EducationalQualityAssuranceAssessmentType", b =>
@@ -1174,7 +997,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EducationalQualityAssuranceAssessmentTypes", (string)null);
+                    b.ToTable("EducationalQualityAssuranceAssessmentTypes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EducationalQualityAssuranceCourseObjective", b =>
@@ -1195,7 +1018,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EqaProgramObjectiveId");
 
-                    b.ToTable("EducationalQualityAssuranceCourseObjectives", (string)null);
+                    b.ToTable("EducationalQualityAssuranceCourseObjectives");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EducationalQualityAssuranceEducationalGoal", b =>
@@ -1216,7 +1039,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EqaTypeId");
 
-                    b.ToTable("EducationalQualityAssuranceEducationalGoals", (string)null);
+                    b.ToTable("EducationalQualityAssuranceEducationalGoals");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EducationalQualityAssuranceLearningObjective", b =>
@@ -1237,7 +1060,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EqaCourseObjectiveId");
 
-                    b.ToTable("EducationalQualityAssuranceLearningObjectives", (string)null);
+                    b.ToTable("EducationalQualityAssuranceLearningObjectives");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EducationalQualityAssuranceProgramObjective", b =>
@@ -1258,7 +1081,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EqaEducationalGoalId");
 
-                    b.ToTable("EducationalQualityAssuranceProgramObjectives", (string)null);
+                    b.ToTable("EducationalQualityAssuranceProgramObjectives");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EducationalQualityAssuranceProgramObjectiveToJobRole", b =>
@@ -1281,7 +1104,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SfJobRoleId");
 
-                    b.ToTable("EducationalQualityAssuranceProgramObjectiveToJobRoles", (string)null);
+                    b.ToTable("EducationalQualityAssuranceProgramObjectiveToJobRoles");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EducationalQualityAssuranceType", b =>
@@ -1312,7 +1135,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EducationalQualityAssuranceTypes", (string)null);
+                    b.ToTable("EducationalQualityAssuranceTypes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Enrollment", b =>
@@ -1367,7 +1190,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("StudentUserId");
 
-                    b.ToTable("Enrollments", (string)null);
+                    b.ToTable("Enrollments");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EnrollmentBilling", b =>
@@ -1424,7 +1247,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("VoucherId");
 
-                    b.ToTable("EnrollmentBillings", (string)null);
+                    b.ToTable("EnrollmentBillings");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EnrollmentFee", b =>
@@ -1456,7 +1279,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ObjectId");
 
-                    b.ToTable("EnrollmentFees", (string)null);
+                    b.ToTable("EnrollmentFees");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EnrollmentGrade", b =>
@@ -1502,7 +1325,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("GradingPeriodId");
 
-                    b.ToTable("EnrollmentGrades", (string)null);
+                    b.ToTable("EnrollmentGrades");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EnrollmentLog", b =>
@@ -1534,7 +1357,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("LogByUserId");
 
-                    b.ToTable("EnrollmentLogs", (string)null);
+                    b.ToTable("EnrollmentLogs");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EnrollmentPayment", b =>
@@ -1572,7 +1395,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EnrollmentBillingId");
 
-                    b.ToTable("EnrollmentPayments", (string)null);
+                    b.ToTable("EnrollmentPayments");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EnrollmentRole", b =>
@@ -1588,7 +1411,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EnrollmentRoles", (string)null);
+                    b.ToTable("EnrollmentRoles");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EvaluationPeriod", b =>
@@ -1641,7 +1464,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("InstrumentId");
 
-                    b.ToTable("EvaluationPeriods", (string)null);
+                    b.ToTable("EvaluationPeriods");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EvaluationRating", b =>
@@ -1673,7 +1496,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EvaluationPeriodId");
 
-                    b.ToTable("EvaluationRatings", (string)null);
+                    b.ToTable("EvaluationRatings");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.EvaluationRatingDetail", b =>
@@ -1705,7 +1528,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("LikertQuestionId");
 
-                    b.ToTable("EvaluationRatingDetails", (string)null);
+                    b.ToTable("EvaluationRatingDetails");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.FileTable", b =>
@@ -1733,7 +1556,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FileTables", (string)null);
+                    b.ToTable("FileTables");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.FundSource", b =>
@@ -1749,7 +1572,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FundSources", (string)null);
+                    b.ToTable("FundSources");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GradeBook", b =>
@@ -1770,7 +1593,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("GradeBooks", (string)null);
+                    b.ToTable("GradeBooks");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GradeBookItem", b =>
@@ -1796,7 +1619,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("GradingPeriodId");
 
-                    b.ToTable("GradeBookItems", (string)null);
+                    b.ToTable("GradeBookItems");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GradeBookItemDetail", b =>
@@ -1834,7 +1657,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("GradeBookItemId");
 
-                    b.ToTable("GradeBookItemDetails", (string)null);
+                    b.ToTable("GradeBookItemDetails");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GradeBookItemToEqaLearningObjectiveMapping", b =>
@@ -1857,7 +1680,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("GradeBookItemDetailId");
 
-                    b.ToTable("GradeBookItemToEqaLearningObjectiveMappings", (string)null);
+                    b.ToTable("GradeBookItemToEqaLearningObjectiveMappings");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GradeBookScore", b =>
@@ -1881,7 +1704,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EnrollmentId");
 
-                    b.ToTable("GradeBookScores", (string)null);
+                    b.ToTable("GradeBookScores");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GradeInput", b =>
@@ -1915,7 +1738,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GradeInputs", (string)null);
+                    b.ToTable("GradeInputs");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GradingPeriod", b =>
@@ -1934,7 +1757,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("GradingPeriods", (string)null);
+                    b.ToTable("GradingPeriods");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GraduationApplicant", b =>
@@ -1974,7 +1797,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("GraduationCampusId");
 
-                    b.ToTable("GraduationApplicants", (string)null);
+                    b.ToTable("GraduationApplicants");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GraduationCampus", b =>
@@ -2019,7 +1842,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("CampusId");
 
-                    b.ToTable("GraduationCampuses", (string)null);
+                    b.ToTable("GraduationCampuses");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Instrument", b =>
@@ -2044,7 +1867,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Instruments", (string)null);
+                    b.ToTable("Instruments");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.LikertQuestion", b =>
@@ -2074,7 +1897,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ParameterId");
 
-                    b.ToTable("LikertQuestions", (string)null);
+                    b.ToTable("LikertQuestions");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.OtherSchool", b =>
@@ -2099,7 +1922,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("OtherSchools", (string)null);
+                    b.ToTable("OtherSchools");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Parameter", b =>
@@ -2128,7 +1951,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Parameters", (string)null);
+                    b.ToTable("Parameters");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ParameterCategory", b =>
@@ -2149,7 +1972,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("InstrumentId");
 
-                    b.ToTable("ParameterCategories", (string)null);
+                    b.ToTable("ParameterCategories");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ParameterSubCategory", b =>
@@ -2170,7 +1993,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ParameterCategoryId");
 
-                    b.ToTable("ParameterSubCategories", (string)null);
+                    b.ToTable("ParameterSubCategories");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PetitionCourses", b =>
@@ -2209,7 +2032,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("PetitionByUserId");
 
-                    b.ToTable("PetitionCourses", (string)null);
+                    b.ToTable("PetitionCourses");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioDisciplinaryAction", b =>
@@ -2244,7 +2067,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("PortfolioIncidentId");
 
-                    b.ToTable("PortfolioDisciplinaryActions", (string)null);
+                    b.ToTable("PortfolioDisciplinaryActions");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioEntry", b =>
@@ -2314,7 +2137,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PortfolioEntries", (string)null);
+                    b.ToTable("PortfolioEntries");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioIncident", b =>
@@ -2365,7 +2188,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("PortfolioIncidentTypeId");
 
-                    b.ToTable("PortfolioIncidents", (string)null);
+                    b.ToTable("PortfolioIncidents");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioIncidentType", b =>
@@ -2381,7 +2204,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PortfolioIncidentTypes", (string)null);
+                    b.ToTable("PortfolioIncidentTypes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioProvider", b =>
@@ -2417,7 +2240,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SectorDisciplineId");
 
-                    b.ToTable("PortfolioProviders", (string)null);
+                    b.ToTable("PortfolioProviders");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioScope", b =>
@@ -2433,7 +2256,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PortfolioScopes", (string)null);
+                    b.ToTable("PortfolioScopes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioSession", b =>
@@ -2481,7 +2304,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("PortfolioSessionTypeId");
 
-                    b.ToTable("PortfolioSessions", (string)null);
+                    b.ToTable("PortfolioSessions");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioSessionInvolved", b =>
@@ -2507,7 +2330,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PortfolioSessionInvolved", (string)null);
+                    b.ToTable("PortfolioSessionInvolved");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioSessionType", b =>
@@ -2523,7 +2346,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PortfolioSessionTypes", (string)null);
+                    b.ToTable("PortfolioSessionTypes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.PortfolioType", b =>
@@ -2542,7 +2365,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PortfolioTypes", (string)null);
+                    b.ToTable("PortfolioTypes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ProgramType", b =>
@@ -2558,7 +2381,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProgramTypes", (string)null);
+                    b.ToTable("ProgramTypes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Requirement", b =>
@@ -2583,7 +2406,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Requirements", (string)null);
+                    b.ToTable("Requirements");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Room", b =>
@@ -2613,7 +2436,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("BuildingId");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Schedule", b =>
@@ -2627,13 +2450,16 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("AcademicProgramId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CourseId")
+                    b.Property<int?>("CourseId")
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CycleId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DaySchedule")
+                    b.Property<DateTime?>("DaySchedule")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("GeneratedReference")
@@ -2641,6 +2467,9 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.Property<string>("GeneratedSection")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsExclusive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsPetitionSchedule")
                         .HasColumnType("bit");
@@ -2651,13 +2480,13 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("MinStudent")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoomId")
+                    b.Property<int?>("RoomId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("TimeScheduleIn")
+                    b.Property<DateTime?>("TimeScheduleIn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("TimeScheduleOut")
+                    b.Property<DateTime?>("TimeScheduleOut")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -2666,11 +2495,13 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("CourseId");
 
+                    b.HasIndex("CreatedByUserId");
+
                     b.HasIndex("CycleId");
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Schedules", (string)null);
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ScheduleAttendance", b =>
@@ -2711,7 +2542,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("ScheduleAttendances", (string)null);
+                    b.ToTable("ScheduleAttendances");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ScheduleMerge", b =>
@@ -2732,7 +2563,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("ScheduleMerges", (string)null);
+                    b.ToTable("ScheduleMerges");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ScheduleTeacher", b =>
@@ -2760,7 +2591,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("TeacherUserId");
 
-                    b.ToTable("ScheduleTeachers", (string)null);
+                    b.ToTable("ScheduleTeachers");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ScholarshipApplication", b =>
@@ -2798,7 +2629,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ScholarshipCycleLimitId");
 
-                    b.ToTable("ScholarshipApplications", (string)null);
+                    b.ToTable("ScholarshipApplications");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ScholarshipCycleLimit", b =>
@@ -2836,7 +2667,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ScholarshipListId");
 
-                    b.ToTable("ScholarshipCycleLimits", (string)null);
+                    b.ToTable("ScholarshipCycleLimits");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ScholarshipEvaluation", b =>
@@ -2873,7 +2704,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ScholarshipRequirementId");
 
-                    b.ToTable("ScholarshipEvaluations", (string)null);
+                    b.ToTable("ScholarshipEvaluations");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ScholarshipList", b =>
@@ -2907,7 +2738,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ScholarshipLists", (string)null);
+                    b.ToTable("ScholarshipLists");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.ScholarshipRequirement", b =>
@@ -2930,7 +2761,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ScholarshipListId");
 
-                    b.ToTable("ScholarshipRequirements", (string)null);
+                    b.ToTable("ScholarshipRequirements");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SectorDiscipline", b =>
@@ -2951,7 +2782,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("SectorDisciplines", (string)null);
+                    b.ToTable("SectorDisciplines");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkCompetency", b =>
@@ -2973,7 +2804,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SkillsFrameworkCompetencies", (string)null);
+                    b.ToTable("SkillsFrameworkCompetencies");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkCompetencyCategory", b =>
@@ -2999,7 +2830,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SfCompetencyTypeId");
 
-                    b.ToTable("SkillsFrameworkCompetencyCategories", (string)null);
+                    b.ToTable("SkillsFrameworkCompetencyCategories");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkCompetencyType", b =>
@@ -3015,7 +2846,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SkillsFrameworkCompetencyTypes", (string)null);
+                    b.ToTable("SkillsFrameworkCompetencyTypes");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkCourseToCompetency", b =>
@@ -3041,7 +2872,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SkillsFrameworkSkillsToCompetencyId");
 
-                    b.ToTable("SkillsFrameworkCourseToCompetencies", (string)null);
+                    b.ToTable("SkillsFrameworkCourseToCompetencies");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkCriticalWorkFunction", b =>
@@ -3057,7 +2888,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SkillsFrameworkCriticalWorkFunctions", (string)null);
+                    b.ToTable("SkillsFrameworkCriticalWorkFunctions");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkGroupLevel", b =>
@@ -3073,7 +2904,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SkillsFrameworkGroupLevels", (string)null);
+                    b.ToTable("SkillsFrameworkGroupLevels");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkJobRole", b =>
@@ -3097,7 +2928,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SfTrackSpecializationId");
 
-                    b.ToTable("SkillsFrameworkJobRoleJobRoles", (string)null);
+                    b.ToTable("SkillsFrameworkJobRoleJobRoles");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkJobRoleToCriticalWorkFunction", b =>
@@ -3123,7 +2954,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SfJobRoleId");
 
-                    b.ToTable("SkillsFrameworkJobRoleToCriticalWorkFunctions", (string)null);
+                    b.ToTable("SkillsFrameworkJobRoleToCriticalWorkFunctions");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkJobRoleToProficiencyLevel", b =>
@@ -3154,7 +2985,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SkillsFrameworkSkillsId");
 
-                    b.ToTable("SkillsFrameworkJobRoleToProficiencyLevels", (string)null);
+                    b.ToTable("SkillsFrameworkJobRoleToProficiencyLevels");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkKeyTask", b =>
@@ -3175,7 +3006,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SfCriticalWorkFunctionId");
 
-                    b.ToTable("SkillsFrameworkKeyTasks", (string)null);
+                    b.ToTable("SkillsFrameworkKeyTasks");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkPerformaceExpectationToJobRole", b =>
@@ -3198,7 +3029,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SfPerformanceExpectationId");
 
-                    b.ToTable("SkillsFrameworkPerformaceExpectationToJobRoles", (string)null);
+                    b.ToTable("SkillsFrameworkPerformaceExpectationToJobRoles");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkPerformanceExpectation", b =>
@@ -3214,7 +3045,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SkillsFrameworkPerformanceExpectations", (string)null);
+                    b.ToTable("SkillsFrameworkPerformanceExpectations");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkProficiencyLevel", b =>
@@ -3235,7 +3066,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SfGroupLevelId");
 
-                    b.ToTable("SkillsFrameworkProficiencyLevels", (string)null);
+                    b.ToTable("SkillsFrameworkProficiencyLevels");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkSkills", b =>
@@ -3259,7 +3090,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SfCompetencyCategoryId");
 
-                    b.ToTable("SkillsFrameworkSkills", (string)null);
+                    b.ToTable("SkillsFrameworkSkills");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkSkillsToCompetency", b =>
@@ -3287,7 +3118,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SfSkillsId");
 
-                    b.ToTable("SkillsFrameworkSkillsToCompetencies", (string)null);
+                    b.ToTable("SkillsFrameworkSkillsToCompetencies");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SkillsFrameworkTrackSpecialization", b =>
@@ -3308,7 +3139,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SectorDisciplineId");
 
-                    b.ToTable("SkillsFrameworkTrackSpecializations", (string)null);
+                    b.ToTable("SkillsFrameworkTrackSpecializations");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.TableObject", b =>
@@ -3337,7 +3168,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("TableObjects", (string)null);
+                    b.ToTable("TableObjects");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.User", b =>
@@ -3404,7 +3235,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.UserAccess", b =>
@@ -3432,7 +3263,30 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAccesses", (string)null);
+                    b.ToTable("UserAccesses");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.UserCampusDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CampusId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CampusId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserCampusDetails");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Voucher", b =>
@@ -3472,7 +3326,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Vouchers", (string)null);
+                    b.ToTable("Vouchers");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.VoucherApplied", b =>
@@ -3498,7 +3352,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("VoucherId");
 
-                    b.ToTable("VoucherApplied", (string)null);
+                    b.ToTable("VoucherApplied");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AcademicCalendar", b =>
@@ -3533,11 +3387,13 @@ namespace INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("DOMAIN.Model.AccessList", b =>
                 {
-                    b.HasOne("DOMAIN.Model.AccessList", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId");
+                    b.HasOne("DOMAIN.Model.AccessGroup", "AccessGroup")
+                        .WithMany("AccessLists")
+                        .HasForeignKey("AccessGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Parent");
+                    b.Navigation("AccessGroup");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AccessListAction", b =>
@@ -3641,7 +3497,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "Evaluator")
                         .WithMany()
-                        .HasForeignKey("EvaluatorId");
+                        .HasForeignKey("EvaluatorId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("AdmissionApplicant");
 
@@ -3673,7 +3530,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "PostedByUser")
                         .WithMany()
-                        .HasForeignKey("PostedByUserId");
+                        .HasForeignKey("PostedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Category");
 
@@ -3702,7 +3560,7 @@ namespace INFRASTRUCTURE.Migrations
             modelBuilder.Entity("DOMAIN.Model.Campus", b =>
                 {
                     b.HasOne("DOMAIN.Model.Agency", "Agency")
-                        .WithMany()
+                        .WithMany("Campuses")
                         .HasForeignKey("AgencyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -3720,15 +3578,18 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "DuWhoTag")
                         .WithMany()
-                        .HasForeignKey("DuWhoTagId");
+                        .HasForeignKey("DuWhoTagId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.User", "UnclearedUser")
                         .WithMany()
-                        .HasForeignKey("UnclearedUserId");
+                        .HasForeignKey("UnclearedUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.User", "UserWhoCleared")
                         .WithMany()
-                        .HasForeignKey("UserWhoClearedId");
+                        .HasForeignKey("UserWhoClearedId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ClearanceType");
 
@@ -3758,6 +3619,11 @@ namespace INFRASTRUCTURE.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DOMAIN.Model.Course", "Parent")
+                        .WithMany()
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DOMAIN.Model.SkillsFrameworkTrackSpecialization", "SfTrackSpecialization")
                         .WithMany()
                         .HasForeignKey("SfTrackSpecializationId")
@@ -3765,6 +3631,8 @@ namespace INFRASTRUCTURE.Migrations
                         .IsRequired();
 
                     b.Navigation("EducationalQualityAssuranceType");
+
+                    b.Navigation("Parent");
 
                     b.Navigation("SfTrackSpecialization");
                 });
@@ -3779,15 +3647,18 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "CreditToUser")
                         .WithMany()
-                        .HasForeignKey("CreditToUserId");
+                        .HasForeignKey("CreditToUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.User", "EvaluatedByUser")
                         .WithMany()
-                        .HasForeignKey("EvaluatedByUserId");
+                        .HasForeignKey("EvaluatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.OtherSchool", "OtherSchool")
                         .WithMany()
-                        .HasForeignKey("OtherSchoolId");
+                        .HasForeignKey("OtherSchoolId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Course");
 
@@ -3846,7 +3717,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.EducationalQualityAssuranceLearningObjective", "EducationalQualityAssuranceLearningObjective")
                         .WithMany()
-                        .HasForeignKey("EducationalQualityAssuranceLearningObjectiveId");
+                        .HasForeignKey("EducationalQualityAssuranceLearningObjectiveId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Course");
 
@@ -3997,7 +3869,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "StudentUser")
                         .WithMany()
-                        .HasForeignKey("StudentUserId");
+                        .HasForeignKey("StudentUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("EnrollmentRole");
 
@@ -4070,7 +3943,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.GradeInput", "GradeInput")
                         .WithMany()
-                        .HasForeignKey("GradeInputId");
+                        .HasForeignKey("GradeInputId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.GradingPeriod", "GradingPeriod")
                         .WithMany()
@@ -4095,7 +3969,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "LogByUser")
                         .WithMany()
-                        .HasForeignKey("LogByUserId");
+                        .HasForeignKey("LogByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Enrollment");
 
@@ -4106,7 +3981,8 @@ namespace INFRASTRUCTURE.Migrations
                 {
                     b.HasOne("DOMAIN.Model.User", "Cashier")
                         .WithMany()
-                        .HasForeignKey("CashierId");
+                        .HasForeignKey("CashierId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.EnrollmentBilling", "EnrollmentBilling")
                         .WithMany()
@@ -4129,7 +4005,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "CreatedByUser")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId");
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.Cycle", "Cycle")
                         .WithMany()
@@ -4183,7 +4060,8 @@ namespace INFRASTRUCTURE.Migrations
                 {
                     b.HasOne("DOMAIN.Model.EvaluationRating", "EvaluationRating")
                         .WithMany()
-                        .HasForeignKey("EvaluationRatingId");
+                        .HasForeignKey("EvaluationRatingId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.LikertQuestion", "LikertQuestion")
                         .WithMany()
@@ -4285,7 +4163,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "GraduatingStudent")
                         .WithMany()
-                        .HasForeignKey("GraduatingStudentId");
+                        .HasForeignKey("GraduatingStudentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.GraduationCampus", "GraduationCampus")
                         .WithMany()
@@ -4332,7 +4211,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.Parameter", "Parent")
                         .WithMany()
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("ParameterSubCategory");
 
@@ -4383,7 +4263,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "PetitionByUser")
                         .WithMany()
-                        .HasForeignKey("PetitionByUserId");
+                        .HasForeignKey("PetitionByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("AcademicProgram");
 
@@ -4398,7 +4279,8 @@ namespace INFRASTRUCTURE.Migrations
                 {
                     b.HasOne("DOMAIN.Model.User", "ImposedByUser")
                         .WithMany()
-                        .HasForeignKey("ImposedByUserId");
+                        .HasForeignKey("ImposedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.PortfolioIncident", "PortfolioIncident")
                         .WithMany()
@@ -4445,7 +4327,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("PortfolioProvider");
 
@@ -4464,15 +4347,18 @@ namespace INFRASTRUCTURE.Migrations
                 {
                     b.HasOne("DOMAIN.Model.User", "ComplainantUser")
                         .WithMany()
-                        .HasForeignKey("ComplainantUserId");
+                        .HasForeignKey("ComplainantUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.User", "ComplaineeUser")
                         .WithMany()
-                        .HasForeignKey("ComplaineeUserId");
+                        .HasForeignKey("ComplaineeUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.User", "EncodedByUser")
                         .WithMany()
-                        .HasForeignKey("EncodedByUserId");
+                        .HasForeignKey("EncodedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.PortfolioIncidentType", "PortfolioIncidentType")
                         .WithMany()
@@ -4521,7 +4407,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("PortfolioSession");
 
@@ -4550,8 +4437,12 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.Course", "Course")
                         .WithMany()
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DOMAIN.Model.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.Cycle", "Cycle")
                         .WithMany()
@@ -4562,12 +4453,13 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.Room", "Room")
                         .WithMany()
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("AcademicProgram");
 
                     b.Navigation("Course");
+
+                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Cycle");
 
@@ -4578,7 +4470,8 @@ namespace INFRASTRUCTURE.Migrations
                 {
                     b.HasOne("DOMAIN.Model.User", "AnyUser")
                         .WithMany()
-                        .HasForeignKey("AnyUserId");
+                        .HasForeignKey("AnyUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.Schedule", "Schedule")
                         .WithMany()
@@ -4618,7 +4511,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "TeacherUser")
                         .WithMany()
-                        .HasForeignKey("TeacherUserId");
+                        .HasForeignKey("TeacherUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("EnrollmentRole");
 
@@ -4631,7 +4525,8 @@ namespace INFRASTRUCTURE.Migrations
                 {
                     b.HasOne("DOMAIN.Model.User", "ApplicantUser")
                         .WithMany()
-                        .HasForeignKey("ApplicantUserId");
+                        .HasForeignKey("ApplicantUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.ScholarshipCycleLimit", "ScholarshipCycleLimit")
                         .WithMany()
@@ -4667,7 +4562,8 @@ namespace INFRASTRUCTURE.Migrations
                 {
                     b.HasOne("DOMAIN.Model.User", "EvaluatorUser")
                         .WithMany()
-                        .HasForeignKey("EvaluatorUserId");
+                        .HasForeignKey("EvaluatorUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DOMAIN.Model.ScholarshipApplication", "ScholarshipApplication")
                         .WithMany()
@@ -4710,8 +4606,9 @@ namespace INFRASTRUCTURE.Migrations
             modelBuilder.Entity("DOMAIN.Model.SectorDiscipline", b =>
                 {
                     b.HasOne("DOMAIN.Model.SectorDiscipline", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId");
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Parent");
                 });
@@ -4745,7 +4642,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.SkillsFrameworkSkillsToCompetency", "SkillsFrameworkSkillsToCompetency")
                         .WithMany()
-                        .HasForeignKey("SkillsFrameworkSkillsToCompetencyId");
+                        .HasForeignKey("SkillsFrameworkSkillsToCompetencyId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Course");
 
@@ -4773,7 +4671,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.SkillsFrameworkJobRole", "SfJobRole")
                         .WithMany()
-                        .HasForeignKey("SfJobRoleId");
+                        .HasForeignKey("SfJobRoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("SfCriticalWorkFunction");
 
@@ -4796,7 +4695,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.SkillsFrameworkSkills", "SkillsFrameworkSkills")
                         .WithMany()
-                        .HasForeignKey("SkillsFrameworkSkillsId");
+                        .HasForeignKey("SkillsFrameworkSkillsId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("SfJobRoleToCriticalWorkFunction");
 
@@ -4905,7 +4805,8 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.TableObject", "Parent")
                         .WithMany()
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("AccountGroup");
 
@@ -4928,11 +4829,30 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasOne("DOMAIN.Model.User", "User")
                         .WithMany("AccessList")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("AccessList");
 
                     b.Navigation("AccessListAction");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.UserCampusDetails", b =>
+                {
+                    b.HasOne("DOMAIN.Model.Campus", "Campus")
+                        .WithMany()
+                        .HasForeignKey("CampusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DOMAIN.Model.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Campus");
 
                     b.Navigation("User");
                 });
@@ -4956,16 +4876,29 @@ namespace INFRASTRUCTURE.Migrations
                     b.Navigation("Voucher");
                 });
 
+            modelBuilder.Entity("DOMAIN.Model.AccessGroup", b =>
+                {
+                    b.Navigation("AccessLists");
+                });
+
             modelBuilder.Entity("DOMAIN.Model.AccessList", b =>
                 {
                     b.Navigation("AccessListActions");
+                });
 
-                    b.Navigation("Children");
+            modelBuilder.Entity("DOMAIN.Model.Agency", b =>
+                {
+                    b.Navigation("Campuses");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Course", b =>
                 {
                     b.Navigation("CourseRequisites");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.SectorDiscipline", b =>
+                {
+                    b.Navigation("Children");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.User", b =>

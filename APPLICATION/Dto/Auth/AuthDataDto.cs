@@ -18,26 +18,66 @@ public class AuthDataDto : GetUserDto
                 return this.AccessListStringMain;
             }
 
-            if (this.AccessList == null)
+            if (this.UserAccessGroupedBy == null)
             {
                 return "[]";
             }
 
-            if (this.AccessList.Count == 0)
+            if (this.UserAccessGroupedBy.Count == 0)
             {
                 return "[]";
             }
 
             var data = "";
             var indx = 0;
-            foreach (var item in this.AccessList)
+            foreach (var item in this.UserAccessGroupedBy)
             {
                 data += "{";
-                data += $"\"subject\": \"{item.AccessList.Subject}\", \"action\": \"{item.AccessListAction.Action}\"";
+                data += $"\"id\": {item.AccessGroup.Id}, ";
+                data += $"\"accessGroup\": \"{item.AccessGroup.AccessGroupName}\", ";
+                data += $"\"accessLists\":";
+                    
+                data += "[";
+                var notUnique = item.UserAccesses.Select(ua => ua.AccessList.Subject).ToList();
+                List<string> subjects = [];
+                foreach (var acl in notUnique)
+                {
+                    if (!subjects.Contains(acl))
+                    {
+                        subjects.Add(acl);
+                    }
+                }
+
+                var subject_index = 0;
+                foreach (var acl in subjects)
+                {
+                    data += "{";
+                    data += $"\"subject\": \"{acl}\", ";
+                    data += "\"actions\":";
+                    data += "[";
+                    var actions = item.UserAccesses.Where(ua => ua.AccessList.Subject == acl).Select(ua => ua.AccessListAction.Action).ToList();
+                    foreach (var action in actions)
+                    {
+                        data += $"\"{action}\"";
+                        if (actions.IndexOf(action) < actions.Count - 1)
+                        {
+                            data += ", ";
+                        }
+                    }
+                    data += "]";
+                    data += "}";
+                    subject_index++;
+                    if (subject_index < subjects.Count)
+                    {
+                        data += ", ";
+                    }
+                }
+                data += "]";
+               
                 data += "}";
                 ++indx;
 
-                if (indx < this.AccessList.Count)
+                if (indx < this.UserAccessGroupedBy.Count)
                 {
                     data += ", ";
                 }
@@ -51,6 +91,8 @@ public class AuthDataDto : GetUserDto
             this.AccessListStringMain = value;
         }
     }
+
+    public string AccessListStringRaw { get; set; }
     public string AccessTokenSize 
     { 
         get 

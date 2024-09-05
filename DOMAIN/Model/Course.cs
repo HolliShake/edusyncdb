@@ -18,6 +18,11 @@ public class Course
     [Column(TypeName = "decimal(18,4)")]
     public decimal CreditUnits { get; set; }
 
+    //
+    [ForeignKey("Parent")]
+    public int? ParentId { get; set; }
+    public Course Parent { get; set; }
+
     // Fk EducationalQualityAssuranceType
     public int EducationalQualityAssuranceTypeId { get; set; }
     public EducationalQualityAssuranceType EducationalQualityAssuranceType { get; set; }

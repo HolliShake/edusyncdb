@@ -5,6 +5,9 @@ using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using APPLICATION.Jwt;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -13,11 +16,29 @@ namespace API.Controllers;
 [Casl("SuperAdmin:all")]
 public class UserAccessController : GenericController<UserAccess, IUserAccessService, UserAccessDto, GetUserAccessDto>
 {
-    public UserAccessController(IMapper mapper, IUserAccessService repo):base(mapper, repo)
+    private readonly IJwtAuthManager _jwtAuthManager;
+    public UserAccessController(IMapper mapper, IJwtAuthManager jwtAuthManager, IUserAccessService repo):base(mapper, repo)
     {
+        _jwtAuthManager = jwtAuthManager;
     }
 
     /****************** ACTION ROUTES ******************/
+
+    [HttpGet("TestUserAccess")]
+    public async Task<ActionResult> TestUserAccess()
+    {
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+
+        if (accessToken.Length <= 0)
+        {
+            return BadRequest();
+        }
+
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        var userId = principal.Item1.FindFirst(type => type.Type == ClaimTypes.NameIdentifier)?.Value;
+        return Ok(await _repo.TestAccessList(userId!));
+    }
+
     /// <summary>
     /// Get all data.
     /// </summary>

@@ -7,35 +7,106 @@ using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using System.Collections.Generic;
+using APPLICATION.Dto.AccessGroup;
+using APPLICATION.Dto.AccessListAction;
 
 namespace INFRASTRUCTURE.Service;
 public class UserAccessService(AppDbContext context, IMapper mapper) : GenericService<UserAccess, GetUserAccessDto>(context, mapper), IUserAccessService
 {
-    public async Task<ICollection<GetUserAccessDto>> GetUserAccessByUserId(string userId)
+    public async Task<ICollection<UserAccessGroupedBy>> GetUserAccessByUserId(string userId)
     {
-        
-        return _mapper.Map<ICollection<GetUserAccessDto>>(await _dbModel
+        return await _dbModel
             .Include(ua => ua.AccessList)
+                .ThenInclude(al => al.AccessGroup)
             .Include(ua => ua.AccessListAction)
-            .Where(ua => ua.UserId.Equals(userId))
-            .Select(ua => new UserAccess
+            .Where(ua => ua.UserId == userId)
+            .GroupBy(ua => ua.AccessList.AccessGroup)
+            .Select(ag => new UserAccessGroupedBy
             {
-                Id = ua.Id,
-                UserId = ua.UserId,
-                AccessListId = ua.AccessListId,
-                AccessList = new AccessList
+                AccessGroup = _mapper.Map<GetAccessGroupDto>(ag.Key),
+                UserAccesses = _mapper.Map<ICollection<GetUserAccessDto>>(ag.Select(ua => new GetUserAccessDto
                 {
-                    Id = ua.AccessList.Id,
-                    Subject = ua.AccessList.Subject,
-                },
-                AccessListActionId = ua.AccessListActionId,
-                AccessListAction = new AccessListAction
-                {
-                    Id = ua.AccessListAction.Id,
-                    Action = ua.AccessListAction.Action,
-                }
+                    Id = ua.Id,
+                    UserId = ua.UserId,
+                    AccessListId = ua.AccessListId,
+                    AccessList = new GetAccessListDto
+                    {
+                        Id = ua.AccessList.Id,
+                        Subject = ua.AccessList.Subject,
+                    },
+                    AccessListActionId = ua.AccessListActionId,
+                    AccessListAction = new GetAccessListActionDto
+                    {
+                        Id = ua.AccessListAction.Id,
+                        Action = ua.AccessListAction.Action,
+                    }
+                }))
             })
-            .ToListAsync());
+            .ToListAsync();
+    }
+
+    public ICollection<UserAccessGroupedBy> GetUserAccessByUserIdSync(string userId)
+    {
+        return _dbModel
+            .Include(ua => ua.AccessList)
+                .ThenInclude(al => al.AccessGroup)
+            .Include(ua => ua.AccessListAction)
+            .Where(ua => ua.UserId == userId)
+            .GroupBy(ua => ua.AccessList.AccessGroup)
+            .Select(ag => new UserAccessGroupedBy
+            {
+                AccessGroup = _mapper.Map<GetAccessGroupDto>(ag.Key),
+                UserAccesses = _mapper.Map<ICollection<GetUserAccessDto>>(ag.Select(ua => new GetUserAccessDto
+                {
+                    Id = ua.Id,
+                    UserId = ua.UserId,
+                    AccessListId = ua.AccessListId,
+                    AccessList = new GetAccessListDto
+                    {
+                        Id = ua.AccessList.Id,
+                        Subject = ua.AccessList.Subject,
+                    },
+                    AccessListActionId = ua.AccessListActionId,
+                    AccessListAction = new GetAccessListActionDto
+                    {
+                        Id = ua.AccessListAction.Id,
+                        Action = ua.AccessListAction.Action,
+                    },
+                }))
+            })
+            .ToList();
+    }
+
+    public async Task<ICollection<UserAccessGroupedBy>> TestAccessList(string userId)
+    {
+        return await _dbModel
+            .Include(ua => ua.AccessList)
+                .ThenInclude(al => al.AccessGroup)
+            .Include(ua => ua.AccessListAction)
+            .Where(ua => ua.UserId == userId)
+            .GroupBy(ua => ua.AccessList.AccessGroup)
+            .Select(ag => new UserAccessGroupedBy
+            {
+                AccessGroup = _mapper.Map<GetAccessGroupDto>(ag.Key),
+                UserAccesses = _mapper.Map<ICollection<GetUserAccessDto>>(ag.Select(ua => new GetUserAccessDto
+                {
+                    Id = ua.Id,
+                    UserId = ua.UserId,
+                    AccessListId = ua.AccessListId,
+                    AccessList = new GetAccessListDto
+                    {
+                        Id = ua.AccessList.Id,
+                        Subject = ua.AccessList.Subject,
+                    },
+                    AccessListActionId = ua.AccessListActionId,
+                    AccessListAction = new GetAccessListActionDto
+                    {
+                        Id = ua.AccessListAction.Id,
+                        Action = ua.AccessListAction.Action,
+                    }
+                }))
+            })
+            .ToListAsync();
     }
 
     public async Task<bool> CreateUserAccess(string userId, int accessListId, int accessListActionId)
@@ -50,7 +121,7 @@ public class UserAccessService(AppDbContext context, IMapper mapper) : GenericSe
 
     public async Task<List<GetUserAccessDto>?> UpdateUserAccess(List<UpdateUserAccessDto> items)
     {
-        List<GetUserAccessDto> newItems = new();
+        List<GetUserAccessDto> newItems = [];
         int success = 0;
         foreach (var item in items)
         {

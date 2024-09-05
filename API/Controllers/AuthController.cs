@@ -11,6 +11,7 @@ using APPLICATION.Dto.UserAccess;
 using API.Constant;
 using APPLICATION.IService;
 using API.Attributes;
+using API.utils;
 
 namespace API.Controllers;
 
@@ -68,11 +69,11 @@ public class AuthController:ControllerBase
         // }
 
         var userData = _mapper.Map<AuthDataDto>(user);
-        var access = await _userAccessService.GetUserAccessByUserId(user.Id);
+        var access = await _userAccessService.GetUserAccessByUserId(userData.Id);
 
-        userData.AccessList = _mapper.Map<ICollection<GetUserAccessDto>>(access);
+        userData.UserAccessGroupedBy = access;
 
-        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, userData.AccessListString);
+        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, "" /*userData.AccessListString*/);
       
         userData.IsGoogle = false;
         userData.AccessToken = /**/
@@ -80,8 +81,9 @@ public class AuthController:ControllerBase
         userData.RefreshToken = /**/
             token.RefreshToken.TokenString;
 
-        userData.AccessListString = "";
-        userData.AccessList = [];
+        var accessListString = userData.AccessListString;
+        userData.UserAccessGroupedBy = [];
+        userData.AccessListString = AesEncrypt.EncryptString(accessListString);
 
         return Ok(userData);
     }
@@ -181,9 +183,9 @@ public class AuthController:ControllerBase
         var userData = _mapper.Map<AuthDataDto>(user);
         var access = await _userAccessService.GetUserAccessByUserId(userData.Id);
 
-        userData.AccessList = _mapper.Map<ICollection<GetUserAccessDto>>(access);
+        userData.UserAccessGroupedBy = access;
 
-        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, userData.AccessListString);
+        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, "" /*userData.AccessListString*/);
         
         userData.IsGoogle = true;
         userData.AccessToken = /**/
@@ -191,8 +193,9 @@ public class AuthController:ControllerBase
         userData.RefreshToken = /**/
             token.RefreshToken.TokenString;
 
-        userData.AccessListString = "";
-        userData.AccessList = [];
+        var accessListString = userData.AccessListString;
+        userData.UserAccessGroupedBy = [];
+        userData.AccessListString = AesEncrypt.EncryptString(accessListString);
 
         return Ok(userData);
     }
@@ -336,18 +339,19 @@ public class AuthController:ControllerBase
         var userData = _mapper.Map<AuthDataDto>(user);
         var access = await _userAccessService.GetUserAccessByUserId(userData.Id);
 
-        userData.AccessList = _mapper.Map<ICollection<GetUserAccessDto>>(access);
+        userData.UserAccessGroupedBy = access;
 
-        var token = JwtGenerator.GenerateToken(_jwtAuthManager, userData.Id, userData.Email, userData.Role, userData.AccessListString);
+        var token = JwtGenerator.GenerateToken(_jwtAuthManager, userData.Id, userData.Email, userData.Role, "" /*userData.AccessListString*/);
         
         userData.AccessToken = /**/
             token.AccessToken;
         userData.RefreshToken = /**/
             token.RefreshToken.TokenString;
 
-        userData.AccessListString = "";
-        userData.AccessList = [];
-        
+        var accessListString = userData.AccessListString;
+        userData.UserAccessGroupedBy = [];
+        userData.AccessListString = accessListString;
+
         return Ok(userData);
     }
 }

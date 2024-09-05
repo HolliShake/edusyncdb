@@ -9,13 +9,6 @@ public class AccessListDto
     [MinLength(2)]
     [MaxLength(30)]
     public string Subject { get; set; }
-
-    [Required]
-    public bool IsGroup { get; set; }
-
-    [Required]
-    public AccessListType Type { get; set; }
-
-    // Fk AccessList
-    public int? ParentId { get; set; }
+    // Fk AccessGroup
+    public int AccessGroupId { get; set; }
 }

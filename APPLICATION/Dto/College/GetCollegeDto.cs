@@ -1,4 +1,5 @@
 using APPLICATION.Dto.Campus;
+using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
 
 namespace APPLICATION.Dto.College;
@@ -14,6 +15,10 @@ public class GetCollegeDto
             var str = "";
             for (int i = 0; i < arr.Length; i++)
             {
+                if (arr[i].IsNullOrEmpty())
+                {
+                    continue;
+                }
                 if (char.IsUpper(arr[i][0]))
                 {
                     str += arr[i][0];

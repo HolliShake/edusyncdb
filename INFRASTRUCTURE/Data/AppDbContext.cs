@@ -1,5 +1,4 @@
 ﻿using DOMAIN.Model;
-using INFRASTRUCTURE.Seeder;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata;
 
@@ -17,6 +16,7 @@ public class AppDbContext : DbContext
     public DbSet<AcademicProgram> AcademicPrograms { get; set; }
     public DbSet<AcademicTerm> AcademicTerms { get; set; }
     public DbSet<AccountGroup> AccountGroups { get; set; }
+    public DbSet<AccessGroup> AccessGroups { get; set; }
     public DbSet<AccessList> AccessLists { get; set; }
     public DbSet<AccessListAction> AccessListActions { get; set; }
     public DbSet<AdmissionApplicant> AdmissionApplicants { get; set; }
@@ -132,17 +132,22 @@ public class AppDbContext : DbContext
     // U
     public DbSet<User> Users { get; set; }
     public DbSet<UserAccess> UserAccesses { get; set; }
+    public DbSet<UserCampusDetails> UserCampusDetails { get; set; }
     // V
     public DbSet<Voucher> Vouchers { get; set; }
     public DbSet<VoucherApplied> VoucherApplied { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+        {
+            relationship.DeleteBehavior = DeleteBehavior.Cascade;
+        }
+
         modelBuilder.Entity<AccessList>()
            .HasIndex(entity => entity.Subject)
            .IsUnique();
 
         base.OnModelCreating(modelBuilder);
-        new DbInitializer(modelBuilder).Seed();
     }
 }

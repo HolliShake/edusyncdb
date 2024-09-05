@@ -1,4 +1,5 @@
 using APPLICATION.Dto.Agency;
+using APPLICATION.Dto.UserAccess;
 using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;
@@ -14,19 +15,39 @@ public class AgencyService:GenericService<Agency, GetAgencyDto>, IAgencyService
     {
     }
 
-    static bool CanAccess(List<Access> accessList, Agency agency)
+    static bool CanAccess(ICollection<UserAccessGroupedBy> accessGroup, Agency agency)
     {
-        return accessList
-            .Where(al => al.action
-            .Equals("read"))
-            .Any(al => al.subject.Equals(agency.AgencyName));
+        return accessGroup
+            .Where(al => al.UserAccesses.Where(ua => ua.AccessList.Subject.Equals(agency.AgencyName)).Any())
+            .Any(al => al.UserAccesses.Where(ua => ua.AccessListAction.Action.Equals("read")).Any());
     }
 
-    public async Task<ICollection<GetAgencyDto>> GetMyAccessibleAgencies(string accessListJSON)
+    static bool CanAccessCampus(ICollection<UserAccessGroupedBy> accessGroup, Campus campus)
     {
-        var json = JsonSerializer.Deserialize<List<Access>>(accessListJSON);
+        return accessGroup
+            .Where(al => al.UserAccesses.Where(ua => ua.AccessList.Subject.Equals(campus.CampusName)).Any())
+            .Any(al => al.UserAccesses.Where(ua => ua.AccessListAction.Action.Equals("read")).Any());
+    }
 
-        return _mapper.Map<ICollection<GetAgencyDto>>((await _dbModel.ToListAsync()).Select(agency => agency).Where(agency => CanAccess(json, agency)));
+    public async Task<ICollection<GetAgencyDto>> GetMyAccessibleAgencies(ICollection<UserAccessGroupedBy> accessGroup)
+    {
+        return _mapper.Map<ICollection<GetAgencyDto>>((await 
+            _dbModel.Include(agency => agency.Campuses).ToListAsync())
+                .Where(agency => CanAccess(accessGroup, agency))
+                .Select(agency => new Agency { 
+                    Id = agency.Id,
+                    AgencyName = agency.AgencyName,
+                    AgencyAddress = agency.AgencyAddress,
+                    Campuses = agency.Campuses.Where(campus => CanAccessCampus(accessGroup, campus)).ToList()
+                        .Select(campus => new Campus { 
+                            Id = campus.Id,
+                            CampusName = campus.CampusName,
+                            AgencyId = campus.AgencyId,
+                            Address = campus.Address,
+                            Latitude = campus.Latitude,
+                            Longitude = campus.Longitude
+                        }).ToList()
+                }));
     }
 }
 

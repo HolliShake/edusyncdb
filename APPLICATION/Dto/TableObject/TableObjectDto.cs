@@ -12,7 +12,6 @@ public class TableObjectDto
     [MaxLength(50)]
     public string AccountName { get; set; }
     // Fk Object
-    [Required]
     public int? ParentId { get; set; }
 
     // Fk AccountGroup

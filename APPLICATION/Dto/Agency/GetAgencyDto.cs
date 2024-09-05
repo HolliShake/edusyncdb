@@ -1,3 +1,4 @@
+using APPLICATION.Dto.Campus;
 using System.ComponentModel.DataAnnotations;
 
 namespace APPLICATION.Dto.Agency;
@@ -22,4 +23,7 @@ public class GetAgencyDto
             return str;
         }
     }
+
+    // Nav
+    public virtual ICollection<GetCampusDto> Campuses { get; set; }
 }

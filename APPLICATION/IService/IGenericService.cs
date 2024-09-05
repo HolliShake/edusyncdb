@@ -1,4 +1,6 @@
-﻿namespace APPLICATION.IService;
+﻿using APPLICATION.Dto.UserAccess;
+
+namespace APPLICATION.IService;
 
 public interface IGenericService<TModel, TGetter>
 {

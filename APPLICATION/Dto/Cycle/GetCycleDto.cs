@@ -6,7 +6,7 @@ public class GetCycleDto
 {
     public int Id { get; set; }
     public string CycleDescription { get; set; }
-    public int CylceNumber { get; set; }
+    public int CycleNumber { get; set; }
     public string SchoolYear { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

@@ -20,8 +20,10 @@ public class UserService:GenericService<User, GetUserDto>, IUserService
     {
         return await _dbModel
             .Include(x => x.AccessList)
-            .ThenInclude(x => x.AccessList)
-            .ThenInclude(x => x.AccessListActions)
+                .ThenInclude(x => x.AccessList)
+                .ThenInclude(x => x.AccessGroup)
+                .Include(x => x.AccessList)
+                .ThenInclude(x => x.AccessListAction)
             .Take(limit)
             .Select(x => new GetUserDto 
             {
@@ -34,14 +36,30 @@ public class UserService:GenericService<User, GetUserDto>, IUserService
                 PhoneNumber = x.PhoneNumber,
                 Role = x.Role,
                 UserName = x.UserName,
-                AccessList = (ICollection<GetUserAccessDto>) x.AccessList.Select(y => new GetUserAccessDto
+                UserAccessGroupedBy = (ICollection<UserAccessGroupedBy>) x.AccessList.Select(y => new UserAccessGroupedBy
                 {
-                    Id = y.Id,
-                    UserId=y.UserId,
-                    AccessListId = y.AccessListId,
-                    AccessList = new GetAccessListDto { Id = y.AccessListId, Subject = y.AccessList.Subject },
-                    AccessListActionId = y.AccessListActionId,
-                    AccessListAction = new GetAccessListActionDto { Id = y.AccessListActionId, Action = y.AccessListAction.Action },
+                    AccessGroup = new APPLICATION.Dto.AccessGroup.GetAccessGroupDto
+                    {
+                        Id = y.AccessList.AccessGroup.Id,
+                        AccessGroupName = y.AccessList.AccessGroup.AccessGroupName,
+                    },
+                    UserAccesses = _mapper.Map<ICollection<GetUserAccessDto>>(x.AccessList.Select(z => new GetUserAccessDto
+                    {
+                        Id = z.Id,
+                        UserId = z.UserId,
+                        AccessListId = z.AccessListId,
+                        AccessList = new GetAccessListDto
+                        {
+                            Id = z.AccessList.Id,
+                            Subject = z.AccessList.Subject,
+                        },
+                        AccessListActionId = z.AccessListActionId,
+                        AccessListAction = new GetAccessListActionDto
+                        {
+                            Id = z.AccessListAction.Id,
+                            Action = z.AccessListAction.Action,
+                        }
+                    }))
                 })
             })
             .ToListAsync();

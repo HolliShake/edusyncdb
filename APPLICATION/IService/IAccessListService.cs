@@ -4,7 +4,5 @@ using DOMAIN.Model;
 namespace APPLICATION.IService;
 public interface IAccessListService:IGenericService<AccessList, GetAccessListDto>
 {
-    public Task<ICollection<GetAccessListDto>> GetGroups();
-    public Task<List<GetAccessListDto>> GetParentAccess();
-    public Task<bool> ImportAgencies();
+    public Task<object> GetByAccessGroupId(int accessGroupId);
 }

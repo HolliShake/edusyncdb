@@ -509,7 +509,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AccessListId,
                         principalTable: "AccessLists",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -531,7 +531,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AccountGroupId,
                         principalTable: "AccountGroups",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TableObjects_TableObjects_ParentId",
                         column: x => x.ParentId,
@@ -559,7 +559,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AgencyId,
                         principalTable: "Agencies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -579,7 +579,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EqaTypeId,
                         principalTable: "EducationalQualityAssuranceTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -599,7 +599,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.InstrumentId,
                         principalTable: "Instruments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -628,7 +628,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.PortfolioSessionTypeId,
                         principalTable: "PortfolioSessionTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -648,13 +648,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.RequirementId,
                         principalTable: "Requirements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ScholarshipRequirements_ScholarshipLists_ScholarshipListId",
                         column: x => x.ScholarshipListId,
                         principalTable: "ScholarshipLists",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -679,7 +679,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SectorDisciplineId,
                         principalTable: "SectorDisciplines",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -699,7 +699,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SectorDisciplineId,
                         principalTable: "SectorDisciplines",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -720,13 +720,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SectorDisciplineId,
                         principalTable: "SectorDisciplines",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SkillsFrameworkCompetencyCategories_SkillsFrameworkCompetencyTypes_SfCompetencyTypeId",
                         column: x => x.SfCompetencyTypeId,
                         principalTable: "SkillsFrameworkCompetencyTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -746,7 +746,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SfCriticalWorkFunctionId,
                         principalTable: "SkillsFrameworkCriticalWorkFunctions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -766,7 +766,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SfGroupLevelId,
                         principalTable: "SkillsFrameworkGroupLevels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -794,7 +794,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.BulletinCategoryId,
                         principalTable: "BulletinCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Bulletins_Users_PostedByUserId",
                         column: x => x.PostedByUserId,
@@ -832,7 +832,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.ClearanceTypeId,
                         principalTable: "ClearanceTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ClearanceTags_Users_DuWhoTagId",
                         column: x => x.DuWhoTagId,
@@ -875,7 +875,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.PortfolioIncidentTypeId,
                         principalTable: "PortfolioIncidentTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PortfolioIncidents_Users_ComplainantUserId",
                         column: x => x.ComplainantUserId,
@@ -911,13 +911,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AccessListActionId,
                         principalTable: "AccessListActions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserAccesses_AccessLists_AccessListId",
                         column: x => x.AccessListId,
                         principalTable: "AccessLists",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_UserAccesses_Users_UserId",
                         column: x => x.UserId,
@@ -945,13 +945,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.FundSourceId,
                         principalTable: "FundSources",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EnrollmentFees_TableObjects_ObjectId",
                         column: x => x.ObjectId,
                         principalTable: "TableObjects",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -973,7 +973,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CampusId,
                         principalTable: "Campuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -993,7 +993,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CampusId,
                         principalTable: "Campuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1017,7 +1017,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CampusId,
                         principalTable: "Campuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1045,7 +1045,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CampusId,
                         principalTable: "Campuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1065,7 +1065,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EqaEducationalGoalId,
                         principalTable: "EducationalQualityAssuranceEducationalGoals",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1085,7 +1085,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.ParameterCategoryId,
                         principalTable: "ParameterCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1106,7 +1106,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.PortfolioSessionId,
                         principalTable: "PortfolioSessions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PortfolioSessionInvolved_Users_UserId",
                         column: x => x.UserId,
@@ -1139,13 +1139,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EducationalQualityAssuranceTypeId,
                         principalTable: "EducationalQualityAssuranceTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Courses_SkillsFrameworkTrackSpecializations_SfTrackSpecializationId",
                         column: x => x.SfTrackSpecializationId,
                         principalTable: "SkillsFrameworkTrackSpecializations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1166,7 +1166,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SfTrackSpecializationId,
                         principalTable: "SkillsFrameworkTrackSpecializations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1187,7 +1187,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SfCompetencyCategoryId,
                         principalTable: "SkillsFrameworkCompetencyCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1211,7 +1211,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.PortfolioIncidentId,
                         principalTable: "PortfolioIncidents",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PortfolioDisciplinaryActions_Users_ImposedByUserId",
                         column: x => x.ImposedByUserId,
@@ -1239,7 +1239,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.BuildingId,
                         principalTable: "Buildings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1261,7 +1261,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CollegeId,
                         principalTable: "Colleges",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1284,13 +1284,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CycleId,
                         principalTable: "Cycles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AcademicCalendars_GradingPeriods_GradingPeriodId",
                         column: x => x.GradingPeriodId,
                         principalTable: "GradingPeriods",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1315,13 +1315,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CycleId,
                         principalTable: "Cycles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ScholarshipCycleLimits_ScholarshipLists_ScholarshipListId",
                         column: x => x.ScholarshipListId,
                         principalTable: "ScholarshipLists",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1341,7 +1341,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EqaProgramObjectiveId,
                         principalTable: "EducationalQualityAssuranceProgramObjectives",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1363,7 +1363,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.ParameterSubCategoryId,
                         principalTable: "ParameterSubCategories",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Parameters_Parameters_ParentId",
                         column: x => x.ParentId,
@@ -1398,7 +1398,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CourseCreditings_OtherSchools_OtherSchoolId",
                         column: x => x.OtherSchoolId,
@@ -1433,13 +1433,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CourseFees_EnrollmentFees_FeeId",
                         column: x => x.FeeId,
                         principalTable: "EnrollmentFees",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1460,13 +1460,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CourseRequisites_Courses_RequisiteCourseId",
                         column: x => x.RequisiteCourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1486,13 +1486,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EqaProgramObjectiveId,
                         principalTable: "EducationalQualityAssuranceProgramObjectives",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EducationalQualityAssuranceProgramObjectiveToJobRoles_SkillsFrameworkJobRoleJobRoles_SfJobRoleId",
                         column: x => x.SfJobRoleId,
                         principalTable: "SkillsFrameworkJobRoleJobRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1513,7 +1513,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SfCriticalWorkFunctionId,
                         principalTable: "SkillsFrameworkCriticalWorkFunctions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SkillsFrameworkJobRoleToCriticalWorkFunctions_SkillsFrameworkJobRoleJobRoles_SfJobRoleId",
                         column: x => x.SfJobRoleId,
@@ -1538,13 +1538,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SfJobRoleId,
                         principalTable: "SkillsFrameworkJobRoleJobRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SkillsFrameworkPerformaceExpectationToJobRoles_SkillsFrameworkPerformanceExpectations_SfPerformanceExpectationId",
                         column: x => x.SfPerformanceExpectationId,
                         principalTable: "SkillsFrameworkPerformanceExpectations",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1577,31 +1577,31 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.PortfolioProviderId,
                         principalTable: "PortfolioProviders",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PortfolioEntries_PortfolioScopes_PortfolioScopeId",
                         column: x => x.PortfolioScopeId,
                         principalTable: "PortfolioScopes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PortfolioEntries_PortfolioTypes_PortfolioTypeId",
                         column: x => x.PortfolioTypeId,
                         principalTable: "PortfolioTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PortfolioEntries_SkillsFrameworkProficiencyLevels_SfProficiencyLevelId",
                         column: x => x.SfProficiencyLevelId,
                         principalTable: "SkillsFrameworkProficiencyLevels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PortfolioEntries_SkillsFrameworkSkills_SfSkillsId",
                         column: x => x.SfSkillsId,
                         principalTable: "SkillsFrameworkSkills",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PortfolioEntries_Users_UserId",
                         column: x => x.UserId,
@@ -1627,19 +1627,19 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SfCompetencyId,
                         principalTable: "SkillsFrameworkCompetencies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SkillsFrameworkSkillsToCompetencies_SkillsFrameworkProficiencyLevels_SfProficiencyLevelId",
                         column: x => x.SfProficiencyLevelId,
                         principalTable: "SkillsFrameworkProficiencyLevels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SkillsFrameworkSkillsToCompetencies_SkillsFrameworkSkills_SfSkillsId",
                         column: x => x.SfSkillsId,
                         principalTable: "SkillsFrameworkSkills",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1663,13 +1663,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AcademicProgramId,
                         principalTable: "AcademicPrograms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AdmissionSchedules_Cycles_CycleId",
                         column: x => x.CycleId,
                         principalTable: "Cycles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1689,13 +1689,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AcademicProgramId,
                         principalTable: "AcademicPrograms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_BulletinScopes_Bulletins_BulletinId",
                         column: x => x.BulletinId,
                         principalTable: "Bulletins",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1729,25 +1729,25 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AcademicProgramId,
                         principalTable: "AcademicPrograms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Curricula_AcademicTerms_AcademicTermId",
                         column: x => x.AcademicTermId,
                         principalTable: "AcademicTerms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Curricula_GradeInputs_MinGradeToBeCulledId",
                         column: x => x.MinGradeToBeCulledId,
                         principalTable: "GradeInputs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Curricula_ProgramTypes_ProgramTypeId",
                         column: x => x.ProgramTypeId,
                         principalTable: "ProgramTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1775,25 +1775,25 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AcademicProgramId,
                         principalTable: "AcademicPrograms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EvaluationPeriods_Cycles_CycleId",
                         column: x => x.CycleId,
                         principalTable: "Cycles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EvaluationPeriods_EnrollmentRoles_EnrollmentRoleId",
                         column: x => x.EnrollmentRoleId,
                         principalTable: "EnrollmentRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EvaluationPeriods_Instruments_InstrumentId",
                         column: x => x.InstrumentId,
                         principalTable: "Instruments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EvaluationPeriods_Users_CreatedByUserId",
                         column: x => x.CreatedByUserId,
@@ -1823,13 +1823,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AcademicProgramId,
                         principalTable: "AcademicPrograms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GraduationApplicants_GraduationCampuses_GraduationCampusId",
                         column: x => x.GraduationCampusId,
                         principalTable: "GraduationCampuses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GraduationApplicants_Users_GraduatingStudentId",
                         column: x => x.GraduatingStudentId,
@@ -1858,19 +1858,19 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AcademicProgramId,
                         principalTable: "AcademicPrograms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PetitionCourses_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PetitionCourses_Cycles_CycleId",
                         column: x => x.CycleId,
                         principalTable: "Cycles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_PetitionCourses_Users_PetitionByUserId",
                         column: x => x.PetitionByUserId,
@@ -1905,25 +1905,25 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AcademicProgramId,
                         principalTable: "AcademicPrograms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Schedules_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Schedules_Cycles_CycleId",
                         column: x => x.CycleId,
                         principalTable: "Cycles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Schedules_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1948,7 +1948,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.ScholarshipCycleLimitId,
                         principalTable: "ScholarshipCycleLimits",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ScholarshipApplications_Users_ApplicantUserId",
                         column: x => x.ApplicantUserId,
@@ -1973,7 +1973,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EqaCourseObjectiveId,
                         principalTable: "EducationalQualityAssuranceCourseObjectives",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1996,7 +1996,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.ParameterId,
                         principalTable: "Parameters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2018,13 +2018,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.SfJobRoleToCriticalWorkFunctionId,
                         principalTable: "SkillsFrameworkJobRoleToCriticalWorkFunctions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SkillsFrameworkJobRoleToProficiencyLevels_SkillsFrameworkProficiencyLevels_SfProficiencyLevelId",
                         column: x => x.SfProficiencyLevelId,
                         principalTable: "SkillsFrameworkProficiencyLevels",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SkillsFrameworkJobRoleToProficiencyLevels_SkillsFrameworkSkills_SkillsFrameworkSkillsId",
                         column: x => x.SkillsFrameworkSkillsId,
@@ -2050,7 +2050,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SkillsFrameworkCourseToCompetencies_SkillsFrameworkSkillsToCompetencies_SkillsFrameworkSkillsToCompetencyId",
                         column: x => x.SkillsFrameworkSkillsToCompetencyId,
@@ -2079,13 +2079,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AdmissionApplicantId,
                         principalTable: "AdmissionApplicants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AdmissionApplications_AdmissionSchedules_AdmissionScheduleId",
                         column: x => x.AdmissionScheduleId,
                         principalTable: "AdmissionSchedules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2111,7 +2111,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AdmissionScheduleId,
                         principalTable: "AdmissionSchedules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2133,13 +2133,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AdmissionScheduleId,
                         principalTable: "AdmissionSchedules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AdmissionProgramRequirements_Requirements_RequirementId",
                         column: x => x.RequirementId,
                         principalTable: "Requirements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2162,13 +2162,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CurriculumDetails_Curricula_CurriculumId",
                         column: x => x.CurriculumId,
                         principalTable: "Curricula",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2198,13 +2198,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EnrollmentRoleId,
                         principalTable: "EnrollmentRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Enrollments_Schedules_ScheduleId",
                         column: x => x.ScheduleId,
                         principalTable: "Schedules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Enrollments_Users_StudentUserId",
                         column: x => x.StudentUserId,
@@ -2229,7 +2229,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.ScheduleId,
                         principalTable: "Schedules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2255,7 +2255,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.ScheduleId,
                         principalTable: "Schedules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ScheduleAttendances_Users_AnyUserId",
                         column: x => x.AnyUserId,
@@ -2280,7 +2280,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.ScheduleId,
                         principalTable: "Schedules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2301,13 +2301,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EnrollmentRoleId,
                         principalTable: "EnrollmentRoles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ScheduleTeachers_Schedules_ScheduleId",
                         column: x => x.ScheduleId,
                         principalTable: "Schedules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ScheduleTeachers_Users_TeacherUserId",
                         column: x => x.TeacherUserId,
@@ -2336,13 +2336,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.ScholarshipApplicationId,
                         principalTable: "ScholarshipApplications",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ScholarshipEvaluations_ScholarshipRequirements_ScholarshipRequirementId",
                         column: x => x.ScholarshipRequirementId,
                         principalTable: "ScholarshipRequirements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ScholarshipEvaluations_Users_EvaluatorUserId",
                         column: x => x.EvaluatorUserId,
@@ -2368,7 +2368,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CourseToLearningObjectiveMappings_EducationalQualityAssuranceLearningObjectives_EducationalQualityAssuranceLearningObjective~",
                         column: x => x.EducationalQualityAssuranceLearningObjectiveId,
@@ -2399,19 +2399,19 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.AdmissionApplicantId,
                         principalTable: "AdmissionApplicants",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AdmissionScores_AdmissionEvaluationSchedules_AdmissionEvaluationScheduleId",
                         column: x => x.AdmissionEvaluationScheduleId,
                         principalTable: "AdmissionEvaluationSchedules",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AdmissionScores_AdmissionProgramRequirements_AdmissionProgramRequirementId",
                         column: x => x.AdmissionProgramRequirementId,
                         principalTable: "AdmissionProgramRequirements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AdmissionScores_Users_EvaluatorId",
                         column: x => x.EvaluatorId,
@@ -2446,25 +2446,25 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.CycleId,
                         principalTable: "Cycles",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EnrollmentBillings_EnrollmentFees_EnrollmentFeeId",
                         column: x => x.EnrollmentFeeId,
                         principalTable: "EnrollmentFees",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EnrollmentBillings_Enrollments_EnrollmentId",
                         column: x => x.EnrollmentId,
                         principalTable: "Enrollments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EnrollmentBillings_Vouchers_VoucherId",
                         column: x => x.VoucherId,
                         principalTable: "Vouchers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2491,7 +2491,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EnrollmentId,
                         principalTable: "Enrollments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EnrollmentGrades_GradeInputs_GradeInputId",
                         column: x => x.GradeInputId,
@@ -2502,7 +2502,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.GradingPeriodId,
                         principalTable: "GradingPeriods",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2525,7 +2525,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EnrollmentId,
                         principalTable: "Enrollments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EnrollmentLogs_Users_LogByUserId",
                         column: x => x.LogByUserId,
@@ -2553,13 +2553,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EnrollmentId,
                         principalTable: "Enrollments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EvaluationRatings_EvaluationPeriods_EvaluationPeriodId",
                         column: x => x.EvaluationPeriodId,
                         principalTable: "EvaluationPeriods",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2580,7 +2580,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EnrollmentId,
                         principalTable: "Enrollments",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2601,13 +2601,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.GradeBookId,
                         principalTable: "GradeBooks",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GradeBookItems_GradingPeriods_GradingPeriodId",
                         column: x => x.GradingPeriodId,
                         principalTable: "GradingPeriods",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2632,7 +2632,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EnrollmentBillingId,
                         principalTable: "EnrollmentBillings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EnrollmentPayments_Users_CashierId",
                         column: x => x.CashierId,
@@ -2658,13 +2658,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EnrollmentBillingId,
                         principalTable: "EnrollmentBillings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_VoucherApplied_Vouchers_VoucherId",
                         column: x => x.VoucherId,
                         principalTable: "Vouchers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2692,7 +2692,7 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.LikertQuestionId,
                         principalTable: "LikertQuestions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2717,13 +2717,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EqaAssessmentTypeId,
                         principalTable: "EducationalQualityAssuranceAssessmentTypes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GradeBookItemDetails_GradeBookItems_GradeBookItemId",
                         column: x => x.GradeBookItemId,
                         principalTable: "GradeBookItems",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -2743,13 +2743,13 @@ namespace INFRASTRUCTURE.Migrations
                         column: x => x.EqaLearningObjectiveId,
                         principalTable: "EducationalQualityAssuranceLearningObjectives",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_GradeBookItemToEqaLearningObjectiveMappings_GradeBookItemDetails_GradeBookItemDetailId",
                         column: x => x.GradeBookItemDetailId,
                         principalTable: "GradeBookItemDetails",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(

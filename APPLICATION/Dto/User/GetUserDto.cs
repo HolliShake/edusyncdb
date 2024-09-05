@@ -14,7 +14,7 @@ public class GetUserDto
     public string Address { get; set; }
     public DateTime BirthDate { get; set; }
     public string Role { get; set; }
-    public ICollection<GetUserAccessDto> AccessList { get; set; }
+    public ICollection<UserAccessGroupedBy> UserAccessGroupedBy { get; set; }
 
     public string FullName
     {
