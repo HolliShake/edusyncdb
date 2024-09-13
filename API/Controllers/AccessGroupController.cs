@@ -49,6 +49,7 @@ public class AccessGroupController : GenericController<AccessGroup, IAccessGroup
         return await GenericCreate(item);
     }
 
+    /*
     /// <summary>
     /// Creates multiple instance of AccessGroup.
     /// </summary>
@@ -58,6 +59,7 @@ public class AccessGroupController : GenericController<AccessGroup, IAccessGroup
     {
         return await GenericCreateAll(items);
     }
+    */
 
     /// <summary>
     /// Updates multiple property of AccessGroup.

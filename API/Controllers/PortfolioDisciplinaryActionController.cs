@@ -48,6 +48,7 @@ public class PortfolioDisciplinaryActionController : GenericController<Portfolio
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of PortfolioDisciplinaryAction.
     /// </summary>
@@ -57,6 +58,7 @@ public class PortfolioDisciplinaryActionController : GenericController<Portfolio
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of PortfolioDisciplinaryAction.

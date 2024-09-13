@@ -4,6 +4,10 @@ using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using API.Attributes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
+using APPLICATION.Jwt;
 
 namespace API.Controllers;
 
@@ -11,8 +15,10 @@ namespace API.Controllers;
 [Route("Api/[controller]")]
 public class UserCampusDetailsController : GenericController<UserCampusDetails, IUserCampusDetailsService, UserCampusDetailsDto, GetUserCampusDetailsDto>
 {
-    public UserCampusDetailsController(IMapper mapper, IUserCampusDetailsService repo):base(mapper, repo)
+    private readonly IJwtAuthManager _jwtAuthManager;
+    public UserCampusDetailsController(IMapper mapper, IJwtAuthManager authManager, IUserCampusDetailsService repo):base(mapper, repo)
     {
+        _jwtAuthManager = authManager;
     }
 
     /****************** ACTION ROUTES ******************/
@@ -25,7 +31,20 @@ public class UserCampusDetailsController : GenericController<UserCampusDetails, 
     {
         return await GenericGetAll();
     }
-    
+
+    /// <summary>
+    /// Get All campus that I have access.
+    /// </summary>
+    /// <returns>Array[UserCampusDetails]</returns>
+    [HttpGet("MyCampusAccess")]
+    public async Task<ActionResult> GetMyAction()
+    {
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        return Ok(await _repo.GetAllCampusByUserId(userId));
+    }
+
     /// <summary>
     /// Get specific data (UserCampusDetails) by id.
     /// </summary>
@@ -46,6 +65,7 @@ public class UserCampusDetailsController : GenericController<UserCampusDetails, 
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of UserCampusDetails.
     /// </summary>
@@ -55,6 +75,7 @@ public class UserCampusDetailsController : GenericController<UserCampusDetails, 
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of UserCampusDetails.

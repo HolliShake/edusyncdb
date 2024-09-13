@@ -14,7 +14,19 @@ public class AcademicProgramService:GenericService<AcademicProgram, GetAcademicP
 
     public async new Task<ICollection<GetAcademicProgramDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetAcademicProgramDto>>(await _dbModel.Include(ap => ap.College).ToListAsync());
+        return _mapper.Map<ICollection<GetAcademicProgramDto>>(await _dbModel
+            .Include(ap => ap.College)
+            .OrderBy(ap => ap.ProgramName)
+            .ToListAsync());
+    }
+
+    public async Task<ICollection<GetAcademicProgramDto>> GetAcademicProgramByCampusId(int campusId)
+    {
+        return _mapper.Map<ICollection<GetAcademicProgramDto>>(await _dbModel
+            .Include(ap => ap.College)
+            .Where(ap => ap.College.CampusId == campusId)
+            .OrderBy(ap => ap.ProgramName)
+            .ToListAsync());
     }
 
     public async new Task<GetAcademicProgramDto?> GetAsync(int id)

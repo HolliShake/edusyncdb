@@ -48,6 +48,7 @@ public class GradeBookItemDetailController : GenericController<GradeBookItemDeta
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of GradeBookItemDetail.
     /// </summary>
@@ -57,6 +58,7 @@ public class GradeBookItemDetailController : GenericController<GradeBookItemDeta
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of GradeBookItemDetail.

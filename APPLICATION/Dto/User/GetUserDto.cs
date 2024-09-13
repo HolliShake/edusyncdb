@@ -1,4 +1,6 @@
-using APPLICATION.Dto.UserAccess;
+
+
+using APPLICATION.Dto.UserAccessGroupDetails;
 
 namespace APPLICATION.Dto.User;
 
@@ -14,7 +16,7 @@ public class GetUserDto
     public string Address { get; set; }
     public DateTime BirthDate { get; set; }
     public string Role { get; set; }
-    public ICollection<UserAccessGroupedBy> UserAccessGroupedBy { get; set; }
+    public ICollection<GetUserAccessGroupDetailsDto> UserAccessGroupDetails { get; set; }
 
     public string FullName
     {

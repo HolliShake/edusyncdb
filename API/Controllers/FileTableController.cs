@@ -50,6 +50,7 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of FileTable.
     /// </summary>
@@ -59,6 +60,7 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of FileTable.

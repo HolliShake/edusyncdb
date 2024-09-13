@@ -48,6 +48,7 @@ public class EvaluationRatingController : GenericController<EvaluationRating, IE
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EvaluationRating.
     /// </summary>
@@ -57,6 +58,7 @@ public class EvaluationRatingController : GenericController<EvaluationRating, IE
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EvaluationRating.

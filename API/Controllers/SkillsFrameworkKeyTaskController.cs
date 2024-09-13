@@ -48,6 +48,7 @@ public class SkillsFrameworkKeyTaskController : GenericController<SkillsFramewor
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SkillsFrameworkKeyTask.
     /// </summary>
@@ -57,6 +58,7 @@ public class SkillsFrameworkKeyTaskController : GenericController<SkillsFramewor
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SkillsFrameworkKeyTask.

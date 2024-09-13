@@ -18,71 +18,53 @@ public class AuthDataDto : GetUserDto
                 return this.AccessListStringMain;
             }
 
-            if (this.UserAccessGroupedBy == null)
+            if (this.UserAccessGroupDetails == null)
             {
                 return "[]";
             }
 
-            if (this.UserAccessGroupedBy.Count == 0)
+            if (this.UserAccessGroupDetails.Count == 0)
             {
                 return "[]";
             }
 
             var data = "";
-            var indx = 0;
-            foreach (var item in this.UserAccessGroupedBy)
+            List<string> uniqueAccessGroup = [];
+            foreach (var item in UserAccessGroupDetails)
+            {
+                var name = item.AccessGroupAction.AccessGroup.AccessGroupName;
+                if (!uniqueAccessGroup.Contains(name))
+                {
+                    uniqueAccessGroup.Add(name);
+                }
+            }
+            var index_i = 0;
+            foreach (var name in uniqueAccessGroup)
             {
                 data += "{";
-                data += $"\"id\": {item.AccessGroup.Id}, ";
-                data += $"\"accessGroup\": \"{item.AccessGroup.AccessGroupName}\", ";
-                data += $"\"accessLists\":";
-                    
+                data += $"\"accessGroup\": \"{name}\", ";
+                data += "\"actions\":";
                 data += "[";
-                var notUnique = item.UserAccesses.Select(ua => ua.AccessList.Subject).ToList();
-                List<string> subjects = [];
-                foreach (var acl in notUnique)
+            
+                var access = UserAccessGroupDetails.Where(uagd => uagd.AccessGroupAction.AccessGroup.AccessGroupName == name).Select(uagd => uagd.AccessGroupAction.Action).ToList();
+                var index_j = 0;
+                foreach (var item in access)
                 {
-                    if (!subjects.Contains(acl))
-                    {
-                        subjects.Add(acl);
-                    }
-                }
-
-                var subject_index = 0;
-                foreach (var acl in subjects)
-                {
-                    data += "{";
-                    data += $"\"subject\": \"{acl}\", ";
-                    data += "\"actions\":";
-                    data += "[";
-                    var actions = item.UserAccesses.Where(ua => ua.AccessList.Subject == acl).Select(ua => ua.AccessListAction.Action).ToList();
-                    foreach (var action in actions)
-                    {
-                        data += $"\"{action}\"";
-                        if (actions.IndexOf(action) < actions.Count - 1)
-                        {
-                            data += ", ";
-                        }
-                    }
-                    data += "]";
-                    data += "}";
-                    subject_index++;
-                    if (subject_index < subjects.Count)
+                    data += $"\"{item}\"";
+                    if (index_j < access.Count - 1)
                     {
                         data += ", ";
                     }
+                    ++index_j;
                 }
                 data += "]";
-               
                 data += "}";
-                ++indx;
-
-                if (indx < this.UserAccessGroupedBy.Count)
+                if (index_i < uniqueAccessGroup.Count - 1)
                 {
                     data += ", ";
                 }
+                ++index_i;
             }
-
             return "[" + data + "]";
         }
 

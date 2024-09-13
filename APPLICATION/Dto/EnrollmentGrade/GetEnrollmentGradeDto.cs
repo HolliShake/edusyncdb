@@ -1,7 +1,9 @@
 using APPLICATION.Dto.Enrollment;
 using APPLICATION.Dto.GradeInput;
 using APPLICATION.Dto.GradingPeriod;
+using APPLICATION.Dto.User;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APPLICATION.Dto.EnrollmentGrade;
 public class GetEnrollmentGradeDto
@@ -18,10 +20,14 @@ public class GetEnrollmentGradeDto
     public GetEnrollmentDto Enrollment { get; set; }
 
     // Fk GradingInput
-    public int GradingInput { get; set; }
+    public int GradeInputId { get; set; }
     public GetGradeInputDto GradeInput { get; set; }
 
     // Fk GradingPeriod
     public int GradingPeriodId { get; set; }
     public GetGradingPeriodDto GradingPeriod { get; set; }
+
+    // Fk User
+    public string EncodedByUserId { get; set; }
+    public GetUserOnlyDto EncodedByUser { get; set; }
 }

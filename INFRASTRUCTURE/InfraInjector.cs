@@ -45,8 +45,6 @@ public class InfraInjector
 			services.AddScoped<IAccountGroupService, AccountGroupService>(); /* added by make.py */
 			services.AddScoped<IFundSourceService, FundSourceService>(); /* added by make.py */
 			services.AddScoped<IEnrollmentFeeService, EnrollmentFeeService>(); /* added by make.py */
-			services.AddScoped<IAccessListService, AccessListService>(); /* added by make.py */
-			services.AddScoped<IAccessListActionService, AccessListActionService>(); /* added by make.py */
 			services.AddScoped<IBulletinService, BulletinService>(); /* added by make.py */
 			services.AddScoped<IBulletinCategoryService, BulletinCategoryService>(); /* added by make.py */
 			services.AddScoped<IClearanceTagService, ClearanceTagService>(); /* added by make.py */
@@ -124,9 +122,10 @@ public class InfraInjector
 			services.AddScoped<ISkillsFrameworkTrackSpecializationService, SkillsFrameworkTrackSpecializationService>(); /* added by make.py */
 			services.AddScoped<IVoucherService, VoucherService>(); /* added by make.py */
 			services.AddScoped<IVoucherAppliedService, VoucherAppliedService>(); /* added by make.py */
-			services.AddScoped<IUserAccessService, UserAccessService>(); /* added by make.py */
 			services.AddScoped<IAccessGroupService, AccessGroupService>(); /* added by doydoy */
 			services.AddScoped<IUserCampusDetailsService, UserCampusDetailsService>(); /* added by make.py */
+			services.AddScoped<IAccessGroupActionService, AccessGroupActionService>(); /* added by make.py */
+			services.AddScoped<IUserAccessGroupDetailsService, UserAccessGroupDetailsService>(); /* added by make.py */
 		#endregion
 
         // Identity

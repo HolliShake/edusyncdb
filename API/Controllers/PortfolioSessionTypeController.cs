@@ -48,6 +48,7 @@ public class PortfolioSessionTypeController : GenericController<PortfolioSession
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of PortfolioSessionType.
     /// </summary>
@@ -57,6 +58,7 @@ public class PortfolioSessionTypeController : GenericController<PortfolioSession
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of PortfolioSessionType.

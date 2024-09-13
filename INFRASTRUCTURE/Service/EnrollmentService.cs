@@ -26,6 +26,7 @@ public class EnrollmentService:GenericService<Enrollment, GetEnrollmentDto>, IEn
         return _mapper.Map<ICollection<GetEnrollmentDto>>(await _dbModel
             .Include(e => e.EnrollmentRole)
             .Include(e => e.Schedule)
+            .Include(e => e.StudentUser)
             .Where(e => e.ScheduleId == scheduleId)
             .ToListAsync());
     }

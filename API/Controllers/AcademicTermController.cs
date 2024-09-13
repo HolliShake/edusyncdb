@@ -48,6 +48,7 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of AcademicTerm.
     /// </summary>
@@ -57,6 +58,7 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of AcademicTerm.

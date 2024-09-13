@@ -68,6 +68,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of BulletinScope.
     /// </summary>
@@ -77,6 +78,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of BulletinScope.

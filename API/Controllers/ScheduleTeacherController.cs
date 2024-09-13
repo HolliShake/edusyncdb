@@ -48,6 +48,7 @@ public class ScheduleTeacherController : GenericController<ScheduleTeacher, ISch
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ScheduleTeacher.
     /// </summary>
@@ -57,6 +58,7 @@ public class ScheduleTeacherController : GenericController<ScheduleTeacher, ISch
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ScheduleTeacher.

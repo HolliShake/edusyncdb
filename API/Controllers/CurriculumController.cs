@@ -57,6 +57,7 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of Curriculum.
     /// </summary>
@@ -66,7 +67,8 @@ public class CurriculumController : GenericController<Curriculum, ICurriculumSer
     {
         return await GenericCreateAll(items);
     }
-    
+    */
+
     /// <summary>
     /// Updates multiple property of Curriculum.
     /// </summary>

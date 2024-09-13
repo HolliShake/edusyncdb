@@ -48,6 +48,7 @@ public class GradeInputController : GenericController<GradeInput, IGradeInputSer
         return await GenericCreate(item);
     }
     
+
     /// <summary>
     /// Creates multiple instance of GradeInput.
     /// </summary>

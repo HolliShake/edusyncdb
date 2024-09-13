@@ -32,4 +32,19 @@ public class AdmissionProgramRequirementService:GenericService<AdmissionProgramR
     {
         return _mapper.Map<ICollection<GetAdmissionProgramRequirementDto>>(await _dbModel.Include(apr => apr.Requirement).Where(apr => apr.IsEnabled).ToListAsync());
     }
+
+    public async new Task<bool> CreateAllAsync(IList<AdmissionProgramRequirement> newItems)
+    {
+        await _dbModel.AddRangeAsync(newItems);
+        var result = await Save();
+        if (result)
+        {
+            foreach (var newItem in newItems)
+            {
+                newItem.Requirement = _dbContext.Requirements.Find(newItem.RequirementId);
+                newItem.AdmissionSchedule = _dbContext.AdmissionSchedules.Find(newItem.AdmissionScheduleId);
+            }
+        }
+        return result;
+    }
 }

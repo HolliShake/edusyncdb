@@ -48,6 +48,7 @@ public class GradeBookItemToEqaLearningObjectiveMappingController : GenericContr
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of GradeBookItemToEqaLearningObjectiveMapping.
     /// </summary>
@@ -57,6 +58,7 @@ public class GradeBookItemToEqaLearningObjectiveMappingController : GenericContr
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of GradeBookItemToEqaLearningObjectiveMapping.

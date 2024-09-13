@@ -1,4 +1,6 @@
-﻿namespace DOMAIN.Model;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace DOMAIN.Model;
 
 public class EnrollmentGrade
 {
@@ -14,10 +16,15 @@ public class EnrollmentGrade
     public Enrollment Enrollment { get; set; }
 
     // Fk GradingInput
-    public int GradingInput { get; set; }
+    public int GradeInputId { get; set; }
     public GradeInput GradeInput { get; set; }
 
     // Fk GradingPeriod
     public int GradingPeriodId { get; set; }
     public GradingPeriod GradingPeriod { get; set; }
+
+    // Fk User
+    [ForeignKey("EncodedByUser")]
+    public string EncodedByUserId { get; set; }
+    public User EncodedByUser { get; set; }
 }

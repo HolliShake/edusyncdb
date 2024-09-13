@@ -48,6 +48,7 @@ public class SkillsFrameworkPerformanceExpectationController : GenericController
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SkillsFrameworkPerformanceExpectation.
     /// </summary>
@@ -57,6 +58,7 @@ public class SkillsFrameworkPerformanceExpectationController : GenericController
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SkillsFrameworkPerformanceExpectation.

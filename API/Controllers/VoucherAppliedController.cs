@@ -48,6 +48,7 @@ public class VoucherAppliedController : GenericController<VoucherApplied, IVouch
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of VoucherApplied.
     /// </summary>
@@ -57,6 +58,7 @@ public class VoucherAppliedController : GenericController<VoucherApplied, IVouch
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of VoucherApplied.

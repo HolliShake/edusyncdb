@@ -48,6 +48,7 @@ public class OtherSchoolController : GenericController<OtherSchool, IOtherSchool
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of OtherSchool.
     /// </summary>
@@ -57,6 +58,7 @@ public class OtherSchoolController : GenericController<OtherSchool, IOtherSchool
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of OtherSchool.

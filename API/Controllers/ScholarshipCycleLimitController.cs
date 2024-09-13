@@ -48,6 +48,7 @@ public class ScholarshipCycleLimitController : GenericController<ScholarshipCycl
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ScholarshipCycleLimit.
     /// </summary>
@@ -57,6 +58,7 @@ public class ScholarshipCycleLimitController : GenericController<ScholarshipCycl
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ScholarshipCycleLimit.

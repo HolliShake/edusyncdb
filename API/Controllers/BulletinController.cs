@@ -58,6 +58,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of Bulletin.
     /// </summary>
@@ -67,6 +68,7 @@ public class BulletinController : GenericController<Bulletin, IBulletinService, 
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of Bulletin.

@@ -48,6 +48,7 @@ public class SkillsFrameworkJobRoleToProficiencyLevelController : GenericControl
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SkillsFrameworkJobRoleToProficiencyLevel.
     /// </summary>
@@ -57,6 +58,7 @@ public class SkillsFrameworkJobRoleToProficiencyLevelController : GenericControl
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SkillsFrameworkJobRoleToProficiencyLevel.

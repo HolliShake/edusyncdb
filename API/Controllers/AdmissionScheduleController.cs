@@ -68,6 +68,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of AdmissionSchedule.
     /// </summary>
@@ -77,6 +78,7 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of AdmissionSchedule.

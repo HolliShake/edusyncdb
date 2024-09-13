@@ -48,6 +48,7 @@ public class ScholarshipApplicationController : GenericController<ScholarshipApp
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ScholarshipApplication.
     /// </summary>
@@ -57,6 +58,7 @@ public class ScholarshipApplicationController : GenericController<ScholarshipApp
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ScholarshipApplication.

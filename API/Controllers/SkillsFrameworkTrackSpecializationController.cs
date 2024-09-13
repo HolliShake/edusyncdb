@@ -58,6 +58,7 @@ public class SkillsFrameworkTrackSpecializationController : GenericController<Sk
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SkillsFrameworkTrackSpecialization.
     /// </summary>
@@ -67,6 +68,7 @@ public class SkillsFrameworkTrackSpecializationController : GenericController<Sk
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SkillsFrameworkTrackSpecialization.

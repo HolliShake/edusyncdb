@@ -58,6 +58,7 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ClearanceTag.
     /// </summary>
@@ -67,6 +68,7 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ClearanceTag.

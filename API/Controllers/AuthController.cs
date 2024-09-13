@@ -7,11 +7,10 @@ using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using APPLICATION.Dto.UserAccess;
 using API.Constant;
-using APPLICATION.IService;
 using API.Attributes;
 using API.utils;
+using APPLICATION.IService;
 
 namespace API.Controllers;
 
@@ -24,16 +23,16 @@ public class AuthController:ControllerBase
     private readonly IJwtAuthManager _jwtAuthManager;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly IUserAccessService _userAccessService;
+    private readonly IUserAccessGroupDetailsService _userAccessGroupDetails;
     
-    public AuthController(ConfigurationManager config, IMapper mapper, IJwtAuthManager jwtAuthManager, UserManager<User> userManager, SignInManager<User> signInManager, IUserAccessService userAccessService)
+    public AuthController(ConfigurationManager config, IMapper mapper, IJwtAuthManager jwtAuthManager, UserManager<User> userManager, SignInManager<User> signInManager, IUserAccessGroupDetailsService userAccessGroupDetails)
     {
         _config = config;
         _mapper = mapper;
         _jwtAuthManager = jwtAuthManager;
         _userManager = userManager;
         _signInManager = signInManager;
-        _userAccessService = userAccessService;
+        _userAccessGroupDetails = userAccessGroupDetails;
     }
     
     /// <summary>
@@ -69,9 +68,9 @@ public class AuthController:ControllerBase
         // }
 
         var userData = _mapper.Map<AuthDataDto>(user);
-        var access = await _userAccessService.GetUserAccessByUserId(userData.Id);
+        var access = await _userAccessGroupDetails.GetUserAccessGroupByUserGuid(userData.Id);
 
-        userData.UserAccessGroupedBy = access;
+        userData.UserAccessGroupDetails = access;
 
         var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, "" /*userData.AccessListString*/);
       
@@ -82,7 +81,7 @@ public class AuthController:ControllerBase
             token.RefreshToken.TokenString;
 
         var accessListString = userData.AccessListString;
-        userData.UserAccessGroupedBy = [];
+        userData.UserAccessGroupDetails = [];
         userData.AccessListString = AesEncrypt.EncryptString(accessListString);
 
         return Ok(userData);
@@ -140,37 +139,6 @@ public class AuthController:ControllerBase
         {
             goto error;
         }
-        else
-        {
-            try
-            {
-                // Auth := 1
-                // all 1
-                // read 2
-                // create 3
-                // update 4
-                // delete 5
-                await _userAccessService.CreateUserAccess(user.Id, 1, 1);
-                await _userAccessService.CreateUserAccess(user.Id, 1, 2);
-                await _userAccessService.CreateUserAccess(user.Id, 1, 3);
-                await _userAccessService.CreateUserAccess(user.Id, 1, 4);
-                await _userAccessService.CreateUserAccess(user.Id, 1, 5);
-                // User := 2
-                // all 6
-                // read 7
-                // create 8
-                // update 9
-                // delete 10
-                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
-                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
-                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
-                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
-                await _userAccessService.CreateUserAccess(user.Id, 2, 6);
-            }
-            catch (Exception)
-            {
-            }
-        }
         
         final:;
         /*
@@ -181,9 +149,9 @@ public class AuthController:ControllerBase
         */
 
         var userData = _mapper.Map<AuthDataDto>(user);
-        var access = await _userAccessService.GetUserAccessByUserId(userData.Id);
+        var access = await _userAccessGroupDetails.GetUserAccessGroupByUserGuid(userData.Id);
 
-        userData.UserAccessGroupedBy = access;
+        userData.UserAccessGroupDetails = access;
 
         var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, "" /*userData.AccessListString*/);
         
@@ -194,7 +162,7 @@ public class AuthController:ControllerBase
             token.RefreshToken.TokenString;
 
         var accessListString = userData.AccessListString;
-        userData.UserAccessGroupedBy = [];
+        userData.UserAccessGroupDetails = [];
         userData.AccessListString = AesEncrypt.EncryptString(accessListString);
 
         return Ok(userData);
@@ -270,35 +238,8 @@ public class AuthController:ControllerBase
         bad:;
         return BadRequest("Failed to create admin user.");
 
-    ok:;
+        ok:;
         var actualData = old ?? user;
-        try
-        {
-            // Auth := 1
-            // all 1
-            // read 2
-            // create 3
-            // update 4
-            // delete 5
-            await _userAccessService.CreateUserAccess(actualData.Id, 1, 1);
-            await _userAccessService.CreateUserAccess(actualData.Id, 1, 2);
-            await _userAccessService.CreateUserAccess(actualData.Id, 1, 3);
-            await _userAccessService.CreateUserAccess(actualData.Id, 1, 4);
-            await _userAccessService.CreateUserAccess(actualData.Id, 1, 5);
-            // SuperAdmin := 5
-            //  all   11
-            //  read  12
-            // create 13
-            // update 14
-            // delete 15
-            await _userAccessService.CreateUserAccess(actualData.Id, 5, 21);
-            await _userAccessService.CreateUserAccess(actualData.Id, 5, 22);
-            await _userAccessService.CreateUserAccess(actualData.Id, 5, 23);
-            await _userAccessService.CreateUserAccess(actualData.Id, 5, 24);
-            await _userAccessService.CreateUserAccess(actualData.Id, 5, 25);
-        } catch (Exception)
-        {
-        }
         return Ok(actualData);
     }
     
@@ -337,9 +278,9 @@ public class AuthController:ControllerBase
         
         ok:;
         var userData = _mapper.Map<AuthDataDto>(user);
-        var access = await _userAccessService.GetUserAccessByUserId(userData.Id);
+        var access = await _userAccessGroupDetails.GetUserAccessGroupByUserGuid(userData.Id);
 
-        userData.UserAccessGroupedBy = access;
+        userData.UserAccessGroupDetails = access;
 
         var token = JwtGenerator.GenerateToken(_jwtAuthManager, userData.Id, userData.Email, userData.Role, "" /*userData.AccessListString*/);
         
@@ -349,8 +290,8 @@ public class AuthController:ControllerBase
             token.RefreshToken.TokenString;
 
         var accessListString = userData.AccessListString;
-        userData.UserAccessGroupedBy = [];
-        userData.AccessListString = accessListString;
+        userData.UserAccessGroupDetails = [];
+        userData.AccessListString = AesEncrypt.EncryptString(accessListString);
 
         return Ok(userData);
     }

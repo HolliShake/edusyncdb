@@ -1,5 +1,4 @@
 ﻿using APPLICATION.Dto.AccessGroup;
-using APPLICATION.Dto.AccountGroup;
 using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;
@@ -16,16 +15,14 @@ public class AccessGroupService : GenericService<AccessGroup, GetAccessGroupDto>
     public async new Task<ICollection<GetAccessGroupDto>> GetAllAsync()
     {
         return _mapper.Map<ICollection<GetAccessGroupDto>>(await _dbModel
-            .Include(x => x.AccessLists)
-                .ThenInclude(x => x.AccessListActions)
+            .Include(ag => ag.AccessGroupActions)
             .ToListAsync());
     }
 
     public async new Task<AccessGroup?> GetAsync(int id)
     {
         return _mapper.Map<AccessGroup?>(await _dbModel
-            .Include(x => x.AccessLists)
-                .ThenInclude(x => x.AccessListActions)
+            .Include(ag => ag.AccessGroupActions)
             .Where(ag => ag.Id == id).FirstOrDefaultAsync());
     }
 }

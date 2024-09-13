@@ -48,6 +48,7 @@ public class SkillsFrameworkProficiencyLevelController : GenericController<Skill
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SkillsFrameworkProficiencyLevel.
     /// </summary>
@@ -57,6 +58,7 @@ public class SkillsFrameworkProficiencyLevelController : GenericController<Skill
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SkillsFrameworkProficiencyLevel.

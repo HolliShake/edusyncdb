@@ -48,6 +48,7 @@ public class EvaluationPeriodController : GenericController<EvaluationPeriod, IE
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EvaluationPeriod.
     /// </summary>
@@ -57,6 +58,7 @@ public class EvaluationPeriodController : GenericController<EvaluationPeriod, IE
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EvaluationPeriod.

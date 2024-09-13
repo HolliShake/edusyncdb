@@ -68,6 +68,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SectorDiscipline.
     /// </summary>
@@ -77,6 +78,7 @@ public class SectorDisciplineController : GenericController<SectorDiscipline, IS
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SectorDiscipline.

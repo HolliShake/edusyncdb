@@ -48,6 +48,7 @@ public class SkillsFrameworkPerformaceExpectationToJobRoleController : GenericCo
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SkillsFrameworkPerformaceExpectationToJobRole.
     /// </summary>
@@ -57,6 +58,7 @@ public class SkillsFrameworkPerformaceExpectationToJobRoleController : GenericCo
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SkillsFrameworkPerformaceExpectationToJobRole.

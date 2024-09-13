@@ -48,6 +48,7 @@ public class EnrollmentRoleController : GenericController<EnrollmentRole, IEnrol
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EnrollmentRole.
     /// </summary>
@@ -57,6 +58,7 @@ public class EnrollmentRoleController : GenericController<EnrollmentRole, IEnrol
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EnrollmentRole.

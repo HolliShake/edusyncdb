@@ -48,6 +48,7 @@ public class FundSourceController : GenericController<FundSource, IFundSourceSer
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of FundSource.
     /// </summary>
@@ -57,6 +58,7 @@ public class FundSourceController : GenericController<FundSource, IFundSourceSer
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of FundSource.

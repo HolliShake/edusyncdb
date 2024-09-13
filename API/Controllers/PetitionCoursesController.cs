@@ -48,6 +48,7 @@ public class PetitionCoursesController : GenericController<PetitionCourses, IPet
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of PetitionCourses.
     /// </summary>
@@ -57,6 +58,7 @@ public class PetitionCoursesController : GenericController<PetitionCourses, IPet
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of PetitionCourses.

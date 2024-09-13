@@ -68,6 +68,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of TableObject.
     /// </summary>
@@ -77,6 +78,7 @@ public class TableObjectController : GenericController<TableObject, ITableObject
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of TableObject.

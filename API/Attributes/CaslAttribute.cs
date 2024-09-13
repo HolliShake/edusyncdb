@@ -1,11 +1,10 @@
 using System.Net;
 using System.Security.Claims;
-using System.Text.Json;
 using API.Constant;
-using APPLICATION.Dto.User;
-using APPLICATION.Dto.UserAccess;
+using APPLICATION.Dto.UserAccessGroupDetails;
 using APPLICATION.IService;
 using APPLICATION.Jwt;
+using DOMAIN.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -21,72 +20,55 @@ public class Access
 public class CaslAttribute:Attribute, IAuthorizationFilter
 {
     private readonly string[] _validAccessList;
-    private IUserAccessService _userAccessRepo;
     private IJwtAuthManager _jwtAuthManager;
+    private IUserAccessGroupDetailsService _userAccessGroupDetailsRepo;
 
     public CaslAttribute(params string[] accessList)
     {
         _validAccessList = accessList;
-        _userAccessRepo = null;
         _jwtAuthManager = null;
+        _userAccessGroupDetailsRepo = null;
     }
 
-    public static string RoleToString(ICollection<UserAccessGroupedBy> accessList)
+    public static string RoleToString(ICollection<GetUserAccessGroupDetailsDto> userAccessGroupDetails)
     {
         var data = "";
-        var indx = 0;
-        foreach (var item in accessList)
+        List<string> uniqueAccessGroup = [];
+        foreach (var item in userAccessGroupDetails)
+        {
+            var name = item.AccessGroupAction.AccessGroup.AccessGroupName;
+            if (!uniqueAccessGroup.Contains(name))
+            {
+                uniqueAccessGroup.Add(name);
+            }
+        }
+        var index_i = 0;
+        foreach (var name in uniqueAccessGroup)
         {
             data += "{";
-            data += $"\"id\": {item.AccessGroup.Id}, ";
-            data += $"\"accessGroup\": \"{item.AccessGroup.AccessGroupName}\", ";
-            data += $"\"accessLists\":";
-
+            data += $"\"accessGroup\": \"{name}\", ";
+            data += "\"actions\":";
             data += "[";
-            var notUnique = item.UserAccesses.Select(ua => ua.AccessList.Subject).ToList();
-            List<string> subjects = [];
-            foreach (var acl in notUnique)
+            
+            var access = userAccessGroupDetails.Where(uagd => uagd.AccessGroupAction.AccessGroup.AccessGroupName == name).Select(uagd => uagd.AccessGroupAction.Action).ToList();
+            var index_j = 0;
+            foreach (var item in access)
             {
-                if (!subjects.Contains(acl))
-                {
-                    subjects.Add(acl);
-                }
-            }
-            var subject_index = 0;
-            foreach (var acl in subjects)
-            {
-                data += "{";
-                data += $"\"subject\": \"{acl}\", ";
-                data += "\"actions\":";
-                data += "[";
-                var actions = item.UserAccesses.Where(ua => ua.AccessList.Subject == acl).Select(ua => ua.AccessListAction.Action).ToList();
-                foreach (var action in actions)
-                {
-                    data += $"\"{action}\"";
-                    if (actions.IndexOf(action) < actions.Count - 1)
-                    {
-                        data += ", ";
-                    }
-                }
-                data += "]";
-                data += "}";
-                subject_index++;
-                if (subject_index < subjects.Count)
+                data += $"\"{item}\"";
+                if (index_j < access.Count - 1)
                 {
                     data += ", ";
                 }
+                ++index_j;
             }
             data += "]";
-
             data += "}";
-            ++indx;
-
-            if (indx < accessList.Count)
+            if (index_i < uniqueAccessGroup.Count - 1)
             {
                 data += ", ";
             }
+            ++index_i;
         }
-
         return "[" + data + "]";
     }
     
@@ -105,10 +87,10 @@ public class CaslAttribute:Attribute, IAuthorizationFilter
         }
 
   
-        _userAccessRepo = (IUserAccessService)context.HttpContext.RequestServices.GetService(typeof(IUserAccessService));
+        _userAccessGroupDetailsRepo = (IUserAccessGroupDetailsService) context.HttpContext.RequestServices.GetService(typeof(IUserAccessGroupDetailsService));
 
 
-        if (_userAccessRepo == null)
+        if (_userAccessGroupDetailsRepo == null)
         {
             goto bad;
         }
@@ -126,49 +108,49 @@ public class CaslAttribute:Attribute, IAuthorizationFilter
             goto bad;
         }
         
-        ICollection<UserAccessGroupedBy> grouped = null;
+        ICollection<GetUserAccessGroupDetailsDto> uagd = null;
 
         try
         {
             var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
             var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
-            var userAccess = _userAccessRepo.GetUserAccessByUserIdSync(userId);
+            var userAccess = _userAccessGroupDetailsRepo.GetUserAccessGroupByUserGuidSync(userId);
             if (userAccess.Count <= 0)
             {
                 goto bad;
             }
-            grouped = userAccess;
+            uagd = userAccess;
         }
         catch (Exception)
         {
             goto bad;
         }
 
-        if (grouped != null)
+        if (uagd != null)
         {
             var matches = 0;
-            foreach (var item in grouped)
+            foreach (var item in uagd)
             {
-                foreach (var accessGrouped in item.UserAccesses)
+                var key = item.AccessGroupAction.AccessGroup.AccessGroupName;
+                var val = item.AccessGroupAction.Action;
+                var access = $"{key}:{val}";
+
+                if (access.Equals($"{Role.SuperAdmin}:all"))
                 {
-                    var key = accessGrouped.AccessList.Subject;
-                    var val = accessGrouped.AccessListAction.Action;
-                    var access = $"{key}:{val}";
+                    return;
+                }
 
-                    if (access.Equals($"{Role.SuperAdmin}:all"))
-                    {
-                        return;
-                    }
-
-                    if (_validAccessList.Contains(access))
-                    {
-                        ++matches;
-                        break;
-                    }
+                if (_validAccessList.Contains(access))
+                {
+                    ++matches;
+                    break;
                 }
             }
 
-            return;
+            if (matches > 0)
+            {
+                return;
+            }
         }
         
         bad:;

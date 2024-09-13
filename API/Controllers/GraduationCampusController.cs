@@ -48,6 +48,7 @@ public class GraduationCampusController : GenericController<GraduationCampus, IG
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of GraduationCampus.
     /// </summary>
@@ -57,6 +58,7 @@ public class GraduationCampusController : GenericController<GraduationCampus, IG
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of GraduationCampus.

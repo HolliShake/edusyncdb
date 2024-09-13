@@ -48,6 +48,7 @@ public class SkillsFrameworkCompetencyTypeController : GenericController<SkillsF
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SkillsFrameworkCompetencyType.
     /// </summary>
@@ -57,6 +58,7 @@ public class SkillsFrameworkCompetencyTypeController : GenericController<SkillsF
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SkillsFrameworkCompetencyType.

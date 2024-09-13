@@ -48,6 +48,7 @@ public class ScheduleAttendanceController : GenericController<ScheduleAttendance
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ScheduleAttendance.
     /// </summary>
@@ -57,6 +58,7 @@ public class ScheduleAttendanceController : GenericController<ScheduleAttendance
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ScheduleAttendance.

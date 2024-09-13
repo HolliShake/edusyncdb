@@ -29,16 +29,6 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
     }
     
     /// <summary>
-    /// Get 1st to n (where n := size(parameter)) data.
-    /// </summary>
-    /// <returns>Array[EducationalQualityAssuranceAssessmentType]</returns>
-    [HttpGet("chunk/{size:int}")]
-    public async Task<ActionResult> GetByChunk(int size)
-    {
-        return await GenericGetByChunk(size);
-    }
-    
-    /// <summary>
     /// Get specific data (EducationalQualityAssuranceAssessmentType) by id.
     /// </summary>
     /// <returns>Array[EducationalQualityAssuranceAssessmentType]></returns>
@@ -58,6 +48,7 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EducationalQualityAssuranceAssessmentType.
     /// </summary>
@@ -67,6 +58,7 @@ public class EducationalQualityAssuranceAssessmentTypeController : GenericContro
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EducationalQualityAssuranceAssessmentType.

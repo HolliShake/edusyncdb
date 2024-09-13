@@ -58,6 +58,7 @@ public class EnrollmentPaymentController : GenericController<EnrollmentPayment, 
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EnrollmentPayment.
     /// </summary>
@@ -67,6 +68,7 @@ public class EnrollmentPaymentController : GenericController<EnrollmentPayment, 
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EnrollmentPayment.

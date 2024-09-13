@@ -48,6 +48,7 @@ public class ClearanceTypeController : GenericController<ClearanceType, IClearan
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ClearanceType.
     /// </summary>
@@ -57,6 +58,7 @@ public class ClearanceTypeController : GenericController<ClearanceType, IClearan
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ClearanceType.

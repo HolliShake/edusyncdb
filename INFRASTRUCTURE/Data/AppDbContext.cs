@@ -17,8 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<AcademicTerm> AcademicTerms { get; set; }
     public DbSet<AccountGroup> AccountGroups { get; set; }
     public DbSet<AccessGroup> AccessGroups { get; set; }
-    public DbSet<AccessList> AccessLists { get; set; }
-    public DbSet<AccessListAction> AccessListActions { get; set; }
+    public DbSet<AccessGroupAction> AccessGroupActions { get; set; }
     public DbSet<AdmissionApplicant> AdmissionApplicants { get; set; }
     public DbSet<AdmissionApplication> AdmissionApplications { get; set; }
     public DbSet<AdmissionEvaluationSchedule> AdmissionEvaluationSchedules { get; set; }
@@ -131,8 +130,8 @@ public class AppDbContext : DbContext
     public DbSet<TableObject> TableObjects { get; set; }
     // U
     public DbSet<User> Users { get; set; }
-    public DbSet<UserAccess> UserAccesses { get; set; }
     public DbSet<UserCampusDetails> UserCampusDetails { get; set; }
+    public DbSet<UserAccessGroupDetails> UserAccessGroupDetails { get; set; }
     // V
     public DbSet<Voucher> Vouchers { get; set; }
     public DbSet<VoucherApplied> VoucherApplied { get; set; }
@@ -143,10 +142,6 @@ public class AppDbContext : DbContext
         {
             relationship.DeleteBehavior = DeleteBehavior.Cascade;
         }
-
-        modelBuilder.Entity<AccessList>()
-           .HasIndex(entity => entity.Subject)
-           .IsUnique();
 
         base.OnModelCreating(modelBuilder);
     }

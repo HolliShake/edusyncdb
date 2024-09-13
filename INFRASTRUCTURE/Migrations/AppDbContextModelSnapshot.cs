@@ -119,7 +119,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.ToTable("AccessGroups");
                 });
 
-            modelBuilder.Entity("DOMAIN.Model.AccessList", b =>
+            modelBuilder.Entity("DOMAIN.Model.AccessGroupAction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,39 +130,14 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("AccessGroupId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Subject")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccessGroupId");
-
-                    b.HasIndex("Subject")
-                        .IsUnique()
-                        .HasFilter("[Subject] IS NOT NULL");
-
-                    b.ToTable("AccessLists");
-                });
-
-            modelBuilder.Entity("DOMAIN.Model.AccessListAction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccessListId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Action")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccessListId");
+                    b.HasIndex("AccessGroupId");
 
-                    b.ToTable("AccessListActions");
+                    b.ToTable("AccessGroupActions");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AccountGroup", b =>
@@ -1293,10 +1268,13 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<DateTime>("CreatedDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("EncodedByUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("EnrollmentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GradeInputId")
+                    b.Property<int>("GradeInputId")
                         .HasColumnType("int");
 
                     b.Property<string>("GradeNotes")
@@ -1304,9 +1282,6 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.Property<string>("GradeStatus")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("GradingInput")
-                        .HasColumnType("int");
 
                     b.Property<int>("GradingPeriodId")
                         .HasColumnType("int");
@@ -1318,6 +1293,8 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("EncodedByUserId");
 
                     b.HasIndex("EnrollmentId");
 
@@ -3238,7 +3215,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("DOMAIN.Model.UserAccess", b =>
+            modelBuilder.Entity("DOMAIN.Model.UserAccessGroupDetails", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -3246,10 +3223,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AccessListActionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AccessListId")
+                    b.Property<int>("AccessGroupActionId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
@@ -3257,13 +3231,11 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AccessListActionId");
-
-                    b.HasIndex("AccessListId");
+                    b.HasIndex("AccessGroupActionId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAccesses");
+                    b.ToTable("UserAccessGroupDetails");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.UserCampusDetails", b =>
@@ -3385,26 +3357,15 @@ namespace INFRASTRUCTURE.Migrations
                     b.Navigation("College");
                 });
 
-            modelBuilder.Entity("DOMAIN.Model.AccessList", b =>
+            modelBuilder.Entity("DOMAIN.Model.AccessGroupAction", b =>
                 {
                     b.HasOne("DOMAIN.Model.AccessGroup", "AccessGroup")
-                        .WithMany("AccessLists")
+                        .WithMany("AccessGroupActions")
                         .HasForeignKey("AccessGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AccessGroup");
-                });
-
-            modelBuilder.Entity("DOMAIN.Model.AccessListAction", b =>
-                {
-                    b.HasOne("DOMAIN.Model.AccessList", "AccessList")
-                        .WithMany("AccessListActions")
-                        .HasForeignKey("AccessListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AccessList");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AdmissionApplication", b =>
@@ -3935,6 +3896,11 @@ namespace INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("DOMAIN.Model.EnrollmentGrade", b =>
                 {
+                    b.HasOne("DOMAIN.Model.User", "EncodedByUser")
+                        .WithMany()
+                        .HasForeignKey("EncodedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DOMAIN.Model.Enrollment", "Enrollment")
                         .WithMany()
                         .HasForeignKey("EnrollmentId")
@@ -3944,13 +3910,16 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.GradeInput", "GradeInput")
                         .WithMany()
                         .HasForeignKey("GradeInputId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.GradingPeriod", "GradingPeriod")
                         .WithMany()
                         .HasForeignKey("GradingPeriodId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("EncodedByUser");
 
                     b.Navigation("Enrollment");
 
@@ -4813,28 +4782,20 @@ namespace INFRASTRUCTURE.Migrations
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("DOMAIN.Model.UserAccess", b =>
+            modelBuilder.Entity("DOMAIN.Model.UserAccessGroupDetails", b =>
                 {
-                    b.HasOne("DOMAIN.Model.AccessListAction", "AccessListAction")
+                    b.HasOne("DOMAIN.Model.AccessGroupAction", "AccessGroupAction")
                         .WithMany()
-                        .HasForeignKey("AccessListActionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DOMAIN.Model.AccessList", "AccessList")
-                        .WithMany()
-                        .HasForeignKey("AccessListId")
+                        .HasForeignKey("AccessGroupActionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("DOMAIN.Model.User", "User")
-                        .WithMany("AccessList")
+                        .WithMany("UserAccessGroupDetails")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("AccessList");
-
-                    b.Navigation("AccessListAction");
+                    b.Navigation("AccessGroupAction");
 
                     b.Navigation("User");
                 });
@@ -4878,12 +4839,7 @@ namespace INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("DOMAIN.Model.AccessGroup", b =>
                 {
-                    b.Navigation("AccessLists");
-                });
-
-            modelBuilder.Entity("DOMAIN.Model.AccessList", b =>
-                {
-                    b.Navigation("AccessListActions");
+                    b.Navigation("AccessGroupActions");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Agency", b =>
@@ -4903,7 +4859,7 @@ namespace INFRASTRUCTURE.Migrations
 
             modelBuilder.Entity("DOMAIN.Model.User", b =>
                 {
-                    b.Navigation("AccessList");
+                    b.Navigation("UserAccessGroupDetails");
                 });
 #pragma warning restore 612, 618
         }

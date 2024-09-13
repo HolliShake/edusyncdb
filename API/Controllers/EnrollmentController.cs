@@ -68,6 +68,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of Enrollment.
     /// </summary>
@@ -77,6 +78,7 @@ public class EnrollmentController : GenericController<Enrollment, IEnrollmentSer
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of Enrollment.

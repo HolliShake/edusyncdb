@@ -5,6 +5,10 @@ using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Net.Http.Headers;
+using APPLICATION.Jwt;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -13,8 +17,10 @@ namespace API.Controllers;
 [Casl("SuperAdmin:all")]
 public class EnrollmentGradeController : GenericController<EnrollmentGrade, IEnrollmentGradeService, EnrollmentGradeDto, GetEnrollmentGradeDto>
 {
-    public EnrollmentGradeController(IMapper mapper, IEnrollmentGradeService repo):base(mapper, repo)
+    private readonly IJwtAuthManager _jwtAuthManager;
+    public EnrollmentGradeController(IMapper mapper, IEnrollmentGradeService repo, IJwtAuthManager jwtAuthManager):base(mapper, repo)
     {
+        _jwtAuthManager = jwtAuthManager;
     }
 
     /****************** ACTION ROUTES ******************/
@@ -55,9 +61,14 @@ public class EnrollmentGradeController : GenericController<EnrollmentGrade, IEnr
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(EnrollmentGradeDto item)
     {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        item.EncodedByUserId = (item.EncodedByUserId.Length > 0) ? item.EncodedByUserId : userId;
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EnrollmentGrade.
     /// </summary>
@@ -67,6 +78,7 @@ public class EnrollmentGradeController : GenericController<EnrollmentGrade, IEnr
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EnrollmentGrade.
@@ -75,6 +87,10 @@ public class EnrollmentGradeController : GenericController<EnrollmentGrade, IEnr
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, EnrollmentGradeDto item)
     {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        item.EncodedByUserId = (item.EncodedByUserId.Length > 0) ? item.EncodedByUserId : userId;
         return await GenericUpdate(id, item);
     }
     

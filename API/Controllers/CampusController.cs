@@ -58,6 +58,7 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of Campus.
     /// </summary>
@@ -67,6 +68,7 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of Campus.

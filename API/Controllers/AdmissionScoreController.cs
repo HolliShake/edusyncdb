@@ -78,6 +78,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of AdmissionScore.
     /// </summary>
@@ -87,6 +88,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of AdmissionScore.

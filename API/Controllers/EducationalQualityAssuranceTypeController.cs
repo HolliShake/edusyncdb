@@ -48,6 +48,7 @@ public class EducationalQualityAssuranceTypeController : GenericController<Educa
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EducationalQualityAssuranceType.
     /// </summary>
@@ -57,6 +58,7 @@ public class EducationalQualityAssuranceTypeController : GenericController<Educa
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EducationalQualityAssuranceType.

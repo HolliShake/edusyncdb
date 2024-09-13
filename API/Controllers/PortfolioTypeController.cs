@@ -48,6 +48,7 @@ public class PortfolioTypeController : GenericController<PortfolioType, IPortfol
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of PortfolioType.
     /// </summary>
@@ -57,6 +58,7 @@ public class PortfolioTypeController : GenericController<PortfolioType, IPortfol
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of PortfolioType.

@@ -48,6 +48,7 @@ public class GradeBookController : GenericController<GradeBook, IGradeBookServic
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of GradeBook.
     /// </summary>
@@ -57,6 +58,7 @@ public class GradeBookController : GenericController<GradeBook, IGradeBookServic
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of GradeBook.

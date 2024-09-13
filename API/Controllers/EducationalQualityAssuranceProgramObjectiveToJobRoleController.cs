@@ -58,6 +58,7 @@ public class EducationalQualityAssuranceProgramObjectiveToJobRoleController : Ge
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EducationalQualityAssuranceProgramObjectiveToJobRole.
     /// </summary>
@@ -67,6 +68,7 @@ public class EducationalQualityAssuranceProgramObjectiveToJobRoleController : Ge
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EducationalQualityAssuranceProgramObjectiveToJobRole.

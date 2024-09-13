@@ -48,6 +48,7 @@ public class PortfolioIncidentController : GenericController<PortfolioIncident, 
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of PortfolioIncident.
     /// </summary>
@@ -57,6 +58,7 @@ public class PortfolioIncidentController : GenericController<PortfolioIncident, 
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of PortfolioIncident.

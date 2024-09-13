@@ -48,6 +48,7 @@ public class AccountGroupController : GenericController<AccountGroup, IAccountGr
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of AccountGroup.
     /// </summary>
@@ -57,6 +58,7 @@ public class AccountGroupController : GenericController<AccountGroup, IAccountGr
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of AccountGroup.

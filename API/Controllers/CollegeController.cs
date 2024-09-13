@@ -58,6 +58,7 @@ public class CollegeController : GenericController<College, ICollegeService, Col
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of College.
     /// </summary>
@@ -67,6 +68,7 @@ public class CollegeController : GenericController<College, ICollegeService, Col
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of College.

@@ -48,6 +48,7 @@ public class LikertQuestionController : GenericController<LikertQuestion, ILiker
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of LikertQuestion.
     /// </summary>
@@ -57,6 +58,7 @@ public class LikertQuestionController : GenericController<LikertQuestion, ILiker
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of LikertQuestion.

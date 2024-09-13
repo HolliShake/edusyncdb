@@ -48,6 +48,7 @@ public class InstrumentController : GenericController<Instrument, IInstrumentSer
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of Instrument.
     /// </summary>
@@ -57,6 +58,7 @@ public class InstrumentController : GenericController<Instrument, IInstrumentSer
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of Instrument.

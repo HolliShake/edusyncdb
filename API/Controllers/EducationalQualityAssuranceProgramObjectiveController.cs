@@ -48,6 +48,7 @@ public class EducationalQualityAssuranceProgramObjectiveController : GenericCont
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EducationalQualityAssuranceProgramObjective.
     /// </summary>
@@ -57,6 +58,7 @@ public class EducationalQualityAssuranceProgramObjectiveController : GenericCont
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EducationalQualityAssuranceProgramObjective.

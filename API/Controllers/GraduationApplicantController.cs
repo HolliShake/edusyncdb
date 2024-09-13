@@ -48,6 +48,7 @@ public class GraduationApplicantController : GenericController<GraduationApplica
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of GraduationApplicant.
     /// </summary>
@@ -57,6 +58,7 @@ public class GraduationApplicantController : GenericController<GraduationApplica
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of GraduationApplicant.

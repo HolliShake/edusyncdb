@@ -58,6 +58,7 @@ public class CycleController : GenericController<Cycle, ICycleService, CycleDto,
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of Cycle.
     /// </summary>
@@ -67,6 +68,7 @@ public class CycleController : GenericController<Cycle, ICycleService, CycleDto,
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of Cycle.

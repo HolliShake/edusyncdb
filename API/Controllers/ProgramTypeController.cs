@@ -48,6 +48,7 @@ public class ProgramTypeController : GenericController<ProgramType, IProgramType
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ProgramType.
     /// </summary>
@@ -57,6 +58,7 @@ public class ProgramTypeController : GenericController<ProgramType, IProgramType
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ProgramType.

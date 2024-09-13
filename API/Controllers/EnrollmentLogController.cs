@@ -48,6 +48,7 @@ public class EnrollmentLogController : GenericController<EnrollmentLog, IEnrollm
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EnrollmentLog.
     /// </summary>
@@ -57,6 +58,7 @@ public class EnrollmentLogController : GenericController<EnrollmentLog, IEnrollm
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of EnrollmentLog.

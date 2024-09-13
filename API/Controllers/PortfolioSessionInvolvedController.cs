@@ -48,6 +48,7 @@ public class PortfolioSessionInvolvedController : GenericController<PortfolioSes
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of PortfolioSessionInvolved.
     /// </summary>
@@ -57,6 +58,7 @@ public class PortfolioSessionInvolvedController : GenericController<PortfolioSes
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of PortfolioSessionInvolved.

@@ -116,6 +116,7 @@ public class CourseController : GenericController<Course, ICourseService, Course
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of Course.
     /// </summary>
@@ -125,6 +126,7 @@ public class CourseController : GenericController<Course, ICourseService, Course
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of Course.

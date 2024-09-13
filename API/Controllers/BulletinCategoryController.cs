@@ -48,6 +48,7 @@ public class BulletinCategoryController : GenericController<BulletinCategory, IB
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of BulletinCategory.
     /// </summary>
@@ -57,6 +58,7 @@ public class BulletinCategoryController : GenericController<BulletinCategory, IB
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of BulletinCategory.

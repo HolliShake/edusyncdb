@@ -88,6 +88,7 @@ public class EnrollmentBillingController : GenericController<EnrollmentBilling, 
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EnrollmentBilling.
     /// </summary>
@@ -97,7 +98,8 @@ public class EnrollmentBillingController : GenericController<EnrollmentBilling, 
     {
         return await GenericCreateAll(items);
     }
-    
+    */
+
     /// <summary>
     /// Updates multiple property of EnrollmentBilling.
     /// </summary>

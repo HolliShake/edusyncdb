@@ -69,6 +69,17 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     }
 
     /// <summary>
+    /// Get Schedule by Campus id.
+    /// </summary>
+    /// <param name="campusId"></param>
+    /// <returns>Array[Schedule]</returns>
+    [HttpGet("Campus/{campusId:int}")]
+    public async Task<ActionResult> GetScheduleByCampusId(int campusId)
+    {
+        return Ok(await _repo.GetSchedulesByCampusId(campusId));
+    }
+
+    /// <summary>
     /// Get Schedule by Room id.
     /// </summary>
     /// <returns>Array[Schedule]</returns>

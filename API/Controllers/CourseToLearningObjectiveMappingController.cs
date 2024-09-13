@@ -48,6 +48,7 @@ public class CourseToLearningObjectiveMappingController : GenericController<Cour
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of CourseToLearningObjectiveMapping.
     /// </summary>
@@ -57,6 +58,7 @@ public class CourseToLearningObjectiveMappingController : GenericController<Cour
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of CourseToLearningObjectiveMapping.

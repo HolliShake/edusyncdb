@@ -40,6 +40,17 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     }
 
     /// <summary>
+    /// Get AcademicCalendar by Campus Id.
+    /// </summary>
+    /// <param name="campusId"></param>
+    /// <returns>Array[AcademicCalendar]</returns>
+    [HttpGet("Campus/{campusId:int}")]
+    public async Task<ActionResult> GetAcademicCalendarsByAcademicYearId(int campusId)
+    {
+        return Ok(await _repo.GetAcademicCalendarsByCampusId(campusId));
+    }
+
+    /// <summary>
     /// Get specific data (AcademicCalendar) by id.
     /// </summary>
     /// <returns>Array[AcademicCalendar]></returns>
@@ -59,6 +70,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of AcademicCalendar.
     /// </summary>
@@ -68,6 +80,7 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of AcademicCalendar.

@@ -72,6 +72,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of CourseRequisite.
     /// </summary>
@@ -81,6 +82,7 @@ public class CourseRequisiteController : GenericController<CourseRequisite, ICou
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of CourseRequisite.

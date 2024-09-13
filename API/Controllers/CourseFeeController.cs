@@ -48,6 +48,7 @@ public class CourseFeeController : GenericController<CourseFee, ICourseFeeServic
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of CourseFee.
     /// </summary>
@@ -57,6 +58,7 @@ public class CourseFeeController : GenericController<CourseFee, ICourseFeeServic
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of CourseFee.

@@ -58,6 +58,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of Room.
     /// </summary>
@@ -67,6 +68,7 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of Room.

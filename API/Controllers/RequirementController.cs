@@ -58,6 +58,7 @@ public class RequirementController : GenericController<Requirement, IRequirement
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of Requirement.
     /// </summary>
@@ -67,6 +68,7 @@ public class RequirementController : GenericController<Requirement, IRequirement
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of Requirement.

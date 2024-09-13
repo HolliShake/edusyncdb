@@ -48,6 +48,7 @@ public class ParameterCategoryController : GenericController<ParameterCategory, 
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ParameterCategory.
     /// </summary>
@@ -57,6 +58,7 @@ public class ParameterCategoryController : GenericController<ParameterCategory, 
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ParameterCategory.

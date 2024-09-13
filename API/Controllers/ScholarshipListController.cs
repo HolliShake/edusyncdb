@@ -48,6 +48,7 @@ public class ScholarshipListController : GenericController<ScholarshipList, ISch
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ScholarshipList.
     /// </summary>
@@ -57,6 +58,7 @@ public class ScholarshipListController : GenericController<ScholarshipList, ISch
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ScholarshipList.

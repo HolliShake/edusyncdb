@@ -48,6 +48,7 @@ public class ParameterSubCategoryController : GenericController<ParameterSubCate
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ParameterSubCategory.
     /// </summary>
@@ -57,6 +58,7 @@ public class ParameterSubCategoryController : GenericController<ParameterSubCate
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ParameterSubCategory.

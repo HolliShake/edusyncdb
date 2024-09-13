@@ -48,6 +48,7 @@ public class ScholarshipRequirementController : GenericController<ScholarshipReq
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ScholarshipRequirement.
     /// </summary>
@@ -57,6 +58,7 @@ public class ScholarshipRequirementController : GenericController<ScholarshipReq
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ScholarshipRequirement.

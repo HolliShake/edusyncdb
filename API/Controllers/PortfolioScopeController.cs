@@ -48,6 +48,7 @@ public class PortfolioScopeController : GenericController<PortfolioScope, IPortf
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of PortfolioScope.
     /// </summary>
@@ -57,6 +58,7 @@ public class PortfolioScopeController : GenericController<PortfolioScope, IPortf
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of PortfolioScope.

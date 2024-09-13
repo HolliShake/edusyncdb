@@ -48,6 +48,7 @@ public class AdmissionApplicantController : GenericController<AdmissionApplicant
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of AdmissionApplicant.
     /// </summary>
@@ -57,6 +58,7 @@ public class AdmissionApplicantController : GenericController<AdmissionApplicant
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of AdmissionApplicant.

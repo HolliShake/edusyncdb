@@ -48,6 +48,7 @@ public class GradingPeriodController : GenericController<GradingPeriod, IGrading
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of GradingPeriod.
     /// </summary>
@@ -57,6 +58,7 @@ public class GradingPeriodController : GenericController<GradingPeriod, IGrading
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of GradingPeriod.

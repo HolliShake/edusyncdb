@@ -38,6 +38,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of CourseCrediting.
     /// </summary>
@@ -47,6 +48,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of CourseCrediting.

@@ -48,6 +48,7 @@ public class SkillsFrameworkCourseToCompetencyController : GenericController<Ski
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SkillsFrameworkCourseToCompetency.
     /// </summary>
@@ -57,6 +58,7 @@ public class SkillsFrameworkCourseToCompetencyController : GenericController<Ski
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SkillsFrameworkCourseToCompetency.

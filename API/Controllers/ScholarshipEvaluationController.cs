@@ -48,6 +48,7 @@ public class ScholarshipEvaluationController : GenericController<ScholarshipEval
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of ScholarshipEvaluation.
     /// </summary>
@@ -57,6 +58,7 @@ public class ScholarshipEvaluationController : GenericController<ScholarshipEval
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of ScholarshipEvaluation.

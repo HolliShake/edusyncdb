@@ -48,6 +48,7 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of GradeBookScore.
     /// </summary>
@@ -57,6 +58,7 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of GradeBookScore.

@@ -43,8 +43,6 @@ public class AppInjector
 			services.AddAutoMapper(typeof(FundSourceMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(EnrollmentFeeMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(AccessGroupMapper)); /* manually added by doydoy */
-			services.AddAutoMapper(typeof(AccessListMapper)); /* added by make.py */
-			services.AddAutoMapper(typeof(AccessListActionMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(BulletinMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(BulletinCategoryMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(ClearanceTagMapper)); /* added by make.py */
@@ -121,8 +119,9 @@ public class AppInjector
 			services.AddAutoMapper(typeof(SkillsFrameworkTrackSpecializationMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(VoucherMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(VoucherAppliedMapper)); /* added by make.py */
-			services.AddAutoMapper(typeof(UserAccessMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(UserCampusDetailsMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(AccessGroupActionMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(UserAccessGroupDetailsMapper)); /* added by make.py */
 		#endregion
 
         // Jwt

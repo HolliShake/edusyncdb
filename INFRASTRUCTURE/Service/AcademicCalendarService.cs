@@ -21,6 +21,16 @@ public class AcademicCalendarService:GenericService<AcademicCalendar, GetAcademi
             .ToListAsync());
     }
 
+    public async Task<ICollection<GetAcademicCalendarDto>> GetAcademicCalendarsByCampusId(int campusId)
+    {
+        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(await
+            _dbModel
+            .Include(ac => ac.Cycle)
+            .Include(ac => ac.GradingPeriod)
+            .Where(ac => ac.Cycle.CampusId == campusId)
+            .ToListAsync());
+    }
+
     public async new Task<GetAcademicCalendarDto?> GetAsync(int id)
     {
         return _mapper.Map<GetAcademicCalendarDto?>(await 

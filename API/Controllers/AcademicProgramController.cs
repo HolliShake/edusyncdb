@@ -27,6 +27,17 @@ public class AcademicProgramController : GenericController<AcademicProgram, IAca
     {
         return await GenericGetAll();
     }
+
+    /// <summary>
+    /// Get AcademicProgram by CampusId.
+    /// </summary>
+    /// <param name="campusId"></param>
+    /// <returns>Array[AcademicProgram]</returns>
+    [HttpGet("Campus/{campusId:int}")]
+    public async Task<ActionResult> GetAcademicProgramByCampusId(int campusId)
+    {
+        return Ok(await _repo.GetAcademicProgramByCampusId(campusId));
+    }
    
     /// <summary>
     /// Get specific data (AcademicProgram) by id.
@@ -48,6 +59,7 @@ public class AcademicProgramController : GenericController<AcademicProgram, IAca
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of AcademicProgram.
     /// </summary>
@@ -57,6 +69,7 @@ public class AcademicProgramController : GenericController<AcademicProgram, IAca
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of AcademicProgram.

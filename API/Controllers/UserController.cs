@@ -17,7 +17,6 @@ public class UserController : GenericController<User, IUserService, UserDto, Get
     {
     }
 
-
     /****************** ACTION ROUTES ******************/
     /// <summary>
     /// Get all data.
@@ -50,13 +49,26 @@ public class UserController : GenericController<User, IUserService, UserDto, Get
     }
 
     /// <summary>
+    /// Search user by name.
+    /// </summary>
+    /// <returns>Array[User]</returns>
+    [HttpPost("search")]
+    public async Task<ActionResult> SearchUser([FromBody] string searchKey)
+    {
+        return Ok(await _repo.SearchUserByName(searchKey));
+    }
+
+    /// <summary>
     /// Get specific data (User) by id.
     /// </summary>
     /// <returns>Array[User]></returns>
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult> GetAction(int id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult> GetAction(string id)
     {
-        return await GenericGet(id);
+        var user = await _repo.GetUserId(id);
+        return (user != null)
+            ? Ok(_mapper.Map<GetUserDto>(user))
+            : NotFound();
     }
 
     /// <summary>
@@ -69,6 +81,7 @@ public class UserController : GenericController<User, IUserService, UserDto, Get
         return await GenericCreate(item);
     }
 
+    /*
     /// <summary>
     /// Creates multiple instance of User.
     /// </summary>
@@ -78,24 +91,51 @@ public class UserController : GenericController<User, IUserService, UserDto, Get
     {
         return await GenericCreateAll(items);
     }
+    */
 
     /// <summary>
     /// Updates multiple property of User.
     /// </summary>
     /// <returns>User</returns>
-    [HttpPut("update/{id:int}")]
-    public async Task<ActionResult> UpdateAction(int id, UserDto item)
+    [HttpPut("update/{id}")]
+    public async Task<ActionResult> UpdateAction(string id, UserDto item)
     {
-        return await GenericUpdate(id, item);
+        var record = await _repo.GetUserId(id);
+
+        if (record == null)
+        {
+            return NotFound();
+        }
+
+        var model = _mapper.Map(item, record);
+
+        var result = /**/
+            await _repo.UpdateSync(model);
+
+        return (result)
+            ? Ok(_mapper.Map<GetUserOnlyDto>(model))
+            : BadRequest("Something went wrong!");
     }
 
     /// <summary>
     /// Deletes single User entry.
     /// </summary>
     /// <returns>Null</returns>
-    [HttpDelete("delete/{id:int}")]
-    public async Task<ActionResult> DeleteAction(int id)
+    [HttpDelete("delete/{id}")]
+    public async Task<ActionResult> DeleteAction(string id)
     {
-        return await GenericDelete(id);
+        var record = await _repo.GetUserId(id);
+
+        if (record == null)
+        {
+            return NotFound();
+        }
+
+        var result = /**/
+            await _repo.DeleteSync(record);
+
+        return (result)
+            ? NoContent()
+            : BadRequest("Something went wrong!");
     }
 }

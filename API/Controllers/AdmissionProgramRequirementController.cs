@@ -67,7 +67,43 @@ public class AdmissionProgramRequirementController : GenericController<Admission
     {
         return await GenericCreateAll(items);
     }
-    
+
+    /// <summary>
+    /// Creates multiple instance of AdmissionProgramRequirement.
+    /// </summary>
+    /// <returns>Array[AdmissionProgramRequirement]</returns>
+    [HttpPost("Requirement/multiple")]
+    public async Task<ActionResult> CreateManyByRequirementIdArray(AdmissionProgramRequirementMultipleDto item)
+    {
+        List<AdmissionProgramRequirement> r = [];
+        foreach (var itemN in item.RequirementIds)
+        {
+            r.Add(new AdmissionProgramRequirement
+            {
+                IsEnabled = item.IsEnabled,
+                PassingScore = item.PassingScore,
+                AdmissionScheduleId = item.AdmissionScheduleId,
+                RequirementId = itemN,
+            });
+        }
+        var result = await _repo.CreateAllAsync(r);
+        if (!result)
+        {
+            return BadRequest("Something went wrong!");
+        }
+        if (r.Count <= 0)
+        {
+            return Ok(r);
+        }
+        return Ok(new { 
+            IsEnabled = item.IsEnabled,
+            PassingScore = item.PassingScore,
+            AdmissionScheduleId = r.FirstOrDefault()!.AdmissionScheduleId,
+            AdmissionSchedule = r.FirstOrDefault()!.AdmissionSchedule,
+            Requirements = r.Select(x => x.Requirement).ToList()
+        });
+    }
+
     /// <summary>
     /// Updates multiple property of AdmissionProgramRequirement.
     /// </summary>

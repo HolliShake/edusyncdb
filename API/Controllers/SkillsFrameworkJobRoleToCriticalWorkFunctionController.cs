@@ -48,6 +48,7 @@ public class SkillsFrameworkJobRoleToCriticalWorkFunctionController : GenericCon
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of SkillsFrameworkJobRoleToCriticalWorkFunction.
     /// </summary>
@@ -57,6 +58,7 @@ public class SkillsFrameworkJobRoleToCriticalWorkFunctionController : GenericCon
     {
         return await GenericCreateAll(items);
     }
+    */
     
     /// <summary>
     /// Updates multiple property of SkillsFrameworkJobRoleToCriticalWorkFunction.
