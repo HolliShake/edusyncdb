@@ -27,7 +27,7 @@ public class GradeInputController : GenericController<GradeInput, IGradeInputSer
     {
         return await GenericGetAll();
     }
-    
+
     /// <summary>
     /// Get specific data (GradeInput) by id.
     /// </summary>

@@ -15,7 +15,26 @@ public class AdmissionProgramRequirementService:GenericService<AdmissionProgramR
 
     public new async Task<ICollection<GetAdmissionProgramRequirementDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetAdmissionProgramRequirementDto>>(await _dbModel.Include(apr => apr.Requirement).ToListAsync());
+        return _mapper.Map<ICollection<GetAdmissionProgramRequirementDto>>(await _dbModel
+            .Include(apr => apr.AdmissionSchedule)
+                .ThenInclude(admissionSchedule => admissionSchedule.AcademicProgram)
+            .Include(apr => apr.AdmissionSchedule)
+                .ThenInclude(admissionSchedule => admissionSchedule.Cycle)
+            .Include(apr => apr.Requirement).ToListAsync());
+    }
+
+    public async Task<object> GetAllGroupedByRequirementAsync()
+    {
+        var items = await _dbModel
+            .Include(apr => apr.AdmissionSchedule)
+                .ThenInclude(admissionSchedule => admissionSchedule.AcademicProgram)
+            .Include(apr => apr.AdmissionSchedule)
+                .ThenInclude(admissionSchedule => admissionSchedule.Cycle)
+            .Include(apr => apr.Requirement)
+            .ToListAsync();
+
+        return items
+            .GroupBy(apr => apr.AdmissionSchedule);
     }
 
     public new async Task<ICollection<GetAdmissionProgramRequirementDto>> GetByChunk(int max)
@@ -25,12 +44,25 @@ public class AdmissionProgramRequirementService:GenericService<AdmissionProgramR
 
     public new async Task<AdmissionProgramRequirement?> GetAsync(int id)
     {
-        return _mapper.Map<AdmissionProgramRequirement?>(await _dbModel.Include(apr => apr.Requirement).Where(apr => apr.Id == id).FirstOrDefaultAsync());
+        return _mapper.Map<AdmissionProgramRequirement?>(await _dbModel
+            .Include(apr => apr.AdmissionSchedule)
+                .ThenInclude(admissionSchedule => admissionSchedule.AcademicProgram)
+            .Include(apr => apr.AdmissionSchedule)
+                .ThenInclude(admissionSchedule => admissionSchedule.Cycle)
+            .Include(apr => apr.Requirement)
+            .Where(apr => apr.Id == id).FirstOrDefaultAsync());
     }
 
     public async Task<ICollection<GetAdmissionProgramRequirementDto>> GetEnabledAdmissionProgramRequirements()
     {
-        return _mapper.Map<ICollection<GetAdmissionProgramRequirementDto>>(await _dbModel.Include(apr => apr.Requirement).Where(apr => apr.IsEnabled).ToListAsync());
+        return _mapper.Map<ICollection<GetAdmissionProgramRequirementDto>>(await _dbModel
+            .Include(apr => apr.AdmissionSchedule)
+                .ThenInclude(admissionSchedule => admissionSchedule.AcademicProgram)
+            .Include(apr => apr.AdmissionSchedule)
+                .ThenInclude(admissionSchedule => admissionSchedule.Cycle)
+            .Include(apr => apr.Requirement)
+            .Where(apr => apr.IsEnabled)
+            .ToListAsync());
     }
 
     public async new Task<bool> CreateAllAsync(IList<AdmissionProgramRequirement> newItems)
@@ -46,5 +78,44 @@ public class AdmissionProgramRequirementService:GenericService<AdmissionProgramR
             }
         }
         return result;
+    }
+
+    public async Task<object?> CreateMultipleAdmissionProgramRequirement(AdmissionProgramRequirementMultipleDto item)
+    {
+        List<AdmissionProgramRequirement> newAdmissionProgramRequirements = [];
+        foreach (var requirementId in item.RequirementIds)
+        {
+            newAdmissionProgramRequirements.Add(new AdmissionProgramRequirement
+            {
+                AdmissionScheduleId = item.AdmissionScheduleId,
+                RequirementId = requirementId,
+                IsEnabled = item.IsEnabled,
+                PassingScore = item.PassingScore,
+            });
+        }
+        if (newAdmissionProgramRequirements.Count <= 0)
+        {
+            return null;
+        }
+        var result = await CreateAllAsync(newAdmissionProgramRequirements);
+        if (result)
+        {
+            foreach (var apr in newAdmissionProgramRequirements)
+            {
+                apr.AdmissionSchedule = _dbContext.AdmissionSchedules
+                        .Include(apr => apr.AcademicProgram)
+                        .Include(apr => apr.Cycle)
+                        .Where(apr0 => apr0.Id == apr.AdmissionScheduleId)
+                        .FirstOrDefault();
+
+                apr.Requirement = _dbContext.Requirements
+                    .Where(apr0 => apr0.Id == apr.RequirementId)
+                    .FirstOrDefault();
+            }
+        }
+        return (result)
+            ? (newAdmissionProgramRequirements)
+            : null;
+        
     }
 }

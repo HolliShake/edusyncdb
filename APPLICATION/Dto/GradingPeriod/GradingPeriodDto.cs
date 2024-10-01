@@ -9,4 +9,7 @@ public class GradingPeriodDto
     public string GradingPeriodDescription { get; set; }
     [Required]
     public int GradingNumber { get; set; }
+    // Fk
+    public int DepartmentId { get; set; }
+
 }

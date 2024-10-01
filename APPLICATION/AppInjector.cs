@@ -122,6 +122,9 @@ public class AppInjector
 			services.AddAutoMapper(typeof(UserCampusDetailsMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(AccessGroupActionMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(UserAccessGroupDetailsMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(AdmissionApplicantParentDetailsMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(AdmissionEducationalBackgroundMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(GeneratedSectionsMapper)); /* added by make.py */
 		#endregion
 
         // Jwt

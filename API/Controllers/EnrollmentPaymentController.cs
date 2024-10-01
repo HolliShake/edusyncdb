@@ -28,6 +28,7 @@ public class EnrollmentPaymentController : GenericController<EnrollmentPayment, 
         return await GenericGetAll();
     }
     
+    /*
     /// <summary>
     /// Get 1st to n (where n := size(parameter)) data.
     /// </summary>
@@ -37,6 +38,7 @@ public class EnrollmentPaymentController : GenericController<EnrollmentPayment, 
     {
         return await GenericGetByChunk(size);
     }
+    */
     
     /// <summary>
     /// Get specific data (EnrollmentPayment) by id.

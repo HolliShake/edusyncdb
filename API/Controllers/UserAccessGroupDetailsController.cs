@@ -4,6 +4,7 @@ using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using APPLICATION.Dto.UserCampusDetails;
 
 namespace API.Controllers;
 
@@ -56,7 +57,20 @@ public class UserAccessGroupDetailsController : GenericController<UserAccessGrou
     {
         return await GenericCreate(item);
     }
-    
+
+    /// <summary>
+    /// Creates new UserAccessGroupDetails entry.
+    /// </summary>
+    /// <returns>UserAccessGroupDetails</returns>
+    [HttpPost("AccessGroupAction/multiple")]
+    public async Task<ActionResult> CreateMultipleByAccessGroupAction(UserCampusDetailMultipleAccessGroupActionDto item)
+    {
+        var result = await _repo.CreateMultipleUserAccess(item);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to create user access");
+    }
+
     /*
     /// <summary>
     /// Creates multiple instance of UserAccessGroupDetails.
@@ -68,7 +82,7 @@ public class UserAccessGroupDetailsController : GenericController<UserAccessGrou
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of UserAccessGroupDetails.
     /// </summary>
@@ -87,5 +101,19 @@ public class UserAccessGroupDetailsController : GenericController<UserAccessGrou
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);
+    }
+
+    /// <summary>
+    /// Delete multple UserAccessGroupDetails entry.
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    [HttpPost("delete/multiple")]
+    public async Task<ActionResult> DeleteMultiple([FromBody] UserCampusDetailMultipleAccessGroupActionDto item)
+    {
+        var result = await _repo.DeleteMultipleUserAccess(item);
+        return (result)
+            ? NoContent()
+            : BadRequest("Something went wrong!");
     }
 }

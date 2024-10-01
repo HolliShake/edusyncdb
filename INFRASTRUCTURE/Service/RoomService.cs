@@ -16,4 +16,22 @@ public class RoomService:GenericService<Room, GetRoomDto>, IRoomService
     {
         return _mapper.Map<ICollection<GetRoomDto>>(await _dbModel.Where(r => r.BuildingId == buildingId).ToListAsync());
     }
+
+    public async Task<ICollection<GetRoomDto>> GetRoomByCampusId(int campusId)
+    {
+        return _mapper.Map<ICollection<GetRoomDto>>(await _dbModel
+            .Include(r => r.Building)
+            .Where(r => r.Building.CampusId == campusId)
+            .Select(r => new GetRoomDto
+            {
+                Id = r.Id,
+                RoomName = r.RoomName,
+                Building = null,
+                BuildingId = r.BuildingId,
+                Capacity = r.Capacity,
+                IsEspecializedLab = r.IsEspecializedLab,
+                IsLab = r.IsLab,
+            })
+            .ToListAsync());
+    }
 }

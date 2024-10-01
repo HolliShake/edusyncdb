@@ -43,6 +43,32 @@ public class FacultyModuleController:ControllerBase
     }
 
     /// <summary>
+    /// Get current loggedin faculty gradebook.
+    /// </summary>
+    /// <returns>Array[ScheduleTeacher]</returns>
+    [HttpGet("GradeBook/My")]
+    public async Task<ActionResult> GetCurrentFacultyGradeBook()
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        return Ok(await _scheduleTeacher.GetTeacherScheduleGradeBookByUserId(userId));
+    }
+
+    /// <summary>
+    /// Get current loggedin faculty gradebook by Academic Program Id.
+    /// </summary>
+    /// <returns>Array[ScheduleTeacher]</returns>
+    [HttpGet("GradeBook/My/AcademicProgram/{academicProgramId:int}")]
+    public async Task<ActionResult> GetCurrentFacultyGradeBook(int academicProgramId)
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        return Ok(await _scheduleTeacher.GetTeacherScheduleGradeBookByUserIdAndAcademicProgramId(userId, academicProgramId));
+    }
+
+    /// <summary>
     /// Get currents user enrolled student by schedule id (pass id from "Schedules/My").
     /// </summary>
     /// <param name="scheduleId"></param>

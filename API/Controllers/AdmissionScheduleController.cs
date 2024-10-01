@@ -47,7 +47,31 @@ public class AdmissionScheduleController : GenericController<AdmissionSchedule, 
     {
         return Ok(await _repo.GetAdmissionSchedulesByCycleId(cycleId));
     }
-    
+
+    /// <summary>
+    /// Get Open admission schedule by Agency id or School Id 
+    /// </summary>
+    /// <param name="schoolId"></param>
+    /// <returns>Array[AdmissionSchedule]</returns>
+    [HttpGet("Public/Open/{schoolId:int}")]
+    public async Task<ActionResult> GetOpenAdmissionSchedule(int schoolId)
+    {
+        var items = await _repo.GetOpenAdmissionScheduleGroupedByCampus(schoolId);
+        return Ok(items);
+    }
+
+    /// <summary>
+    /// Get Open admission schedule by Campus shortname
+    /// </summary>
+    /// <param name="campusShortName"></param>
+    /// <returns>Array[AdmissionSchedule]</returns>
+    [HttpGet("Public/Open/{campusShortName}")]
+    public async Task<ActionResult> GetOpenAdmissionSchedule(string campusShortName)
+    {
+        var items = await _repo.GetOpenAdmissionScheduleGroupedByCampusViaCampusName(campusShortName);
+        return Ok(items);
+    }
+
     /// <summary>
     /// Get specific data (AdmissionSchedule) by id.
     /// </summary>

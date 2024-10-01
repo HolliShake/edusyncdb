@@ -47,7 +47,20 @@ public class AdmissionApplicantController : GenericController<AdmissionApplicant
     {
         return await GenericCreate(item);
     }
-    
+
+    /// <summary>
+    /// Apply Admission.
+    /// </summary>
+    /// <returns>AdmissionApplicant</returns>
+    [HttpPost("apply")]
+    public async Task<ActionResult> CreateGroupApplyAction(AdmissionApplicantGroupedDto group)
+    {
+        var result = await _repo.ApplyApplication(group);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to create");
+    }
+
     /*
     /// <summary>
     /// Creates multiple instance of AdmissionApplicant.
@@ -59,7 +72,7 @@ public class AdmissionApplicantController : GenericController<AdmissionApplicant
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of AdmissionApplicant.
     /// </summary>

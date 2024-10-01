@@ -1,5 +1,6 @@
 
 using APPLICATION.Dto.UserAccessGroupDetails;
+using APPLICATION.Dto.UserCampusDetails;
 using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;
@@ -46,5 +47,62 @@ public class UserAccessGroupDetailsService:GenericService<UserAccessGroupDetails
                 .ThenInclude(aga => aga.AccessGroup)
             .Where(uagd => uagd.UserId == userGuid)
             .ToList());
+    }
+
+    public async Task<object?> CreateMultipleUserAccess(UserCampusDetailMultipleAccessGroupActionDto item)
+    {
+        List<UserAccessGroupDetails> userAccessGroupDetails = [];
+        foreach (var accessGroupActionId in item.AccessGroupActionIds)
+        {
+            userAccessGroupDetails.Add(new UserAccessGroupDetails
+            {
+                UserId = item.UserId,
+                AccessGroupActionId = accessGroupActionId
+            });
+        }
+        await _dbModel.AddRangeAsync(userAccessGroupDetails);
+        var result = await Save();
+        if (result)
+        {
+            foreach (var userAccessGroupDetail in userAccessGroupDetails)
+            {
+                userAccessGroupDetail.AccessGroupAction = _dbContext.AccessGroupActions
+                        .Include(aga => aga.AccessGroup)
+                        .Where(aga => aga.Id == userAccessGroupDetail.AccessGroupActionId)
+                        .FirstOrDefault();
+            }
+            return (new
+            {
+                UserId = item.UserId,
+                AccessGroupActions = userAccessGroupDetails.Select(uagd => new
+                {
+                    Id = uagd.Id,
+                    AccessGroupActionId = uagd.AccessGroupActionId,
+                    AccessGroupAction = uagd.AccessGroupAction
+                }).ToList()
+            });
+        }
+        return null;
+    }
+
+    public async Task<bool> DeleteMultipleUserAccess(UserCampusDetailMultipleAccessGroupActionDto item)
+    {
+        List<UserAccessGroupDetails> userAccessGroupDetails = [];
+        foreach (var accessGroupActionId in item.AccessGroupActionIds)
+        {
+            var current = _dbModel
+                .Where(uagd => uagd.UserId == item.UserId)
+                .Where(uagd => uagd.AccessGroupActionId == accessGroupActionId)
+                .ToList();
+
+            if (current == null || current.Count <= 0)
+            {
+                continue;
+            }
+
+            userAccessGroupDetails.AddRange(current);
+        }
+        _dbModel.RemoveRange(userAccessGroupDetails);
+        return await Save();
     }
 }

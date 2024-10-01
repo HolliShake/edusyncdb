@@ -3,4 +3,5 @@
 public class FileScope
 {
     public static readonly string BuildingImagesScope = "Building:Images";
+    public static readonly string CampusImagesScope = "Campus:Images";
 }

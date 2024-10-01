@@ -1,4 +1,3 @@
-
 using APPLICATION.Dto.Building;
 using APPLICATION.IService;
 using DOMAIN.Model;
@@ -99,7 +98,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
             return NotFound();
         }
 
-        var model = _mapper.Map(item, record);
+        var model = _mapper.Map<Building>(record);
 
         var result = /**/
             await _repo.UpdateSync(model);

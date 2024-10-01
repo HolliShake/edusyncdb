@@ -5,6 +5,10 @@ using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using API.Constant;
+using INFRASTRUCTURE.Service;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using APPLICATION.Dto.Building;
 
 namespace API.Controllers;
 
@@ -13,8 +17,12 @@ namespace API.Controllers;
 [Casl("SuperAdmin:all")]
 public class CampusController : GenericController<Campus, ICampusService, CampusDto, GetCampusDto>
 {
-    public CampusController(IMapper mapper, ICampusService repo):base(mapper, repo)
+    private readonly ConfigurationManager _configurationManager;
+    private readonly IFileManagerService _fileManagerService;
+    public CampusController(ConfigurationManager configurationManager, IFileManagerService fileManagerService, IMapper mapper, ICampusService repo):base(mapper, repo)
     {
+        _configurationManager = configurationManager;
+        _fileManagerService = fileManagerService;
     }
 
     /****************** ACTION ROUTES ******************/
@@ -25,7 +33,13 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
-        return await GenericGetAll();
+        var items = await _repo.GetAllAsync();
+        var data = _mapper.Map<ICollection<GetCampusDto>>(items);
+        foreach (var item in data)
+        {
+            item.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, item.Id);
+        }
+        return Ok(data);
     }
 
     /// <summary>
@@ -35,7 +49,12 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     [HttpGet("Agency/{agencyId:int}")]
     public async Task<ActionResult> GetCampusesByAgencyId(int agencyId)
     {
-        return Ok(await _repo.GetCampusByAgendyId(agencyId));
+        var items = await _repo.GetCampusByAgendyId(agencyId);
+        foreach (var item in items)
+        {
+            item.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, item.Id);
+        }
+        return Ok(items);
     }
 
     /// <summary>
@@ -45,7 +64,16 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
-        return await GenericGet(id);
+        var result = await _repo.GetAsync(id);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        var data = _mapper.Map<GetCampusDto>(result);
+        data.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, data.Id);
+
+        return Ok(data);
     }
     
     /// <summary>
@@ -53,9 +81,23 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     /// </summary>
     /// <returns>Campus</returns>
     [HttpPost("create")]
-    public async Task<ActionResult> CreateAction(CampusDto item)
+    public async Task<ActionResult> CreateAction([FromForm] CampusDto item, [FromForm] List<IFormFile> files)
     {
-        return await GenericCreate(item);
+        var model = _mapper.Map<Campus>(item);
+        var result = /**/
+            await _repo.CreateAsync(model);
+
+        var data = _mapper.Map<GetCampusDto>(model);
+
+        var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.CampusImagesScope, model.Id, files);
+        if (fileResult != null)
+        {
+            data.Images = fileResult.ToList()!;
+        }
+
+        return (result)
+            ? Ok(data)
+            : BadRequest("Something went wrong!");
     }
     
     /*
@@ -75,9 +117,41 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     /// </summary>
     /// <returns>Campus</returns>
     [HttpPut("update/{id:int}")]
-    public async Task<ActionResult> UpdateAction(int id, CampusDto item)
+    public async Task<ActionResult> UpdateAction(int id, [FromForm] CampusDto item, [FromForm] List<IFormFile> files)
     {
-        return await GenericUpdate(id, item);
+        var record = await _repo.GetAsync(id);
+
+        if (record == null)
+        {
+            return NotFound();
+        }
+
+        var model = _mapper.Map<Campus>(record);
+
+        var result = /**/
+            await _repo.UpdateSync(model);
+
+        var data = _mapper.Map<GetCampusDto>(model);
+
+        if (files.Count > 0)
+        {
+            var default_files = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, model.Id);
+
+            var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.CampusImagesScope, model.Id, files);
+            if (fileResult != null)
+            {
+                data.Images = fileResult.ToList()!;
+                data.Images.AddRange(default_files);
+            }
+        }
+        else
+        {
+            data.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, model.Id);
+        }
+
+        return (result)
+            ? Ok(data)
+            : BadRequest("Something went wrong!");
     }
     
     /// <summary>

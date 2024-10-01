@@ -5,6 +5,7 @@ using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace INFRASTRUCTURE.Service;
 public class AdmissionScheduleService:GenericService<AdmissionSchedule, GetAdmissionScheduleDto>, IAdmissionScheduleService
@@ -77,5 +78,96 @@ public class AdmissionScheduleService:GenericService<AdmissionSchedule, GetAdmis
             updatedItem.Cycle = await _dbContext.Cycles.FindAsync(updatedItem.CycleId);
         }
         return result;
+    }
+
+    public async Task<object> GetOpenAdmissionScheduleGroupedByCampus(int schoolId)
+    {
+        // Query for admission schedules with conditions
+        var admissionSchedules = await _dbModel
+            .Include(a => a.AcademicProgram)
+                .ThenInclude(ap => ap.College)
+                    .ThenInclude(c => c.Campus)
+            .Where(a => a.AcademicProgram.College.Campus.AgencyId == schoolId)
+            .Where(a =>
+                (a.StartDate >= DateTime.Now && a.EndDate <= DateTime.Now) ||
+                (a.StartDate >= DateTime.Now && !a.IsClosedOverride))
+            .ToListAsync();
+
+        // Group by campus
+        var groupedByCampus = admissionSchedules
+            .GroupBy(a => a.AcademicProgram.College.Campus)
+            .Select(campusGroup => new
+            {
+                CampusId = campusGroup.Key.Id,
+                CampusName = campusGroup.Key.CampusName,
+                Colleges = campusGroup
+                    .GroupBy(a => a.AcademicProgram.College)
+                    .Select(collegeGroup => new
+                    {
+                        CollegeId = collegeGroup.Key.Id,
+                        CollegeName = collegeGroup.Key.CollegeName,
+                        AdmissionSchedules = collegeGroup
+                            .GroupBy(a => a.CycleId)
+                            .Select(cycleGroup => new
+                            {
+                                AdmissionScheduleId = cycleGroup.First().Id,
+                                CycleId = cycleGroup.Key,
+                                Cycle = cycleGroup.First().Cycle,
+                                AcademicPrograms = cycleGroup
+                                    .Select(a => new
+                                    {
+                                        AcademicProgramId = a.AcademicProgramId,
+                                        AcademicProgramName = a.AcademicProgram.ProgramName
+                                    }).ToList()
+                            }).ToList()
+                    }).ToList()
+            }).ToList();
+        return groupedByCampus;
+    }
+
+    // TODO: Implement this method
+    public async Task<object> GetOpenAdmissionScheduleGroupedByCampusViaCampusName(string campusShortName)
+    {
+        // Query for admission schedules with conditions
+        var admissionSchedules = await _dbModel
+            .Include(a => a.AcademicProgram)
+                .ThenInclude(ap => ap.College)
+                    .ThenInclude(c => c.Campus)
+            .Where(a =>
+                (a.StartDate >= DateTime.Now && a.EndDate <= DateTime.Now) ||
+                (a.StartDate >= DateTime.Now && !a.IsClosedOverride))
+            .ToListAsync();
+
+        // Group by campus
+        var groupedByCampus = admissionSchedules
+            .GroupBy(a => a.AcademicProgram.College.Campus)
+            .Where(a => a.Key.CampusShortName == campusShortName)
+            .Select(campusGroup => new
+            {
+                CampusId = campusGroup.Key.Id,
+                CampusName = campusGroup.Key.CampusName,
+                Colleges = campusGroup
+                    .GroupBy(a => a.AcademicProgram.College)
+                    .Select(collegeGroup => new
+                    {
+                        CollegeId = collegeGroup.Key.Id,
+                        CollegeName = collegeGroup.Key.CollegeName,
+                        AdmissionSchedules = collegeGroup
+                            .GroupBy(a => a.CycleId)
+                            .Select(cycleGroup => new
+                            {
+                                AdmissionScheduleId = cycleGroup.First().Id,
+                                CycleId = cycleGroup.Key,
+                                Cycle = cycleGroup.First().Cycle,
+                                AcademicPrograms = cycleGroup
+                                    .Select(a => new
+                                    {
+                                        AcademicProgramId = a.AcademicProgramId,
+                                        AcademicProgramName = a.AcademicProgram.ProgramName
+                                    }).ToList()
+                            }).ToList()
+                    }).ToList()
+            }).ToList();
+        return groupedByCampus;
     }
 }

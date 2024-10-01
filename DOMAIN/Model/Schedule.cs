@@ -34,4 +34,7 @@ public class Schedule
     // Fk User
     public string CreatedByUserId { get; set; }
     public User CreatedByUser { get; set; }
+
+    // Navigation property GradeBook
+    public ICollection<GradeBook> GradeBooks { get; set; }
 }

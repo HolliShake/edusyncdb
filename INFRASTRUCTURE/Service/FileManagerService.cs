@@ -76,7 +76,8 @@ public class FileManagerService : GenericService<FileTable, GetFileManagerTableD
             FileName = fileName,
             FileType = extension,
             Scope = scope,
-            ReferenceId = referenceId.ToString()
+            ReferenceId = referenceId.ToString(),
+            UploadDate = DateTime.Now
         });
 
         return _mapper.Map<GetFileManagerTableDto?>((await Save())

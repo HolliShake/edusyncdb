@@ -7,6 +7,12 @@ public class AgencyDto
     [MinLength(5)]
     [MaxLength(75)]
     public string AgencyName { get; set; }
+
+    [Required]
+    [MinLength(2)]
+    [MaxLength(10)]
+    public string ShortName { get; set; }
+
     [Required]
     [MinLength(25)]
     [MaxLength(255)]

@@ -19,6 +19,7 @@ public class AppDbContext : DbContext
     public DbSet<AccessGroup> AccessGroups { get; set; }
     public DbSet<AccessGroupAction> AccessGroupActions { get; set; }
     public DbSet<AdmissionApplicant> AdmissionApplicants { get; set; }
+    public DbSet<AdmissionApplicantFamilyDetails> AdmissionApplicantFamilyDetails { get; set; }
     public DbSet<AdmissionApplication> AdmissionApplications { get; set; }
     public DbSet<AdmissionEvaluationSchedule> AdmissionEvaluationSchedules { get; set; }
     public DbSet<AdmissionProgramRequirement> AdmissionProgramRequirements { get; set; }
@@ -65,6 +66,7 @@ public class AppDbContext : DbContext
     public DbSet<FileTable> FileTables { get; set; }
     public DbSet<FundSource> FundSources { get; set; }
     // G
+    public DbSet<GeneratedSections> GeneratedSections { get; set; }
     public DbSet<GradeBook> GradeBooks { get; set; }
     public DbSet<GradeBookItem> GradeBookItems { get; set; }
     public DbSet<GradeBookItemDetail> GradeBookItemDetails { get; set; }

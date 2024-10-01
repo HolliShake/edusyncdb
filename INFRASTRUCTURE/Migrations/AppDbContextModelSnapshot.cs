@@ -66,9 +66,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProgramName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShortName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("YearFirstImplemented")
@@ -90,9 +92,11 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AcademicTermDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Label")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfGradingPeriod")
@@ -112,6 +116,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AccessGroupName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -131,6 +136,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Action")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -149,6 +155,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -164,30 +171,116 @@ namespace INFRASTRUCTURE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AcademicProgramChoiceId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AcademicProgramChoiceId2")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("AcademicProgramChoiceId3")
+                        .HasColumnType("int");
+
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateTime")
+                    b.Property<int>("ApplicationType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Firstname")
+                    b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Lastname")
+                    b.Property<bool?>("IsChildOfSoloParent")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOnsite")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsSoloParent")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Middlename")
+                    b.Property<string>("MiddleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MobileNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("AdmissionApplicants");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.AdmissionApplicantFamilyDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AdmissionApplicantId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("MonthlyIncome")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("Occupation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Relationship")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Religion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("YearLevel")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("YearlyCompensation")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdmissionApplicantId");
+
+                    b.ToTable("AdmissionApplicantFamilyDetails");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AdmissionApplication", b =>
@@ -205,12 +298,14 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ApplicationReferenceNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("OverAllStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SubmissionDate")
@@ -246,6 +341,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EvaluationScheduleDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EvaluationScheduleEnd")
@@ -352,12 +448,15 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EvaluationRemarks")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EvaluatorId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PassingStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -382,9 +481,15 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AgencyAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("AgencyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -401,6 +506,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BuildingName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CampusId")
@@ -431,12 +537,14 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Infographics")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsEnable")
@@ -446,6 +554,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PostedByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Priority")
@@ -455,6 +564,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -475,6 +585,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Category")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -514,12 +625,18 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("AgencyId")
                         .HasColumnType("int");
 
                     b.Property<string>("CampusName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CampusShortName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("Latitude")
@@ -556,9 +673,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DuWhoTagId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ExtendedDeadline")
@@ -580,12 +699,15 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SettlementInstruction")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UnclearedUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserWhoClearedId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -610,6 +732,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -629,6 +752,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CollegeName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -647,12 +771,15 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CourseCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CourseDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CourseTitle")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("CreditUnits")
@@ -705,6 +832,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("CreditToUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("CreditUnits")
@@ -714,9 +842,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreditedFromCourseCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CreditedFromCourseTitle")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CreditedFromSchoolId")
@@ -726,12 +856,14 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EvaluatedByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("OtherSchoolId")
+                    b.Property<int>("OtherSchoolId")
                         .HasColumnType("int");
 
                     b.Property<string>("Remarks")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -807,7 +939,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("EducationalQualityAssuranceLearningObjectiveId")
+                    b.Property<int>("EducationalQualityAssuranceLearningObjectiveId")
                         .HasColumnType("int");
 
                     b.Property<int>("LearningObjectiveId")
@@ -837,15 +969,18 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AuthorityLegal")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CurriculumCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CurriculumName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
@@ -855,6 +990,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Major")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MinGradeToBeCulledId")
@@ -864,6 +1000,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("Minor")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProgramTypeId")
@@ -935,6 +1072,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CycleDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CycleNumber")
@@ -944,6 +1082,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SchoolYear")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("StartDate")
@@ -965,9 +1104,11 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -984,6 +1125,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EqaCourseObjective")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EqaProgramObjectiveId")
@@ -1005,6 +1147,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EqaGoal")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EqaTypeId")
@@ -1029,6 +1172,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("EqaLearningObjective")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1050,6 +1194,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("EqaProgramObjective")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1091,21 +1236,27 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EqaLabel1")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EqaLabel2")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EqaLabel3")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EqaLabel4")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShortName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1128,18 +1279,22 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("EnrollmentNotes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EnrollmentRoleId")
                         .HasColumnType("int");
 
                     b.Property<string>("EnrollmentStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GradeOverallStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GradeRemarks")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsValidated")
@@ -1152,6 +1307,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("StudentUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("YearLEvel")
@@ -1180,12 +1336,15 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("BillingParticulars")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BillingReferenceNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BillingStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Credit")
@@ -1237,9 +1396,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("FeeCategory")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FeeName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FundSourceId")
@@ -1269,6 +1430,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EncodedByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("EnrollmentId")
@@ -1278,9 +1440,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("GradeNotes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GradeStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GradingPeriodId")
@@ -1317,15 +1481,18 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LogByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("LogDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LogDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NetworkAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1349,18 +1516,21 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("CashierId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("EnrollmentBillingId")
                         .HasColumnType("int");
 
                     b.Property<string>("ORNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("PaymentDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PaymentMethod")
@@ -1384,6 +1554,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EnrollmentRoleName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1403,6 +1574,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDateTime")
@@ -1462,6 +1634,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("OverallComment")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("RatingDateTime")
@@ -1484,7 +1657,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("EvaluationRatingId")
+                    b.Property<int>("EvaluationRatingId")
                         .HasColumnType("int");
 
                     b.Property<int>("EvaulationRatingId")
@@ -1497,6 +1670,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("QuestionTextResponse")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1517,15 +1691,19 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReferenceId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Scope")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UploadDate")
@@ -1545,11 +1723,43 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("FundSources");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.GeneratedSections", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CurriculumDetailId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CycleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SectionCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SectionName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurriculumDetailId");
+
+                    b.HasIndex("CycleId");
+
+                    b.ToTable("GeneratedSections");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GradeBook", b =>
@@ -1561,6 +1771,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("GradeBookDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ScheduleId")
@@ -1614,9 +1825,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ItemDetail")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ItemDetailDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MaxScore")
@@ -1696,15 +1909,19 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("GradeDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GradeInputType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GradeRemarks")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LetterGrade")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("NumericGrade")
@@ -1726,13 +1943,19 @@ namespace INFRASTRUCTURE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<int>("GradingNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("GradingPeriodDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.ToTable("GradingPeriods");
                 });
@@ -1752,9 +1975,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ApplicationStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GraduatingStudentId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("GraduationCampusId")
@@ -1792,6 +2017,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("BORResolution")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CampusId")
@@ -1801,12 +2027,15 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("GraduationTheme")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GuestOfHonor")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Venue")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<float>("VenueLatitude")
@@ -1831,12 +2060,14 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfChoices")
@@ -1868,6 +2099,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("QuestionText")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1886,15 +2118,19 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Mobile")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SchoolCampus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SchoolName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1911,6 +2147,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ParameterName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ParameterSubCategoryId")
@@ -1920,6 +2157,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("QuestionTypeLikertOrText")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1943,6 +2181,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ParameterCategoryName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1964,6 +2203,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ParameterSubCategoryName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1991,12 +2231,14 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PetitionByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("PetitionDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ReasonText")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2021,12 +2263,14 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ActionDetails")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ActionType")
                         .HasColumnType("int");
 
                     b.Property<string>("ImposedByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("PortfolioIncidentId")
@@ -2068,21 +2312,25 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("MentorOrAdviser")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PortfolioDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PortfolioProviderId")
                         .HasColumnType("int");
 
                     b.Property<string>("PortfolioReferenceNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PortfolioScopeId")
                         .HasColumnType("int");
 
                     b.Property<string>("PortfolioTitle")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PortfolioTypeId")
@@ -2098,6 +2346,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -2126,18 +2375,22 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ComplainantUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ComplaineeUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("EncodedByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("IncidentDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("IncidentText")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsPosted")
@@ -2150,6 +2403,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ResolutionText")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
@@ -2177,6 +2431,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2193,21 +2448,27 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Authority")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContactNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ContractName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProviderAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProviderName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SectorDisciplineId")
@@ -2229,6 +2490,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ScopeName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2248,6 +2510,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("FollowupDateTime")
@@ -2263,9 +2526,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ReferenceTag")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReferenceTagType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("SessionEndDateTime")
@@ -2275,6 +2540,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SessionSummaryText")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2296,9 +2562,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("RoleDescripton")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -2319,6 +2587,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("SessionType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2335,9 +2604,11 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Type")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TypeGroup")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2354,6 +2625,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ProgramTypeName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2376,9 +2648,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("RequirementDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RequirementName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2407,6 +2681,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("RoomName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2431,6 +2706,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CreatedByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("CycleId")
@@ -2440,9 +2716,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("GeneratedReference")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GeneratedSection")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsExclusive")
@@ -2490,6 +2768,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AnyUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CheckInDateTime")
@@ -2531,6 +2810,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("MergeCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ScheduleId")
@@ -2558,6 +2838,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TeacherUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -2580,15 +2861,18 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ApplicantUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("ApplicationDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ApplicationStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ApplicationType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsApproved")
@@ -2659,12 +2943,15 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("EvaluationDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EvaluationStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EvaluatorUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ScholarshipApplicationId")
@@ -2696,21 +2983,26 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("ScholarshipName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShortName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Sponsor")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2750,6 +3042,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("DisciplineDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentId")
@@ -2771,9 +3064,11 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Competency")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CredentialCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsMicroCredential")
@@ -2793,6 +3088,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CategoryName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SectorDisciplineId")
@@ -2819,6 +3115,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CompetencyType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2837,7 +3134,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SkillsFrameworkSkillsToCompetencyId")
+                    b.Property<int>("SkillsFrameworkSkillsToCompetencyId")
                         .HasColumnType("int");
 
                     b.Property<int>("SkillsToCompetencyId")
@@ -2861,6 +3158,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CriticalWorkFunction")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2877,6 +3175,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("GroupLevel")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -2893,9 +3192,11 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("JobDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SfTrackSpecializationId")
@@ -2922,7 +3223,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("SfJoBRole")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SfJobRoleId")
+                    b.Property<int>("SfJobRoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -2951,7 +3252,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("SfSkillsId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SkillsFrameworkSkillsId")
+                    b.Property<int>("SkillsFrameworkSkillsId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -2974,6 +3275,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("KeyTask")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SfCriticalWorkFunctionId")
@@ -3018,6 +3320,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("PerformaceExpectation")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -3034,6 +3337,7 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ProficiencyLevel")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SfGroupLevelId")
@@ -3055,9 +3359,11 @@ namespace INFRASTRUCTURE.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SfCompetencyCategoryId")
@@ -3110,6 +3416,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Specialization")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -3131,12 +3438,14 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AccountName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Uacs")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -3157,6 +3466,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("BirthDate")
@@ -3172,9 +3482,11 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -3199,6 +3511,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -3227,6 +3540,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -3250,6 +3564,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -3282,18 +3597,23 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("VoucherCode")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VoucherCriteria")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VoucherDescription")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VoucherName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VoucherType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -3366,6 +3686,17 @@ namespace INFRASTRUCTURE.Migrations
                         .IsRequired();
 
                     b.Navigation("AccessGroup");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.AdmissionApplicantFamilyDetails", b =>
+                {
+                    b.HasOne("DOMAIN.Model.AdmissionApplicant", "Applicant")
+                        .WithMany()
+                        .HasForeignKey("AdmissionApplicantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Applicant");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.AdmissionApplication", b =>
@@ -3459,7 +3790,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "Evaluator")
                         .WithMany()
                         .HasForeignKey("EvaluatorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AdmissionApplicant");
 
@@ -3492,7 +3824,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "PostedByUser")
                         .WithMany()
                         .HasForeignKey("PostedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
 
@@ -3540,17 +3873,20 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "DuWhoTag")
                         .WithMany()
                         .HasForeignKey("DuWhoTagId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.User", "UnclearedUser")
                         .WithMany()
                         .HasForeignKey("UnclearedUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.User", "UserWhoCleared")
                         .WithMany()
                         .HasForeignKey("UserWhoClearedId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("ClearanceType");
 
@@ -3609,17 +3945,20 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "CreditToUser")
                         .WithMany()
                         .HasForeignKey("CreditToUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.User", "EvaluatedByUser")
                         .WithMany()
                         .HasForeignKey("EvaluatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.OtherSchool", "OtherSchool")
                         .WithMany()
                         .HasForeignKey("OtherSchoolId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Course");
 
@@ -3679,7 +4018,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.EducationalQualityAssuranceLearningObjective", "EducationalQualityAssuranceLearningObjective")
                         .WithMany()
                         .HasForeignKey("EducationalQualityAssuranceLearningObjectiveId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Course");
 
@@ -3831,7 +4171,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "StudentUser")
                         .WithMany()
                         .HasForeignKey("StudentUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("EnrollmentRole");
 
@@ -3899,7 +4240,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "EncodedByUser")
                         .WithMany()
                         .HasForeignKey("EncodedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.Enrollment", "Enrollment")
                         .WithMany()
@@ -3939,7 +4281,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "LogByUser")
                         .WithMany()
                         .HasForeignKey("LogByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Enrollment");
 
@@ -3951,7 +4294,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "Cashier")
                         .WithMany()
                         .HasForeignKey("CashierId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.EnrollmentBilling", "EnrollmentBilling")
                         .WithMany()
@@ -3975,7 +4319,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.Cycle", "Cycle")
                         .WithMany()
@@ -4030,7 +4375,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.EvaluationRating", "EvaluationRating")
                         .WithMany()
                         .HasForeignKey("EvaluationRatingId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.LikertQuestion", "LikertQuestion")
                         .WithMany()
@@ -4043,10 +4389,29 @@ namespace INFRASTRUCTURE.Migrations
                     b.Navigation("LikertQuestion");
                 });
 
+            modelBuilder.Entity("DOMAIN.Model.GeneratedSections", b =>
+                {
+                    b.HasOne("DOMAIN.Model.CurriculumDetail", "CurriculumDetail")
+                        .WithMany()
+                        .HasForeignKey("CurriculumDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DOMAIN.Model.Cycle", "Cycle")
+                        .WithMany()
+                        .HasForeignKey("CycleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CurriculumDetail");
+
+                    b.Navigation("Cycle");
+                });
+
             modelBuilder.Entity("DOMAIN.Model.GradeBook", b =>
                 {
                     b.HasOne("DOMAIN.Model.Schedule", "Schedule")
-                        .WithMany()
+                        .WithMany("GradeBooks")
                         .HasForeignKey("ScheduleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -4122,6 +4487,17 @@ namespace INFRASTRUCTURE.Migrations
                     b.Navigation("Enrollment");
                 });
 
+            modelBuilder.Entity("DOMAIN.Model.GradingPeriod", b =>
+                {
+                    b.HasOne("DOMAIN.Model.College", "Department")
+                        .WithMany()
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("DOMAIN.Model.GraduationApplicant", b =>
                 {
                     b.HasOne("DOMAIN.Model.AcademicProgram", "AcademicProgram")
@@ -4133,7 +4509,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "GraduatingStudent")
                         .WithMany()
                         .HasForeignKey("GraduatingStudentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.GraduationCampus", "GraduationCampus")
                         .WithMany()
@@ -4233,7 +4610,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "PetitionByUser")
                         .WithMany()
                         .HasForeignKey("PetitionByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AcademicProgram");
 
@@ -4249,7 +4627,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "ImposedByUser")
                         .WithMany()
                         .HasForeignKey("ImposedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.PortfolioIncident", "PortfolioIncident")
                         .WithMany()
@@ -4297,7 +4676,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("PortfolioProvider");
 
@@ -4317,17 +4697,20 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "ComplainantUser")
                         .WithMany()
                         .HasForeignKey("ComplainantUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.User", "ComplaineeUser")
                         .WithMany()
                         .HasForeignKey("ComplaineeUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.User", "EncodedByUser")
                         .WithMany()
                         .HasForeignKey("EncodedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.PortfolioIncidentType", "PortfolioIncidentType")
                         .WithMany()
@@ -4377,7 +4760,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("PortfolioSession");
 
@@ -4411,7 +4795,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "CreatedByUser")
                         .WithMany()
                         .HasForeignKey("CreatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.Cycle", "Cycle")
                         .WithMany()
@@ -4440,7 +4825,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "AnyUser")
                         .WithMany()
                         .HasForeignKey("AnyUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.Schedule", "Schedule")
                         .WithMany()
@@ -4481,7 +4867,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "TeacherUser")
                         .WithMany()
                         .HasForeignKey("TeacherUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("EnrollmentRole");
 
@@ -4495,7 +4882,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "ApplicantUser")
                         .WithMany()
                         .HasForeignKey("ApplicantUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.ScholarshipCycleLimit", "ScholarshipCycleLimit")
                         .WithMany()
@@ -4532,7 +4920,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "EvaluatorUser")
                         .WithMany()
                         .HasForeignKey("EvaluatorUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.ScholarshipApplication", "ScholarshipApplication")
                         .WithMany()
@@ -4612,7 +5001,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.SkillsFrameworkSkillsToCompetency", "SkillsFrameworkSkillsToCompetency")
                         .WithMany()
                         .HasForeignKey("SkillsFrameworkSkillsToCompetencyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Course");
 
@@ -4641,7 +5031,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.SkillsFrameworkJobRole", "SfJobRole")
                         .WithMany()
                         .HasForeignKey("SfJobRoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("SfCriticalWorkFunction");
 
@@ -4665,7 +5056,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.SkillsFrameworkSkills", "SkillsFrameworkSkills")
                         .WithMany()
                         .HasForeignKey("SkillsFrameworkSkillsId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("SfJobRoleToCriticalWorkFunction");
 
@@ -4793,7 +5185,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "User")
                         .WithMany("UserAccessGroupDetails")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AccessGroupAction");
 
@@ -4811,7 +5204,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Campus");
 
@@ -4850,6 +5244,11 @@ namespace INFRASTRUCTURE.Migrations
             modelBuilder.Entity("DOMAIN.Model.Course", b =>
                 {
                     b.Navigation("CourseRequisites");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.Schedule", b =>
+                {
+                    b.Navigation("GradeBooks");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.SectorDiscipline", b =>

@@ -1,4 +1,3 @@
-
 using APPLICATION.Dto.AdmissionProgramRequirement;
 using APPLICATION.IService;
 using DOMAIN.Model;
@@ -38,6 +37,18 @@ public class AdmissionProgramRequirementController : GenericController<Admission
         return Ok(await _repo.GetEnabledAdmissionProgramRequirements());
     }
 
+    /*
+    /// <summary>
+    /// Get all AdmissionProgramRequirement Grouped by AdmissionRequirementId.
+    /// </summary>
+    /// <returns>Array[AdmissionProgramRequirement]</returns>
+    [HttpGet("Grouped/all")]
+    public async Task<ActionResult> GetAllGroupedAction()
+    {
+        return Ok(await _repo.GetAllGroupedByRequirementAsync());
+    }
+    */
+
     /// <summary>
     /// Get specific data (AdmissionProgramRequirement) by id.
     /// </summary>
@@ -75,33 +86,10 @@ public class AdmissionProgramRequirementController : GenericController<Admission
     [HttpPost("Requirement/multiple")]
     public async Task<ActionResult> CreateManyByRequirementIdArray(AdmissionProgramRequirementMultipleDto item)
     {
-        List<AdmissionProgramRequirement> r = [];
-        foreach (var itemN in item.RequirementIds)
-        {
-            r.Add(new AdmissionProgramRequirement
-            {
-                IsEnabled = item.IsEnabled,
-                PassingScore = item.PassingScore,
-                AdmissionScheduleId = item.AdmissionScheduleId,
-                RequirementId = itemN,
-            });
-        }
-        var result = await _repo.CreateAllAsync(r);
-        if (!result)
-        {
-            return BadRequest("Something went wrong!");
-        }
-        if (r.Count <= 0)
-        {
-            return Ok(r);
-        }
-        return Ok(new { 
-            IsEnabled = item.IsEnabled,
-            PassingScore = item.PassingScore,
-            AdmissionScheduleId = r.FirstOrDefault()!.AdmissionScheduleId,
-            AdmissionSchedule = r.FirstOrDefault()!.AdmissionSchedule,
-            Requirements = r.Select(x => x.Requirement).ToList()
-        });
+        var result = await _repo.CreateMultipleAdmissionProgramRequirement(item);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to create admission program requirement");
     }
 
     /// <summary>

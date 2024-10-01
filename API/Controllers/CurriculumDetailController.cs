@@ -27,7 +27,17 @@ public class CurriculumDetailController : GenericController<CurriculumDetail, IC
     {
         return await GenericGetAll();
     }
-    
+
+    /// <summary>
+    /// Get information|prospectus by curriculum id.
+    /// </summary>
+    /// <returns>Array[CurriculumDetail]</returns>
+    [HttpGet("Curriculum/prospectus/{curriculumId:int}")]
+    public async Task<ActionResult> GetInfoByCurriculumIdAction(int curriculumId)
+    {
+        return Ok(await _repo.GetInfoByCurriculumId(curriculumId));
+    }
+
     /// <summary>
     /// Get CurriculumDetail by Course id.
     /// </summary>

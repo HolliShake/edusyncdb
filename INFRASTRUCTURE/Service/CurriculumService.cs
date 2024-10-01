@@ -14,6 +14,8 @@ public class CurriculumService:GenericService<Curriculum, GetCurriculumDto>, ICu
 
     public async Task<ICollection<GetCurriculumDto>> GetCurriculumByAcademicProgramId(int academicProgramId)
     {
-        return _mapper.Map<ICollection<GetCurriculumDto>>(await _dbModel.Where(c => c.AcademicProgramId == academicProgramId).ToListAsync());
+        return _mapper.Map<ICollection<GetCurriculumDto>>(await _dbModel
+            .Include(c => c.AcademicTerm)
+            .Where(c => c.AcademicProgramId == academicProgramId).ToListAsync());
     }
 }

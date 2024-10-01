@@ -37,7 +37,17 @@ public class RoomController : GenericController<Room, IRoomService, RoomDto, Get
     {
         return Ok(await _repo.GetRoomByBuildingId(buildingId));
     }
-    
+
+    /// <summary>
+    /// Get Room by Campus id.
+    /// </summary>
+    /// <returns>Array[Room]</returns>
+    [HttpGet("Campus/{campusId:int}")]
+    public async Task<ActionResult> GetRoomByCampusId(int campusId)
+    {
+        return Ok(await _repo.GetRoomByCampusId(campusId));
+    }
+
     /// <summary>
     /// Get specific data (Room) by id.
     /// </summary>

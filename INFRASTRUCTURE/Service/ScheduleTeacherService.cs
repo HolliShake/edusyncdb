@@ -4,7 +4,6 @@ using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
@@ -28,5 +27,69 @@ public class ScheduleTeacherService:GenericService<ScheduleTeacher, GetScheduleT
     {
         return await _dbModel
             .AnyAsync(st => st.TeacherUserId == userId && st.ScheduleId == scheduleId);
+    }
+
+    public async Task<object> GetTeacherScheduleGradeBookByUserIdAndAcademicProgramId(string userId, int academicProgramId)
+    {
+        var items = _dbModel
+                .Include(st => st.Schedule)
+                    .ThenInclude(s => s.Cycle)
+                .Include(st => st.Schedule)
+                   .ThenInclude(s => s.GradeBooks)
+                //.ThenInclude(gb => gb.Schedule)
+                //.ThenInclude(s => s.GradeBooks)
+                //.Include(st => st.EnrollmentRole)
+                .Include(st => st.Schedule)
+                    .ThenInclude(s => s.AcademicProgram)
+                .Where(st => st.TeacherUserId == userId)
+                .ToList();
+
+        List<object> datas = [];
+
+        foreach (var item in items)
+        {
+            datas.AddRange(item.Schedule.GradeBooks.Select(gb => new
+            {
+                GradeBookId = gb.Id,
+                GradeBookName = gb.GradeBookDescription,
+                ScheduleId = gb.ScheduleId,
+                Schedule = gb.Schedule,
+            }));
+        }
+
+        return datas;
+    }
+
+    public async Task<object> GetTeacherScheduleGradeBookByUserId(string userId)
+    {
+        var items = _dbModel
+                .Include(st => st.Schedule)
+                    .ThenInclude(s => s.Cycle)
+                .Include(st => st.Schedule)
+                   .ThenInclude(s => s.GradeBooks)
+                        //.ThenInclude(gb => gb.Schedule)
+                    //.ThenInclude(s => s.GradeBooks)
+                        //.Include(st => st.EnrollmentRole)
+                .Include(st => st.Schedule)
+                    .ThenInclude(s => s.AcademicProgram)
+                .Where(st => st.TeacherUserId == userId)
+                .ToList();
+
+        List<object> datas = [];
+
+        /*
+        foreach (var item in items)
+        {
+            datas.AddRange(item.Schedule.GradeBooks.Select(gb => new
+            {
+                GradeBookId = gb.Id,
+                GradeBookName = gb.GradeBookDescription,
+                ScheduleId = gb.ScheduleId,
+                //Schedule = gb.Schedule,
+            }));
+        }
+        */
+
+        return datas;
     }
 }

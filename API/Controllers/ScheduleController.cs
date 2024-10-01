@@ -1,10 +1,8 @@
-
 using APPLICATION.Dto.Schedule;
 using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using APPLICATION.Dto.AcademicProgram;
 using API.Attributes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
@@ -33,6 +31,18 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
+    }
+
+    /// <summary>
+    /// Get schedules by section name and cycleId
+    /// </summary>
+    /// <param name="sectionName"></param>
+    /// <param name="cycleId"></param>
+    /// <returns></returns>
+    [HttpGet("Section/{sectionName}/Cycle/{cycleId:int}")]
+    public async Task<ActionResult> GetSchedulesBySectionAndCycle(string sectionName, int cycleId)
+    {
+        return Ok(await _repo.GetSectionsBySectionNameAndCycleId(sectionName, cycleId));
     }
 
     /// <summary>
@@ -126,39 +136,32 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<ScheduleDto> items)
     {
-        return await GenericCreateAll(items);
+        var accessToken = HttpContext.Request.Headers.Authorization.ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+
+        var model = _mapper.Map<IList<Schedule>>(items);
+
+        var result = /**/
+            await _repo.CreateAllWithUserIdAsync(userId, model);
+
+        return (result)
+            ? Ok(_mapper.Map<ICollection<GetScheduleDto>>(model))
+            : BadRequest("Something went wrong!");
     }
 
     /// <summary>
     /// Creates initial multiple instance of Schedule.
     /// </summary>
     /// <returns>Array[Schedule]</returns>
-    [HttpPost("generate/program/{academicProgramId:int}/cycle/{cycleId:int}/count/{numberOfSchedules:int}")]
-    public async Task<ActionResult> GenerateSchedule(int academicProgramId, int cycleId, int numberOfSchedules)
+    [HttpPost("generate/{numberOfSchedules:int}")]
+    public async Task<ActionResult> GenerateSchedule(int numberOfSchedules, ScheduleGenerateDto items)
     {
         var accessToken = HttpContext.Request.Headers.Authorization.ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrWhiteSpace(accessToken))
-        {
-            return Unauthorized();
-        }
-
         var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
         var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
 
-        List<ScheduleDto> schedules = [];
-        for (int i = 0; i < numberOfSchedules; i++)
-        {
-            schedules.Add(new ScheduleDto
-            {
-                AcademicProgramId = academicProgramId,
-                CycleId = cycleId,
-                // CourseId = courseId,
-                GeneratedSection = $"SCHEDULE - {i + 1}",
-                GeneratedReference = $"CODE - {i + 1}",
-            });
-        }
-
-        var items_or_null = await _repo.GenerateSchedule(userId, schedules);
+        var items_or_null = await _repo.GenerateSchedule(userId, numberOfSchedules, items);
 
         return (items_or_null != null)
             ? Ok(items_or_null)

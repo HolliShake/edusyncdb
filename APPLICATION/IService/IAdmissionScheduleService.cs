@@ -6,4 +6,6 @@ public interface IAdmissionScheduleService:IGenericService<AdmissionSchedule, Ge
 {
     public Task<ICollection<GetAdmissionScheduleDto>> GetAdmissionSchedulesByAcademicProgramId(int academicProgramId);
     public Task<ICollection<GetAdmissionScheduleDto>> GetAdmissionSchedulesByCycleId(int cycleId);
+    public Task<object> GetOpenAdmissionScheduleGroupedByCampus(int schoolId);
+    public Task<object> GetOpenAdmissionScheduleGroupedByCampusViaCampusName(string campusShortName);
 }

@@ -28,6 +28,7 @@ public class EducationalQualityAssuranceProgramObjectiveToJobRoleController : Ge
         return await GenericGetAll();
     }
     
+    /*
     /// <summary>
     /// Get 1st to n (where n := size(parameter)) data.
     /// </summary>
@@ -37,6 +38,7 @@ public class EducationalQualityAssuranceProgramObjectiveToJobRoleController : Ge
     {
         return await GenericGetByChunk(size);
     }
+    */
     
     /// <summary>
     /// Get specific data (EducationalQualityAssuranceProgramObjectiveToJobRole) by id.

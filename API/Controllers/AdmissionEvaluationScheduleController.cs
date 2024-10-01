@@ -57,33 +57,24 @@ public class AdmissionEvaluationScheduleController : GenericController<Admission
     {
         if (!item.IsOnlineMode)
         {
-            if (item.EvaluationLocation != null)
+            if ((item.EvaluationLocation != null) && (item.EvaluationLocation.Length > 0))
             {
-                if (item.EvaluationLocation.Length > 0)
-                {
-                    goto ok;
-                }
+                goto ok;
             }
-
             return BadRequest("EvaluationLocation is required when not online mode.");
         }
         else
         {
-            if (item.EvaluationOnlineLink != null)
+            if ((item.EvaluationOnlineLink != null) && (item.EvaluationOnlineLink.Length > 0))
             {
-                if (item.EvaluationOnlineLink.Length > 0)
-                {
-                    goto ok;
-                }
+                goto ok;
             }
-
             return BadRequest("EvaluationOnlineLine is required when online mode.");
         }
-
         ok:;
         return await GenericCreate(item);
     }
-    
+
     /*
     /// <summary>
     /// Creates multiple instance of AdmissionEvaluationSchedule.
@@ -96,34 +87,25 @@ public class AdmissionEvaluationScheduleController : GenericController<Admission
         {
             if (!item.IsOnlineMode)
             {
-                if (item.EvaluationLocation != null)
+                if ((item.EvaluationLocation != null) && (item.EvaluationLocation.Length > 0))
                 {
-                    if (item.EvaluationLocation.Length > 0)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
-
                 return BadRequest("EvaluationLocation is required when not online mode.");
             }
             else
             {
-                if (item.EvaluationOnlineLink != null)
+                if ((item.EvaluationOnlineLink != null) && (item.EvaluationOnlineLink.Length > 0))
                 {
-                    if (item.EvaluationOnlineLink.Length > 0)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
-
                 return BadRequest("EvaluationOnlineLine is required when online mode.");
             }
         }
-
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of AdmissionEvaluationSchedule.
     /// </summary>
@@ -133,29 +115,20 @@ public class AdmissionEvaluationScheduleController : GenericController<Admission
     {
         if (!item.IsOnlineMode)
         {
-            if (item.EvaluationLocation != null)
+            if ((item.EvaluationLocation != null) && (item.EvaluationLocation.Length > 0))
             {
-                if (item.EvaluationLocation.Length > 0)
-                {
-                    goto ok;
-                }
+                goto ok;
             }
-
             return BadRequest("EvaluationLocation is required when not online mode.");
         }
         else
         {
-            if (item.EvaluationOnlineLink != null)
+            if ((item.EvaluationOnlineLink != null) && (item.EvaluationOnlineLink.Length > 0))
             {
-                if (item.EvaluationOnlineLink.Length > 0)
-                {
-                    goto ok;
-                }
+                goto ok;
             }
-
             return BadRequest("EvaluationOnlineLine is required when online mode.");
         }
-
         ok:;
         return await GenericUpdate(id, item);
     }

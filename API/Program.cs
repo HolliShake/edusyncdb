@@ -3,7 +3,9 @@ using API;
 using API.Extensions;
 using APPLICATION;
 using INFRASTRUCTURE;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.FileProviders;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,14 +22,37 @@ AppInjector.Inject(builder.Services, builder.Configuration);
 // Api dependency injection
 ApiInjector.Inject(builder.Services, builder.Configuration);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressMapClientErrors = true;
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+  
 
 var app = builder.Build();
 
 app.UseDeveloperExceptionPage();
+app.UseStatusCodePages();
+
+
+app.UseExceptionHandler(exceptionhandler =>
+{
+    exceptionhandler.Run(async context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+        // using static System.Net.Mime.MediaTypeNames;
+        context.Response.ContentType = Text.Plain;
+
+        var exceptionHandlerPathFeature =
+                context.Features.Get<IExceptionHandlerPathFeature>();
+
+        await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
+    });
+});
 
 app.UseCors(x => x
     .WithOrigins("https://*:3001", "https://*:3001")

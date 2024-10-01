@@ -40,6 +40,7 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
         return await GenericGet(id);
     }
     
+    /*
     /// <summary>
     /// Creates new FileTable entry.
     /// </summary>
@@ -49,6 +50,7 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
     {
         return await GenericCreate(item);
     }
+    */
     
     /*
     /// <summary>
@@ -62,6 +64,7 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
     }
     */
     
+    /*
     /// <summary>
     /// Updates multiple property of FileTable.
     /// </summary>
@@ -71,6 +74,7 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
     {
         return await GenericUpdate(id, item);
     }
+    */
     
     /// <summary>
     /// Deletes single FileTable entry.
