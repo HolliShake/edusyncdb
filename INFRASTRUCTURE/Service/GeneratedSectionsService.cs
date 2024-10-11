@@ -28,6 +28,9 @@ public class GeneratedSectionsService:GenericService<GeneratedSections, GetGener
         return _mapper.Map<ICollection<GetGeneratedSectionsDto>>(await _dbModel
             .Include(g => g.Cycle)
             .Include(g => g.CurriculumDetail)
+                .ThenInclude(cd => cd.Curriculum)
+            .Include(g => g.CurriculumDetail)
+                .ThenInclude(cd => cd.Course)
             .Where(g => g.CurriculumDetail.CurriculumId == curriculumId && g.CycleId == cycleId && g.CurriculumDetail.YearLevel == yearLevel)
             .ToListAsync());
     }

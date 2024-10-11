@@ -8,7 +8,7 @@ public class GradingPeriod
     public string GradingPeriodDescription { get; set; }
     public int GradingNumber { get; set; }
     // Fk
-    [ForeignKey("Department")]
-    public int DepartmentId { get; set; }
-    public College Department { get; set; }
+    [ForeignKey("College")]
+    public int CollegeId { get; set; }
+    public College College { get; set; }
 }

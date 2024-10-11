@@ -7,8 +7,8 @@ namespace APPLICATION.Dto.Enrollment;
 public class GetEnrollmentDto
 {
     public int Id { get; set; }
-    public int EnrollmentDateTime { get; set; }
-    public int YearLEvel { get; set; }
+    public DateTime EnrollmentDateTime { get; set; }
+    public int YearLevel { get; set; }
     public decimal CreditUnits { get; set; }
     public string GradeOverallStatus { get; set; }
     public string GradeRemarks { get; set; }

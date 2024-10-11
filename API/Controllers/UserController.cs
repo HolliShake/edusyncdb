@@ -81,7 +81,7 @@ public class UserController : GenericController<User, IUserService, UserDto, Get
         return await GenericCreate(item);
     }
 
-    /*
+
     /// <summary>
     /// Creates multiple instance of User.
     /// </summary>
@@ -91,7 +91,6 @@ public class UserController : GenericController<User, IUserService, UserDto, Get
     {
         return await GenericCreateAll(items);
     }
-    */
 
     /// <summary>
     /// Updates multiple property of User.

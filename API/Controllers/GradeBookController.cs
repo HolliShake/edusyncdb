@@ -27,7 +27,22 @@ public class GradeBookController : GenericController<GradeBook, IGradeBookServic
     {
         return await GenericGetAll();
     }
-    
+
+    /// <summary>
+    /// Get gradebook by schedule id.
+    /// </summary>
+    /// <param name="scheduleId"></param>
+    /// <returns>GradeBook?</returns>
+    [HttpGet("Schedule/{scheduleId:int}")]
+    public async Task<ActionResult> GetGradeBookByScheduleId(int scheduleId)
+    {
+        var result = await _repo.GetGradeBookByScheduleId(scheduleId);
+
+        return (result != null)
+            ? Ok(result)
+            : NoContent();
+    }
+
     /// <summary>
     /// Get specific data (GradeBook) by id.
     /// </summary>
@@ -36,6 +51,22 @@ public class GradeBookController : GenericController<GradeBook, IGradeBookServic
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
+    }
+
+    /// <summary>
+    /// Generate GradeBook from Template.
+    /// </summary>
+    /// <param name="scheduleId"></param>
+    /// <param name="templateId"></param>
+    /// <returns>Object</returns>
+    [HttpPost("Generate/Schedule/{scheduleId:int}/Template/{templateId:int}")]
+    public async Task<ActionResult> GenerateGradeBookFromTemplate(int scheduleId, int templateId)
+    {
+        var result = await _repo.GenerateGradeBookFromTemplate(scheduleId, templateId);
+
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to generate GradeBook from Template");
     }
     
     /// <summary>

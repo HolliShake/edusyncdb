@@ -7,4 +7,5 @@ public interface IEnrollmentService:IGenericService<Enrollment, GetEnrollmentDto
 {
     public Task<ICollection<GetEnrollmentDto>> GetEnrollmentsByEnrollmentRoleId(int enrollmentRoleId);
     public Task<ICollection<GetEnrollmentDto>> GetEnrollmentsByScheduleId(int scheduleId);
+    public Task<object> GetEnrollmentsWithScoreByScheduleId(int scheduleId);
 }

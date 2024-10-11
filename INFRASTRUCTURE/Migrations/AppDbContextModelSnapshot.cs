@@ -1275,8 +1275,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<decimal>("CreditUnits")
                         .HasColumnType("decimal(18,0)");
 
-                    b.Property<int>("EnrollmentDateTime")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("EnrollmentDateTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("EnrollmentNotes")
                         .IsRequired()
@@ -1310,7 +1310,7 @@ namespace INFRASTRUCTURE.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("YearLEvel")
+                    b.Property<int>("YearLevel")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -1798,6 +1798,10 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("GradingPeriodId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(18,4)");
 
@@ -1887,12 +1891,18 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<int>("GradeBookItemDetailId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Score")
                         .HasColumnType("decimal(18,4)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EnrollmentId");
+
+                    b.HasIndex("GradeBookItemDetailId");
 
                     b.ToTable("GradeBookScores");
                 });
@@ -1943,7 +1953,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DepartmentId")
+                    b.Property<int>("CollegeId")
                         .HasColumnType("int");
 
                     b.Property<int>("GradingNumber")
@@ -1955,7 +1965,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("CollegeId");
 
                     b.ToTable("GradingPeriods");
                 });
@@ -3457,6 +3467,93 @@ namespace INFRASTRUCTURE.Migrations
                     b.ToTable("TableObjects");
                 });
 
+            modelBuilder.Entity("DOMAIN.Model.TemplateGradeBook", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("TemplateName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemplateGradeBooks");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.TemplateGradeBookItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("GradingPeriodId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TemplateGradeBookId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GradingPeriodId");
+
+                    b.HasIndex("TemplateGradeBookId");
+
+                    b.ToTable("TemplateGradeBookItems");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.TemplateGradeBookItemDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("EqaAssessmentTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemDetail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemDetailDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("MaxScore")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("PassingScore")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("TemplateGradeBookItemId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EqaAssessmentTypeId");
+
+                    b.HasIndex("TemplateGradeBookItemId");
+
+                    b.ToTable("TemplateGradeBookItemDetails");
+                });
+
             modelBuilder.Entity("DOMAIN.Model.User", b =>
                 {
                     b.Property<string>("Id")
@@ -3509,6 +3606,9 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<int?>("ReferenceId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -4422,7 +4522,7 @@ namespace INFRASTRUCTURE.Migrations
             modelBuilder.Entity("DOMAIN.Model.GradeBookItem", b =>
                 {
                     b.HasOne("DOMAIN.Model.GradeBook", "GradeBook")
-                        .WithMany()
+                        .WithMany("GradeBookItems")
                         .HasForeignKey("GradeBookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -4447,7 +4547,7 @@ namespace INFRASTRUCTURE.Migrations
                         .IsRequired();
 
                     b.HasOne("DOMAIN.Model.GradeBookItem", "GradeBookItem")
-                        .WithMany()
+                        .WithMany("GradeBookItemDetails")
                         .HasForeignKey("GradeBookItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -4484,18 +4584,26 @@ namespace INFRASTRUCTURE.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DOMAIN.Model.GradeBookItemDetail", "GradeBookItemDetail")
+                        .WithMany()
+                        .HasForeignKey("GradeBookItemDetailId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Enrollment");
+
+                    b.Navigation("GradeBookItemDetail");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GradingPeriod", b =>
                 {
-                    b.HasOne("DOMAIN.Model.College", "Department")
+                    b.HasOne("DOMAIN.Model.College", "College")
                         .WithMany()
-                        .HasForeignKey("DepartmentId")
+                        .HasForeignKey("CollegeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Department");
+                    b.Navigation("College");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.GraduationApplicant", b =>
@@ -5174,6 +5282,44 @@ namespace INFRASTRUCTURE.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("DOMAIN.Model.TemplateGradeBookItem", b =>
+                {
+                    b.HasOne("DOMAIN.Model.GradingPeriod", "GradingPeriod")
+                        .WithMany()
+                        .HasForeignKey("GradingPeriodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DOMAIN.Model.TemplateGradeBook", "TemplateGradeBook")
+                        .WithMany("TemplateGradeBookItems")
+                        .HasForeignKey("TemplateGradeBookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GradingPeriod");
+
+                    b.Navigation("TemplateGradeBook");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.TemplateGradeBookItemDetail", b =>
+                {
+                    b.HasOne("DOMAIN.Model.EducationalQualityAssuranceAssessmentType", "EqaAssessmentType")
+                        .WithMany()
+                        .HasForeignKey("EqaAssessmentTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DOMAIN.Model.TemplateGradeBookItem", "TemplateGradeBookItem")
+                        .WithMany("TemplateGradeBookItemDetails")
+                        .HasForeignKey("TemplateGradeBookItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EqaAssessmentType");
+
+                    b.Navigation("TemplateGradeBookItem");
+                });
+
             modelBuilder.Entity("DOMAIN.Model.UserAccessGroupDetails", b =>
                 {
                     b.HasOne("DOMAIN.Model.AccessGroupAction", "AccessGroupAction")
@@ -5246,6 +5392,16 @@ namespace INFRASTRUCTURE.Migrations
                     b.Navigation("CourseRequisites");
                 });
 
+            modelBuilder.Entity("DOMAIN.Model.GradeBook", b =>
+                {
+                    b.Navigation("GradeBookItems");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.GradeBookItem", b =>
+                {
+                    b.Navigation("GradeBookItemDetails");
+                });
+
             modelBuilder.Entity("DOMAIN.Model.Schedule", b =>
                 {
                     b.Navigation("GradeBooks");
@@ -5254,6 +5410,16 @@ namespace INFRASTRUCTURE.Migrations
             modelBuilder.Entity("DOMAIN.Model.SectorDiscipline", b =>
                 {
                     b.Navigation("Children");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.TemplateGradeBook", b =>
+                {
+                    b.Navigation("TemplateGradeBookItems");
+                });
+
+            modelBuilder.Entity("DOMAIN.Model.TemplateGradeBookItem", b =>
+                {
+                    b.Navigation("TemplateGradeBookItemDetails");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.User", b =>

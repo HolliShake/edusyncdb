@@ -6,7 +6,7 @@ namespace APPLICATION.Dto.GradeBookItem;
 public class GetGradeBookItemDto
 {
     public int Id { get; set; }
-
+    public string ItemName { get; set; }
     public decimal Weight { get; set; }
     // Fk GradeBook
     public int GradeBookId { get; set; }

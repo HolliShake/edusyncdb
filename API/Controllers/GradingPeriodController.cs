@@ -27,6 +27,17 @@ public class GradingPeriodController : GenericController<GradingPeriod, IGrading
     {
         return await GenericGetAll();
     }
+
+    /// <summary>
+    /// Get all data by collegeId.
+    /// </summary>
+    /// <param name="collegeId"></param>
+    /// <returns>Array[GradingPeriod]</returns>
+    [HttpGet("College/{collegeId:int}")]
+    public async Task<ActionResult> GetGradingPeriodByCollegeIdAction(int collegeId)
+    {
+        return Ok(await _repo.GetGradingPeriodByCollegeId(collegeId));
+    }
     
     /// <summary>
     /// Get specific data (GradingPeriod) by id.

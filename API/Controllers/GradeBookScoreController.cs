@@ -27,7 +27,30 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     {
         return await GenericGetAll();
     }
-    
+
+    /// <summary>
+    /// Get all enrollment score by gradebook item detail id.
+    /// </summary>
+    /// <param name="gradeBookItemDetailId"></param>
+    /// <returns></returns>
+    [HttpGet("GradeBookItemDetail/{gradeBookItemDetailId:int}")]
+    public async Task<ActionResult> GetAllEnrollmentStudentGradeBookScoreByGradeBookItemDetailId(int gradeBookItemDetailId)
+    {
+        return Ok(await _repo.GetEnrolledStudentWithOrWithoutScoreByGradeBookItemDetailsId(gradeBookItemDetailId));
+    }
+
+    /// <summary>
+    /// Get GradeBook overall Information by Schedule and Student Id.
+    /// </summary>
+    /// <param name="scheduleId"></param>
+    /// <param name="studentId"></param>
+    /// <returns></returns>
+    [HttpGet("GradeBookInformation/Schedule/{scheduleId:int}/Student/{studentId:int}")]
+    public async Task<ActionResult> GetStudentGradeBookInformationByScheduleAndStudentId(int scheduleId, int studentId)
+    {
+        return Ok(await _repo.GetStudentGradeBookInformationByScheduleAndStudentId(scheduleId, studentId));
+    }
+
     /// <summary>
     /// Get specific data (GradeBookScore) by id.
     /// </summary>
@@ -46,6 +69,17 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     public async Task<ActionResult> CreateAction(GradeBookScoreDto item)
     {
         return await GenericCreate(item);
+    }
+
+    /// <summary>
+    /// Give multiple score both support create and update
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    [HttpPost("give/score/multiple")]
+    public async Task<ActionResult> GiveScoreMultipleAction(GiveGradeBookScoreGroupDto item)
+    {
+        return Ok(await _repo.GiveScoreMultiple(item));
     }
     
     /*

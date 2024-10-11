@@ -5,8 +5,8 @@ namespace DOMAIN.Model;
 public class Enrollment
 {
     public int Id { get; set; }
-    public int EnrollmentDateTime { get; set; }
-    public int YearLEvel { get; set; }
+    public DateTime EnrollmentDateTime { get; set; }
+    public int YearLevel { get; set; }
     [Column(TypeName = "decimal(18,0)")]
     public decimal CreditUnits { get; set; }
     public string GradeOverallStatus { get; set; }
@@ -28,4 +28,6 @@ public class Enrollment
     // Fk EnrollmentRole
     public int EnrollmentRoleId { get; set; }
     public EnrollmentRole EnrollmentRole { get; set; }
+    // Nav
+    public ICollection<GradeBookScore> GradeBookScores { get; set; }
 }

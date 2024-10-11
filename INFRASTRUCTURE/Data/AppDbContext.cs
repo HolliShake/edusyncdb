@@ -130,6 +130,9 @@ public class AppDbContext : DbContext
     public DbSet<SkillsFrameworkTrackSpecialization> SkillsFrameworkTrackSpecializations { get; set; }
     // T
     public DbSet<TableObject> TableObjects { get; set; }
+    public DbSet<TemplateGradeBook> TemplateGradeBooks { get; set; }
+    public DbSet<TemplateGradeBookItem> TemplateGradeBookItems { get; set; }
+    public DbSet<TemplateGradeBookItemDetail> TemplateGradeBookItemDetails { get; set; }
     // U
     public DbSet<User> Users { get; set; }
     public DbSet<UserCampusDetails> UserCampusDetails { get; set; }
@@ -140,9 +143,12 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
         {
-            relationship.DeleteBehavior = DeleteBehavior.Cascade;
+            foreach (var relationship in entity.GetForeignKeys())
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Cascade;
+            }
         }
 
         base.OnModelCreating(modelBuilder);

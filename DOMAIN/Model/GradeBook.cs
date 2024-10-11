@@ -8,4 +8,6 @@ public class GradeBook
     // Fk Schedule
     public int ScheduleId { get; set; }
     public Schedule Schedule { get; set; }
+    // Nav
+    public ICollection<GradeBookItem> GradeBookItems { get; set; }
 }

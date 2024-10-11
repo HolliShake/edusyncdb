@@ -5,7 +5,7 @@ namespace DOMAIN.Model;
 public class TemplateGradeBookItem
 {
     public int Id { get; set; }
-
+    public string ItemName { get; set; }
     [Column(TypeName = "decimal(18,4)")]
     public decimal Weight { get; set; }
     // Fk GradeBook
@@ -15,4 +15,6 @@ public class TemplateGradeBookItem
     // Fk GradingPeriod
     public int GradingPeriodId { get; set; }
     public GradingPeriod GradingPeriod { get; set; }
+    // Nav
+    public ICollection<TemplateGradeBookItemDetail> TemplateGradeBookItemDetails { get; set; }
 }

@@ -13,6 +13,18 @@ public class ScheduleService:GenericService<Schedule, GetScheduleDto>, ISchedule
     {
     }
 
+    public async new Task<Schedule?> GetAsync(int id)
+    {
+        return _mapper.Map<Schedule?>(await _dbModel
+            .Include(s => s.Cycle)
+            .Include(s => s.AcademicProgram)
+            .Include(s => s.Course)
+            .Include(s => s.Room)
+                .ThenInclude(room => room.Building)
+            .Where(s => s.Id == id)
+            .FirstOrDefaultAsync());
+    }
+
     public async new Task<ICollection<GetScheduleDto>> GetAllAsync()
     {
         return _mapper.Map<ICollection<GetScheduleDto>>(await _dbModel
@@ -34,17 +46,6 @@ public class ScheduleService:GenericService<Schedule, GetScheduleDto>, ISchedule
             .Include(s => s.Cycle)
             .Where(s => s.CreatedByUserId == createdByUserId)
             .ToListAsync());
-    }
-
-    public async new Task<GetScheduleDto?> GetAsync(int id)
-    {
-        return _mapper.Map<GetScheduleDto?>(await _dbModel
-            .Include(s => s.AcademicProgram)
-            .Include(s => s.Course)
-            .Include(s => s.Room)
-                .ThenInclude(room => room.Building)
-            .Include(s => s.Cycle)
-            .Where(sched => sched.Id == id).FirstOrDefaultAsync());
     }
 
     public async new Task<bool> CreateAsync(Schedule newItem)

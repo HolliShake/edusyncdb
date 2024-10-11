@@ -83,7 +83,7 @@ public class FacultyModuleController:ControllerBase
         {
             return NotFound("Schedule not found for user!");
         }
-        return Ok(await _enrollment.GetEnrollmentsByScheduleId(scheduleId));
+        return Ok(await _enrollment.GetEnrollmentsWithScoreByScheduleId(scheduleId));
     }
 
     /// <summary>
@@ -96,6 +96,20 @@ public class FacultyModuleController:ControllerBase
         var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
         var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
         var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
-        return Ok(await _userCampus.GetAllCampusByUserId(userId));
+        return Ok(await _scheduleTeacher.GetTeacherScheduleWhereHeOrSheTeach(userId));
+    }
+
+    /// <summary>
+    /// Get all academic program that I have access.
+    /// </summary>
+    /// <param name="campusId"></param>
+    /// <returns></returns>
+    [HttpGet("AcademicProgram/Campus/{campusId:int}/my")]
+    public async Task<ActionResult> GetFacultyAcademicProgram(int campusId)
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        return Ok(await _scheduleTeacher.GetAcademicProgramByUserAndCampusId(userId, campusId));
     }
 }

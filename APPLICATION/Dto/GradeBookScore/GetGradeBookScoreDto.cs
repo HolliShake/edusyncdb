@@ -7,6 +7,7 @@ public class GetGradeBookScoreDto
 {
     public int Id { get; set; }
     public decimal Score { get; set; }
+    public string Remarks { get; set; }
 
     // Fk GradeBookItemDetails
     public int GradeBookItemDetailId { get; set; }

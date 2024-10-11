@@ -129,6 +129,9 @@ public class InfraInjector
 			services.AddScoped<IAdmissionApplicantFamilyDetailsService, AdmissionApplicantFamilyDetailsService>(); /* added by make.py */
 			services.AddScoped<IAdmissionEducationalBackgroundService, AdmissionEducationalBackgroundService>(); /* added by make.py */
 			services.AddScoped<IGeneratedSectionsService, GeneratedSectionsService>(); /* added by make.py */
+			services.AddScoped<ITemplateGradeBookService, TemplateGradeBookService>(); /* added by make.py */
+			services.AddScoped<ITemplateGradeBookItemService, TemplateGradeBookItemService>(); /* added by make.py */
+			services.AddScoped<ITemplateGradeBookItemDetailService, TemplateGradeBookItemDetailService>(); /* added by make.py */
 		#endregion
 
         // Identity

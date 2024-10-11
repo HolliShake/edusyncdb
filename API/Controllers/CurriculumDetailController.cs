@@ -47,6 +47,20 @@ public class CurriculumDetailController : GenericController<CurriculumDetail, IC
     {
         return Ok(await _repo.GetCurriculumDetailsByCourseId(courseId));
     }
+
+    /// <summary>
+    /// Create curriculum detail grouped by course.
+    /// </summary>
+    /// <param name="curriculumDetailGroup"></param>
+    /// <returns>Array[CurriculumDetail]</returns>
+    [HttpPost("create/bycourses")]
+    public async Task<ActionResult> CreateCurriculumDetailGroupedByCourseAction(CurriculumDetailGroup curriculumDetailGroup)
+    {
+        var result = await _repo.CreateCurriculumDetailGroupedByCourse(curriculumDetailGroup);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to create curriculum details");
+    }
     
     /// <summary>
     /// Get specific data (CurriculumDetail) by id.

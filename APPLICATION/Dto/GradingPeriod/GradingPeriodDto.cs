@@ -10,6 +10,5 @@ public class GradingPeriodDto
     [Required]
     public int GradingNumber { get; set; }
     // Fk
-    public int DepartmentId { get; set; }
-
+    public int CollegeId { get; set; }
 }

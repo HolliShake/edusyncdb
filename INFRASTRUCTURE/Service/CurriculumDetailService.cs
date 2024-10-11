@@ -109,4 +109,68 @@ public class CurriculumDetailService:GenericService<CurriculumDetail, GetCurricu
             .Where(cd => cd.CourseId == courseId)
             .ToListAsync());
     }
+
+    public async Task<object?> CreateCurriculumDetailGroupedByCourse(CurriculumDetailGroup curriculumDetailGroup)
+    {
+        var curriculumDetails = curriculumDetailGroup.CourseId.Select(courseId => new CurriculumDetail
+        {
+            CurriculumId = curriculumDetailGroup.CurriculumId,
+            IsIncludeGWA = curriculumDetailGroup.IsIncludeGWA,
+            YearLevel = curriculumDetailGroup.YearLevel,
+            TermNumber = curriculumDetailGroup.TermNumber,
+            CourseId = courseId,
+        }).ToList();
+
+        var result = await CreateAllAsync(curriculumDetails);
+        return (result)
+            ? curriculumDetails.Select(cd => 
+                _dbModel
+                    .Include(cd2 => cd2.Course)
+                        .ThenInclude(cd2 => cd2.CourseRequisites)
+                    .Include(cd2 => cd2.Curriculum)
+                        .ThenInclude(cd2 => cd2.AcademicProgram)
+                    .Include(cd2 => cd2.Curriculum)
+                        .ThenInclude(cd2 => cd2.AcademicTerm)
+                    .Where(cd2 => cd2.Id == cd.Id)
+                    .Select(cd2 => new
+                    {
+                        Id = cd2.Id,
+                        YearLevel = $"{AddSuffix(int.Parse(cd2.YearLevel.ToString()))} Year",
+                        TermNumber = $"{AddSuffix(int.Parse(cd2.TermNumber.ToString()))} {cd2.Curriculum.AcademicTerm.Label}",
+                        IsIncludeGWA = cd2.IsIncludeGWA,
+                        CurriculumId = cd2.CurriculumId,
+                        Curriculum = cd2.Curriculum,
+                        CourseId = cd2.CourseId,
+                        Course = new
+                        {
+                            Id = cd2.Course.Id,
+                            CourseCode = cd2.Course.CourseCode,
+                            CourseDescription = cd2.Course.CourseDescription,
+                            LectureUnits = cd2.Course.LectureUnits,
+                            LaboratoryUnits = cd2.Course.LaboratoryUnits,
+                            CreditUnits = cd2.Course.CreditUnits,
+                            PreRequisites = cd2.Course.CourseRequisites.Where(cr => cr.Type == CourseRequisiteType.PreRequisite).Select(cr => new Course
+                            {
+                                Id = cr.Course.Id,
+                                CourseCode = cr.Course.CourseCode,
+                                CourseDescription = cr.Course.CourseDescription
+                            }).ToList(),
+                            CoRequisites = cd2.Course.CourseRequisites.Where(cr => cr.Type == CourseRequisiteType.CoRequisite).Select(cr => new Course
+                            {
+                                Id = cr.Course.Id,
+                                CourseCode = cr.Course.CourseCode,
+                                CourseDescription = cr.Course.CourseDescription
+                            }).ToList(),
+                            Equivalents = cd2.Course.CourseRequisites.Where(cr => cr.Type == CourseRequisiteType.Equivalent).Select(cr => new Course
+                            {
+                                Id = cr.Course.Id,
+                                CourseCode = cr.Course.CourseCode,
+                                CourseDescription = cr.Course.CourseDescription
+                            }).ToList()
+                        }
+                    })
+                    .FirstOrDefault()
+            )
+            : null;
+    }
 }

@@ -37,7 +37,6 @@ var app = builder.Build();
 app.UseDeveloperExceptionPage();
 app.UseStatusCodePages();
 
-
 app.UseExceptionHandler(exceptionhandler =>
 {
     exceptionhandler.Run(async context =>
