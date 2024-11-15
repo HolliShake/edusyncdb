@@ -5,14 +5,12 @@ namespace DOMAIN.Model;
 public class ScheduleAttendance
 {
     public int Id { get; set; }
-    public DateTime CheckInDateTime { get; set; }
-    public DateTime CheckOutDateTime { get; set; }
+    public DateTime AttendanceDateTime { get; set; }
 
     //
-    public float InLatitude { get; set; }
-    public float InLongitude { get; set; }
-    public float OutLatitude { get; set; }
-    public float OutLongitude { get; set; }
+    public float Latitude { get; set; }
+    public float Longitude { get; set; }
+    public bool IsTimeIn { get; set; }
 
     // Fk Schedule
     public int ScheduleId { get; set; }

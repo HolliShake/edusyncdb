@@ -68,7 +68,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
         var result = /**/
             await _repo.CreateAsync(model);
 
-        if (!result)
+        if (result == null)
         {
             return BadRequest("Something went wrong!");
         }
@@ -101,9 +101,9 @@ public class BuildingController : GenericController<Building, IBuildingService, 
         var model = _mapper.Map<Building>(record);
 
         var result = /**/
-            await _repo.UpdateSync(model);
+            await _repo.UpdateAsync(model);
 
-        if (!result)
+        if (result == null)
         {
             return BadRequest("Something went wrong!");
         }

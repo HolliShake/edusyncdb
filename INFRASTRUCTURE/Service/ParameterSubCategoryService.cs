@@ -14,38 +14,41 @@ public class ParameterSubCategoryService:GenericService<ParameterSubCategory, Ge
 
     public async new Task<ICollection<GetParameterSubCategoryDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetParameterSubCategoryDto>>(await _dbModel
-            .Include(psc => psc.ParameterCategory)
-            .ToListAsync());
+        var parameterSubCategories = await _dbModel
+        .Include(psc => psc.ParameterCategory)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetParameterSubCategoryDto>>(parameterSubCategories);
     }
 
-    public async new Task<GetParameterSubCategoryDto?> GetAsync(int id)
+    public async new Task<ParameterSubCategory?> GetAsync(int id)
     {
-        return _mapper.Map<GetParameterSubCategoryDto?>(await _dbModel
-            .Include(psc => psc.ParameterCategory)
-            .Where(psc => psc.Id == id)
-            .FirstOrDefaultAsync());
+        var parameterSubCategory = await _dbModel
+        .Include(psc => psc.ParameterCategory)
+        .Where(psc => psc.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return parameterSubCategory;
     }
 
-    public async new Task<bool> CreateAsync(ParameterSubCategory newItem)
+    public async new Task<GetParameterSubCategoryDto?> CreateAsync(ParameterSubCategory newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.ParameterCategory = await _dbContext.ParameterCategories.FindAsync(newItem.ParameterCategoryId);
+            newItem.ParameterCategory = _dbContext.ParameterCategories.Find(newItem.ParameterCategoryId);
+            return _mapper.Map<GetParameterSubCategoryDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(ParameterSubCategory updatedItem)
+    public async new Task<GetParameterSubCategoryDto?> UpdateAsync(ParameterSubCategory updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.ParameterCategory = await _dbContext.ParameterCategories.FindAsync(updatedItem.ParameterCategoryId);
+            updatedItem.ParameterCategory = _dbContext.ParameterCategories.Find(updatedItem.ParameterCategoryId);
+            return _mapper.Map<GetParameterSubCategoryDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

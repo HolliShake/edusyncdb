@@ -30,4 +30,7 @@ public class EvaluationPeriod
     // Fk User (CreatedBy)
     public string CreatedByUserId { get; set; }
     public User CreatedByUser { get; set; }
+
+    // Nav EvaluationRating
+    public ICollection<EvaluationRating> EvaluationRatings { get; set; }
 }

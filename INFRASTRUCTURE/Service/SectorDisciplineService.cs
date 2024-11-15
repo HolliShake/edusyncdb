@@ -15,23 +15,27 @@ public class SectorDisciplineService:GenericService<SectorDiscipline, GetSectorD
 
     public async new Task<ICollection<GetSectorDisciplineDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetSectorDisciplineDto>>(
-            await _dbModel.Include(sd => sd.Children).ToListAsync()
-        );
+        var sectorDisciplines = await _dbModel
+        .Include(sd => sd.Children)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetSectorDisciplineDto>>(sectorDisciplines);
     }
 
     public async Task<ICollection<GetSectorDisciplineDto>> GetAllParentSectorDiscipline()
     {
-        return _mapper.Map<ICollection<GetSectorDisciplineDto>>(await _dbModel
-           .Include(sd => sd.Children)
-           .Where(sd => sd.ParentId == null)
-           .ToListAsync());
+        var sectorDisciplines = await _dbModel
+        .Include(sd => sd.Children)
+        .Where(sd => sd.ParentId == null)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetSectorDisciplineDto>>(sectorDisciplines);
     }
+
     public async Task<ICollection<GetSectorDisciplineDto>> GetSectorDisciplineByParentSectorDisciplineId(int parentId)
     {
-        return _mapper.Map<ICollection<GetSectorDisciplineDto>>(await _dbModel
-            .Where(sd => sd.ParentId != null)
-            .Where(sd => sd.ParentId == parentId)
-            .ToListAsync());
+        var sectorDisciplines = await _dbModel
+        .Where(sd => sd.ParentId != null)
+        .Where(sd => sd.ParentId == parentId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetSectorDisciplineDto>>(sectorDisciplines);
     }
 }

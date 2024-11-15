@@ -17,11 +17,12 @@ public class UserAccessGroupDetailsService:GenericService<UserAccessGroupDetails
 
     public async Task<ICollection<GetUserAccessGroupDetailsDto>> GetUserAccessGroupByUserGuid(string userGuid)
     {
-        return _mapper.Map<ICollection<GetUserAccessGroupDetailsDto>>(await _dbModel
-            .Include(uagd => uagd.AccessGroupAction)
-                .ThenInclude(aga => aga.AccessGroup)
-            .Where(uagd => uagd.UserId == userGuid)
-            .ToListAsync());
+        var userAccessGroupDetails = await _dbModel
+        .Include(uagd => uagd.AccessGroupAction)
+            .ThenInclude(aga => aga.AccessGroup)
+        .Where(uagd => uagd.UserId == userGuid)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetUserAccessGroupDetailsDto>>(userAccessGroupDetails);
     }
 
     public async Task<object> GetUserAccessByUserGuid(string userGuid)
@@ -30,7 +31,8 @@ public class UserAccessGroupDetailsService:GenericService<UserAccessGroupDetails
             .Include(uagd => uagd.AccessGroupAction)
             .Where(uagd => uagd.UserId == userGuid)
             .GroupBy(uagd => uagd.AccessGroupAction.AccessGroupId)
-            .Select(uagdArray => new {
+            .Select(uagdArray => new 
+            {
                 Id = uagdArray.First().AccessGroupAction.AccessGroupId,
                 AccessGroup = uagdArray.First().AccessGroupAction.AccessGroup.AccessGroupName,
                 Actions = uagdArray.Select(uagd => new {
@@ -42,11 +44,12 @@ public class UserAccessGroupDetailsService:GenericService<UserAccessGroupDetails
     }
     public ICollection<GetUserAccessGroupDetailsDto> GetUserAccessGroupByUserGuidSync(string userGuid)
     {
-        return _mapper.Map<ICollection<GetUserAccessGroupDetailsDto>>(_dbModel
-            .Include(uagd => uagd.AccessGroupAction)
-                .ThenInclude(aga => aga.AccessGroup)
-            .Where(uagd => uagd.UserId == userGuid)
-            .ToList());
+        var userAccessGroupDetails = _dbModel
+        .Include(uagd => uagd.AccessGroupAction)
+            .ThenInclude(aga => aga.AccessGroup)
+        .Where(uagd => uagd.UserId == userGuid)
+        .ToList();
+        return _mapper.Map<ICollection<GetUserAccessGroupDetailsDto>>(userAccessGroupDetails);
     }
 
     public async Task<object?> CreateMultipleUserAccess(UserCampusDetailMultipleAccessGroupActionDto item)

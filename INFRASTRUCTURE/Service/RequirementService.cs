@@ -15,6 +15,9 @@ public class RequirementService:GenericService<Requirement, GetRequirementDto>, 
 
     public async Task<ICollection<GetRequirementDto>> GetActiveRequirement()
     {
-        return _mapper.Map<ICollection<GetRequirementDto>>(await _dbModel.Where(r => r.IsActive).ToListAsync());
+        var requirements = await _dbModel
+        .Where(r => r.IsActive)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetRequirementDto>>(requirements);
     }
 }

@@ -16,57 +16,65 @@ public class EnrollmentFeeService:GenericService<EnrollmentFee, GetEnrollmentFee
 
     public async new Task<ICollection<GetEnrollmentFeeDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetEnrollmentFeeDto>>(await _dbModel
-            .Include(ef => ef.Object)
-            .Include(ef => ef.FundSource)
-            .ToListAsync());
+        var enrollmentFees = await _dbModel
+        .Include(ef => ef.Object)
+        .Include(ef => ef.FundSource)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetEnrollmentFeeDto>>(enrollmentFees);
     }
 
-    public async new Task<GetEnrollmentFeeDto?> GetAsync(int id)
+    public async new Task<EnrollmentFee?> GetAsync(int id)
     {
-        return _mapper.Map<GetEnrollmentFeeDto?>(await _dbModel
-            .Include(ef => ef.Object)
-            .Include(ef => ef.FundSource)
-            .Where(ef => ef.Id == id).FirstOrDefaultAsync());
+        var enrollmentFee = await _dbModel
+        .Include(ef => ef.Object)
+        .Include(ef => ef.FundSource)
+        .Where(ef => ef.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return enrollmentFee;
     }
 
-    public async new Task<bool> CreateAsync(EnrollmentFee newItem)
+    public async new Task<GetEnrollmentFeeDto?> CreateAsync(EnrollmentFee newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.Object = await _dbContext.TableObjects.FindAsync(newItem.ObjectId);
-            newItem.FundSource = await _dbContext.FundSources.FindAsync(newItem.FundSourceId);
+            newItem.Object = _dbContext.TableObjects.Find(newItem.ObjectId);
+            newItem.FundSource = _dbContext.FundSources.Find(newItem.FundSourceId);
+            return _mapper.Map<GetEnrollmentFeeDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(EnrollmentFee updatedItem)
+    public async new Task<GetEnrollmentFeeDto?> UpdateAsync(EnrollmentFee updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.Object = await _dbContext.TableObjects.FindAsync(updatedItem.ObjectId);
-            updatedItem.FundSource = await _dbContext.FundSources.FindAsync(updatedItem.FundSourceId);
+            updatedItem.Object = _dbContext.TableObjects.Find(updatedItem.ObjectId);
+            updatedItem.FundSource = _dbContext.FundSources.Find(updatedItem.FundSourceId);
+            return _mapper.Map<GetEnrollmentFeeDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 
     public async Task<ICollection<GetEnrollmentFeeDto>> GetEnrollmentFeesByObjectId(int objectId)
     {
-        return _mapper.Map<ICollection<GetEnrollmentFeeDto>>(await _dbModel
-            .Include(ef => ef.Object)
-            .Include(ef => ef.FundSource)
-            .Where(ef => ef.ObjectId == objectId).ToListAsync());
+        var enrollmentFees = await _dbModel
+        .Include(ef => ef.Object)
+        .Include(ef => ef.FundSource)
+        .Where(ef => ef.ObjectId == objectId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetEnrollmentFeeDto>>(enrollmentFees);
     }
 
     public async Task<ICollection<GetEnrollmentFeeDto>> GetEnrollmentFeesByFundSourceId(int fundSourceId)
     {
-        return _mapper.Map<ICollection<GetEnrollmentFeeDto>>(await _dbModel
-            .Include(ef => ef.Object)
-            .Include(ef => ef.FundSource)
-            .Where(ef => ef.FundSourceId == fundSourceId).ToListAsync());
+        var enrollmentFees = await _dbModel
+        .Include(ef => ef.Object)
+        .Include(ef => ef.FundSource)
+        .Where(ef => ef.FundSourceId == fundSourceId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetEnrollmentFeeDto>>(enrollmentFees);
     }
 }

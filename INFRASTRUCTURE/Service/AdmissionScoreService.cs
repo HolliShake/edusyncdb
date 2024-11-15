@@ -15,25 +15,28 @@ public class AdmissionScoreService:GenericService<AdmissionScore, GetAdmissionSc
 
     public async Task<ICollection<GetAdmissionScoreDto>> GetAdmissionScoreByAdmissionEvaluationScheduleId(int admissionEvaluationScheduleId)
     {
-        return _mapper.Map<ICollection<GetAdmissionScoreDto>>(await _dbModel
-            .Include(ads => ads.AdmissionEvaluationSchedule)
-            .Where(ads => ads.AdmissionEvaluationScheduleId == admissionEvaluationScheduleId)
-            .ToListAsync());
+        var admissionScores = await _dbModel
+        .Include(ads => ads.AdmissionEvaluationSchedule)
+        .Where(ads => ads.AdmissionEvaluationScheduleId == admissionEvaluationScheduleId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionScoreDto>>(admissionScores);
     }
 
     public async Task<ICollection<GetAdmissionScoreDto>> GetAdmissionScoreByAdmissionProgramRequirementId(int admissionProgramRequirementId)
     {
-        return _mapper.Map<ICollection<GetAdmissionScoreDto>>(await _dbModel
-            .Include(ads => ads.AdmissionProgramRequirement)
-            .Where(ads => ads.AdmissionProgramRequirementId == admissionProgramRequirementId)
-            .ToListAsync());
+        var admissionScores = await _dbModel
+        .Include(ads => ads.AdmissionProgramRequirement)
+        .Where(ads => ads.AdmissionProgramRequirementId == admissionProgramRequirementId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionScoreDto>>(admissionScores);
     }
 
     public async Task<ICollection<GetAdmissionScoreDto>> GetAdmissionScoreByAdmissionApplicantId(int admissionApplicantId)
     {
-        return _mapper.Map<ICollection<GetAdmissionScoreDto>>(await _dbModel
-           .Include(ads => ads.AdmissionApplicant)
-           .Where(ads => ads.AdmissionApplicantId == admissionApplicantId)
-           .ToListAsync());
+        var admissionScores = await _dbModel
+        .Include(ads => ads.AdmissionApplicant)
+        .Where(ads => ads.AdmissionApplicantId == admissionApplicantId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionScoreDto>>(admissionScores);
     }
 }

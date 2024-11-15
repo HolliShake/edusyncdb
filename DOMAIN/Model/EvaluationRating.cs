@@ -14,4 +14,11 @@ public class EvaluationRating
     // Fk EvaluationPeriod
     public int EvaluationPeriodId { get; set; }
     public EvaluationPeriod EvaluationPeriod { get; set; }
+
+    // Fk ScheduleTeacher
+    public int ScheduleTeacherId { get; set; }
+    public ScheduleTeacher ScheduleTeacher { get; set; }
+
+    // Fk
+    public ICollection<EvaluationRatingDetail> EvaluationRatingDetails { get; set; }
 }

@@ -5,6 +5,11 @@ using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using INFRASTRUCTURE;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Net.Http.Headers;
+using APPLICATION.Jwt;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -13,11 +18,29 @@ namespace API.Controllers;
 [Casl("SuperAdmin:all")]
 public class ScheduleAttendanceController : GenericController<ScheduleAttendance, IScheduleAttendanceService, ScheduleAttendanceDto, GetScheduleAttendanceDto>
 {
-    public ScheduleAttendanceController(IMapper mapper, IScheduleAttendanceService repo):base(mapper, repo)
+    protected readonly IJwtAuthManager _jwtAuthManager;
+    public ScheduleAttendanceController(
+        IJwtAuthManager jwtAuthManager,
+        IMapper mapper, 
+        IScheduleAttendanceService repo
+
+    ):base(mapper, repo)
     {
+        _jwtAuthManager = jwtAuthManager;
     }
 
     /****************** ACTION ROUTES ******************/
+    /// <summary>
+    /// Get current user id.
+    /// </summary>
+    /// <returns></returns>
+    protected string GetUserId()
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        return principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+    }
+
     /// <summary>
     /// Get all data.
     /// </summary>
@@ -46,6 +69,23 @@ public class ScheduleAttendanceController : GenericController<ScheduleAttendance
     public async Task<ActionResult> CreateAction(ScheduleAttendanceDto item)
     {
         return await GenericCreate(item);
+    }
+
+    /// <summary>
+    /// Submit attendance.
+    /// </summary>
+    /// <param name="scheduleId"></param>
+    /// <param name="isTimeIn"></param>
+    /// <param name="file"></param>
+    /// <returns></returns>
+    [HttpPost("submit/Schedule/{scheduleId:int}/IsTimeIn/{isTimeIn:bool}/My")]
+    public async Task<ActionResult> SubmitAttendanceinmt(int scheduleId, bool isTimeIn, IFormFile file)
+    {
+        var userId = GetUserId();
+        var result = await _repo.SubmitAttendance(userId, isTimeIn, scheduleId, file);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to submit attendance");
     }
     
     /*

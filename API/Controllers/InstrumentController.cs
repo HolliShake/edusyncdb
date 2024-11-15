@@ -37,7 +37,35 @@ public class InstrumentController : GenericController<Instrument, IInstrumentSer
     {
         return await GenericGet(id);
     }
-    
+
+    /// <summary>
+    /// Get instrument information
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    [HttpGet("Instrument/info/{id:int}")]
+    public async Task<ActionResult> GetInstrumentInfoAction(int id)
+    {
+        var result = await _repo.GetInstrumentInfo(id);
+        return (result != null)
+            ? Ok(result)
+            : NotFound("Instrument not found");
+    }
+
+    /// <summary>
+    /// Creates instrument as whole.
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
+    [HttpPost("Group/create")]
+    public async Task<ActionResult> CreateGroupAction(InstrumentGroupDto item)
+    {
+        var result = await _repo.CreateInstrumentByGroup(item);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to create instrument");
+    }
+
     /// <summary>
     /// Creates new Instrument entry.
     /// </summary>

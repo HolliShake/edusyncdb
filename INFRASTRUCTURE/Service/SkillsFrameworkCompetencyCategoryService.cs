@@ -15,41 +15,45 @@ public class SkillsFrameworkCompetencyCategoryService:GenericService<SkillsFrame
 
     public async new Task<ICollection<GetSkillsFrameworkCompetencyCategoryDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetSkillsFrameworkCompetencyCategoryDto>>(await _dbModel
-            .Include(sfcc => sfcc.SfCompetencyType)
-            .Include(sfcc => sfcc.SectorDiscipline)
-            .ToListAsync());
+        var sfCompetencyCategory = await _dbModel
+        .Include(sfcc => sfcc.SfCompetencyType)
+        .Include(sfcc => sfcc.SectorDiscipline)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetSkillsFrameworkCompetencyCategoryDto>>(sfCompetencyCategory);
     }
 
     public async new Task<SkillsFrameworkCompetencyCategory?> GetAsync(int id)
     {
-        return _mapper.Map<SkillsFrameworkCompetencyCategory?>(await _dbModel
-            .Include(sfcc => sfcc.SfCompetencyType)
-            .Include(sfcc => sfcc.SectorDiscipline)
-            .Where(sfcc => sfcc.Id == id).FirstOrDefaultAsync());
+        var sfCompetencyCategory = await _dbModel
+        .Include(sfcc => sfcc.SfCompetencyType)
+        .Include(sfcc => sfcc.SectorDiscipline)
+        .Where(sfcc => sfcc.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return sfCompetencyCategory;
     }
 
-    public async new Task<bool> CreateAsync(SkillsFrameworkCompetencyCategory newItem)
+    public async new Task<GetSkillsFrameworkCompetencyCategoryDto?> CreateAsync(SkillsFrameworkCompetencyCategory newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.SfCompetencyType = await _dbContext.SkillsFrameworkCompetencyTypes.FindAsync(newItem.SfCompetencyTypeId);
-            newItem.SectorDiscipline = await _dbContext.SectorDisciplines.FindAsync(newItem.SectorDisciplineId);
+            newItem.SfCompetencyType = _dbContext.SkillsFrameworkCompetencyTypes.Find(newItem.SfCompetencyTypeId);
+            newItem.SectorDiscipline = _dbContext.SectorDisciplines.Find(newItem.SectorDisciplineId);
+            return _mapper.Map<GetSkillsFrameworkCompetencyCategoryDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(SkillsFrameworkCompetencyCategory updatedItem)
+    public async new Task<GetSkillsFrameworkCompetencyCategoryDto?> UpdateAsync(SkillsFrameworkCompetencyCategory updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result) 
+        if (await Save()) 
         {
-            updatedItem.SfCompetencyType = await _dbContext.SkillsFrameworkCompetencyTypes.FindAsync(updatedItem.SfCompetencyTypeId);
-            updatedItem.SectorDiscipline = await _dbContext.SectorDisciplines.FindAsync(updatedItem.SectorDisciplineId);
+            updatedItem.SfCompetencyType = _dbContext.SkillsFrameworkCompetencyTypes.Find(updatedItem.SfCompetencyTypeId);
+            updatedItem.SectorDiscipline = _dbContext.SectorDisciplines.Find(updatedItem.SectorDisciplineId);
+            return _mapper.Map<GetSkillsFrameworkCompetencyCategoryDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

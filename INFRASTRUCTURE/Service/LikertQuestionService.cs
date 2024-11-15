@@ -22,31 +22,33 @@ public class LikertQuestionService:GenericService<LikertQuestion, GetLikertQuest
 
     public async new Task<LikertQuestion?> GetAsync(int id)
     {
-        return _mapper.Map<LikertQuestion?>(await _dbModel
-            .Include(lq => lq.Parameter)
-            .Where(lq => lq.Id == id)
-            .FirstOrDefaultAsync());
+        var likertQuestion = await _dbModel
+        .Include(lq => lq.Parameter)
+        .Where(lq => lq.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return likertQuestion;
     }
 
-    public async new Task<bool> CreateAsync(LikertQuestion newItem)
+    public async new Task<GetLikertQuestionDto?> CreateAsync(LikertQuestion newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.Parameter = await _dbContext.Parameters.FindAsync(newItem.ParameterId);
+            newItem.Parameter = _dbContext.Parameters.Find(newItem.ParameterId);
+            return _mapper.Map<GetLikertQuestionDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(LikertQuestion updatedItem)
+    public async new Task<GetLikertQuestionDto?> UpdateAsync(LikertQuestion updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.Parameter = await _dbContext.Parameters.FindAsync(updatedItem.ParameterId);
+            updatedItem.Parameter = _dbContext.Parameters.Find(updatedItem.ParameterId);
+            return _mapper.Map<GetLikertQuestionDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

@@ -22,6 +22,18 @@ public class UserCampusDetailsController : GenericController<UserCampusDetails, 
     }
 
     /****************** ACTION ROUTES ******************/
+
+    /// <summary>
+    /// Get user's id.
+    /// </summary>
+    /// <returns>string</returns>
+    protected string GetUserId()
+    {
+        var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        return principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+    }
+
     /// <summary>
     /// Get all data.
     /// </summary>
@@ -39,9 +51,7 @@ public class UserCampusDetailsController : GenericController<UserCampusDetails, 
     [HttpGet("MyCampusAccess")]
     public async Task<ActionResult> GetMyAction()
     {
-        var accessToken = HttpContext.Request.Headers["Authorization"].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         return Ok(await _repo.GetAllCampusByUserId(userId));
     }
 

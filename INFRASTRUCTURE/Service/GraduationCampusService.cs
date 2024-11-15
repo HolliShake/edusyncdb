@@ -14,38 +14,41 @@ public class GraduationCampusService:GenericService<GraduationCampus, GetGraduat
 
     public async new Task<ICollection<GetGraduationCampusDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetGraduationCampusDto>>(await _dbModel
-            .Include(gc => gc.Campus)
-            .ToListAsync());
+        var graduationCampuses = await _dbModel
+        .Include(gc => gc.Campus)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetGraduationCampusDto>>(graduationCampuses);
     }
 
-    public async new Task<GetGraduationCampusDto?> GetAsync(int id)
+    public async new Task<GraduationCampus?> GetAsync(int id)
     {
-        return _mapper.Map<GetGraduationCampusDto?>(await _dbModel
-            .Include(gc => gc.Campus)
-            .Where(gc => gc.Id == id)
-            .FirstOrDefaultAsync());
+        var graduationCampus = await _dbModel
+        .Include(gc => gc.Campus)
+        .Where(gc => gc.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return graduationCampus;
     }
 
-    public async new Task<bool> CreateAsync(GraduationCampus newItem)
+    public async new Task<GetGraduationCampusDto?> CreateAsync(GraduationCampus newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.Campus = await _dbContext.Campuses.FindAsync(newItem.CampusId);
+            newItem.Campus = _dbContext.Campuses.Find(newItem.CampusId);
+            return _mapper.Map<GetGraduationCampusDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(GraduationCampus updatedItem)
+    public async new Task<GetGraduationCampusDto?> UpdateAsync(GraduationCampus updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.Campus = await _dbContext.Campuses.FindAsync(updatedItem.CampusId);
+            updatedItem.Campus = _dbContext.Campuses.Find(updatedItem.CampusId);
+            return _mapper.Map<GetGraduationCampusDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

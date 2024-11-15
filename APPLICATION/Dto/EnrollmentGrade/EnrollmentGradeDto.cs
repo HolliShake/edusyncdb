@@ -23,7 +23,7 @@ public class EnrollmentGradeDto
 
     // Fk GradingInput
     [Required]
-    public int GradingInputId { get; set; }
+    public int GradeInputId { get; set; }
 
     // Fk GradingPeriod
     [Required]

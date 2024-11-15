@@ -14,45 +14,52 @@ public class AcademicProgramService:GenericService<AcademicProgram, GetAcademicP
 
     public async new Task<ICollection<GetAcademicProgramDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetAcademicProgramDto>>(await _dbModel
-            .Include(ap => ap.College)
-            .OrderBy(ap => ap.ProgramName)
-            .ToListAsync());
+        var academicPrograms = await _dbModel
+        .Include(ap => ap.College)
+        .OrderBy(ap => ap.ProgramName)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAcademicProgramDto>>(academicPrograms);
     }
 
     public async Task<ICollection<GetAcademicProgramDto>> GetAcademicProgramByCampusId(int campusId)
     {
-        return _mapper.Map<ICollection<GetAcademicProgramDto>>(await _dbModel
-            .Include(ap => ap.College)
-            .Where(ap => ap.College.CampusId == campusId)
-            .OrderBy(ap => ap.ProgramName)
-            .ToListAsync());
+        var academicPrograms = await _dbModel
+        .Include(ap => ap.College)
+        .Where(ap => ap.College.CampusId == campusId)
+        .OrderBy(ap => ap.ProgramName)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAcademicProgramDto>>(academicPrograms);
     }
 
-    public async new Task<GetAcademicProgramDto?> GetAsync(int id)
+    public async new Task<AcademicProgram?> GetAsync(int id)
     {
-        return _mapper.Map<GetAcademicProgramDto?>(await _dbModel.Include(ap => ap.College).Where(ap => ap.Id == id).FirstOrDefaultAsync());
+        var academicProgram = await _dbModel
+        .Include(ap => ap.College)
+        .Where(ap => ap.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return academicProgram;
     }
 
-    public async new Task<bool> CreateAsync(AcademicProgram newItem)
+    public async new Task<GetAcademicProgramDto?> CreateAsync(AcademicProgram newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
             newItem.College = await _dbContext.Colleges.FindAsync(newItem.CollegeId);
+            return _mapper.Map<GetAcademicProgramDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(AcademicProgram updatedItem)
+    public async new Task<GetAcademicProgramDto?> UpdateAsync(AcademicProgram updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
             updatedItem.College = await _dbContext.Colleges.FindAsync(updatedItem.CollegeId);
+            return _mapper.Map<GetAcademicProgramDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

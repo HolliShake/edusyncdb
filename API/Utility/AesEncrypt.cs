@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace API.utils;
+namespace API.Utility;
 
 public class AesEncrypt
 {

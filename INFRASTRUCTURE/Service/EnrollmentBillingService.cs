@@ -14,43 +14,46 @@ public class EnrollmentBillingService:GenericService<EnrollmentBilling, GetEnrol
 
     public async Task<ICollection<GetEnrollmentBillingDto>> GetEnrollmentBillingsByEnrollmentId(int enrollmentId)
     {
-        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(
-            await _dbModel
-            .Include(eb => eb.Enrollment)
-            .Include(eb => eb.EnrollmentFee)
-            .Include(eb => eb.Cycle)
-            .Include(eb => eb.Voucher)
-            .Where(eb => eb.EnrollmentId == enrollmentId)
-            .ToListAsync());
+        var enrollmentBillings = await _dbModel
+        .Include(eb => eb.Enrollment)
+        .Include(eb => eb.EnrollmentFee)
+        .Include(eb => eb.Cycle)
+        .Include(eb => eb.Voucher)
+        .Where(eb => eb.EnrollmentId == enrollmentId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(enrollmentBillings);
     }
     public async Task<ICollection<GetEnrollmentBillingDto>> GetEnrollmentBillingsByEnrollmentFeeId(int enrollmenFeetId)
     {
-        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _dbModel
-            .Include(eb => eb.Enrollment)
-            .Include(eb => eb.EnrollmentFee)
-            .Include(eb => eb.Cycle)
-            .Include(eb => eb.Voucher)
-            .Where(eb => eb.EnrollmentFeeId == enrollmenFeetId)
-            .ToListAsync());
+        var enrollmentBillings = await _dbModel
+        .Include(eb => eb.Enrollment)
+        .Include(eb => eb.EnrollmentFee)
+        .Include(eb => eb.Cycle)
+        .Include(eb => eb.Voucher)
+        .Where(eb => eb.EnrollmentFeeId == enrollmenFeetId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(enrollmentBillings);
     }
     public async Task<ICollection<GetEnrollmentBillingDto>> GetEnrollmentBillingsByCycleId(int cycleId)
     {
-        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _dbModel
-            .Include(eb => eb.Enrollment)
-            .Include(eb => eb.EnrollmentFee)
-            .Include(eb => eb.Cycle)
-            .Include(eb => eb.Voucher)
-            .Where(eb => eb.CycleId == cycleId)
-            .ToListAsync());
+        var enrollmentBillings = await _dbModel
+        .Include(eb => eb.Enrollment)
+        .Include(eb => eb.EnrollmentFee)
+        .Include(eb => eb.Cycle)
+        .Include(eb => eb.Voucher)
+        .Where(eb => eb.CycleId == cycleId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(enrollmentBillings);
     }
     public async Task<ICollection<GetEnrollmentBillingDto>> GetEnrollmentBillingsByVoucherId(int voucherId)
     {
-        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(await _dbModel
-            .Include(eb => eb.Enrollment)
-            .Include(eb => eb.EnrollmentFee)
-            .Include(eb => eb.Cycle)
-            .Include(eb => eb.Voucher)
-            .Where(eb => eb.VoucherId == voucherId)
-            .ToListAsync());
+        var enrollmentBillings = await _dbModel
+        .Include(eb => eb.Enrollment)
+        .Include(eb => eb.EnrollmentFee)
+        .Include(eb => eb.Cycle)
+        .Include(eb => eb.Voucher)
+        .Where(eb => eb.VoucherId == voucherId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetEnrollmentBillingDto>>(enrollmentBillings);
     }
 }

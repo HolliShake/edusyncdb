@@ -124,10 +124,12 @@ public class AppInjector
 			services.AddAutoMapper(typeof(UserAccessGroupDetailsMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(AdmissionApplicantParentDetailsMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(AdmissionEducationalBackgroundMapper)); /* added by make.py */
-			services.AddAutoMapper(typeof(GeneratedSectionsMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(TemplateGradeBookMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(TemplateGradeBookItemMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(TemplateGradeBookItemDetailMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(ScheduleAssignmentMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(AcademicProgramChairMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(CollegeDeanMapper)); /* added by make.py */
 		#endregion
 
         // Jwt

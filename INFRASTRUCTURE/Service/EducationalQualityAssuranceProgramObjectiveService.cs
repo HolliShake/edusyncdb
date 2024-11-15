@@ -19,33 +19,35 @@ public class EducationalQualityAssuranceProgramObjectiveService:GenericService<E
             .ToListAsync());
     }
 
-    public async new Task<GetEducationalQualityAssuranceProgramObjectiveDto?> GetAsync(int id)
+    public async new Task<EducationalQualityAssuranceProgramObjective?> GetAsync(int id)
     {
-        return _mapper.Map<GetEducationalQualityAssuranceProgramObjectiveDto?>(await _dbModel
-            .Include(eqapo => eqapo.EqaEducationalGoal)
-            .Where(eqapo => eqapo.Id == id)
-            .FirstOrDefaultAsync());
+        var eqaProgramObjective = await _dbModel
+        .Include(eqapo => eqapo.EqaEducationalGoal)
+        .Where(eqapo => eqapo.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return eqaProgramObjective;
     }
 
-    public async new Task<bool> CreateAsync(EducationalQualityAssuranceProgramObjective newItem)
+    public async new Task<GetEducationalQualityAssuranceProgramObjectiveDto?> CreateAsync(EducationalQualityAssuranceProgramObjective newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.EqaEducationalGoal = await _dbContext.EducationalQualityAssuranceEducationalGoals.FindAsync(newItem.EqaEducationalGoalId);
+            newItem.EqaEducationalGoal = _dbContext.EducationalQualityAssuranceEducationalGoals.Find(newItem.EqaEducationalGoalId);
+            return _mapper.Map<GetEducationalQualityAssuranceProgramObjectiveDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(EducationalQualityAssuranceProgramObjective updatedItem)
+    public async new Task<GetEducationalQualityAssuranceProgramObjectiveDto?> UpdateAsync(EducationalQualityAssuranceProgramObjective updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.EqaEducationalGoal = await _dbContext.EducationalQualityAssuranceEducationalGoals.FindAsync(updatedItem.EqaEducationalGoalId);
+            updatedItem.EqaEducationalGoal = _dbContext.EducationalQualityAssuranceEducationalGoals.Find(updatedItem.EqaEducationalGoalId);
+            return _mapper.Map<GetEducationalQualityAssuranceProgramObjectiveDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

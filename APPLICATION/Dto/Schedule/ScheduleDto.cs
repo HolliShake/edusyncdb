@@ -15,15 +15,12 @@ public class ScheduleDto
     public bool IsPetitionSchedule { get; set; }
     public bool IsExclusive { get; set; }
 
-    // Fk AcademicProgram
-    public int AcademicProgramId { get; set; }
-
     // Fk Cycle 
     public int CycleId { get; set; }
 
     // Fk Room
     public int? RoomId { get; set; }
 
-    // Fk Course
-    public int? CourseId { get; set; }
+    // Fk Curriculum
+    public int CurriculumDetailId { get; set; }
 }

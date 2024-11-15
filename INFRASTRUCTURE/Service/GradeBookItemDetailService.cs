@@ -11,25 +11,25 @@ public class GradeBookItemDetailService:GenericService<GradeBookItemDetail, GetG
     {
     }
 
-    public async new Task<bool> CreateAsync(GradeBookItemDetail newItem)
+    public async new Task<GetGradeBookItemDetailDto?> CreateAsync(GradeBookItemDetail newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
             newItem.EqaAssessmentType = _dbContext.EducationalQualityAssuranceAssessmentTypes.Find(newItem.EqaAssessmentTypeId);
+            return _mapper.Map<GetGradeBookItemDetailDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(GradeBookItemDetail updatedItem)
+    public async new Task<GetGradeBookItemDetailDto?> UpdateAsync(GradeBookItemDetail updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
             updatedItem.EqaAssessmentType = _dbContext.EducationalQualityAssuranceAssessmentTypes.Find(updatedItem.EqaAssessmentTypeId);
+            return _mapper.Map<GetGradeBookItemDetailDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

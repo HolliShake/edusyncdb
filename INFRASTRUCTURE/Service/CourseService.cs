@@ -12,102 +12,92 @@ public class CourseService:GenericService<Course, GetCourseDto>, ICourseService
     {
     }
 
-    public async new Task<bool> CreateAsync(Course newItem)
+    public async new Task<GetCourseDto?> CreateAsync(Course newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.SfTrackSpecialization = await _dbContext.SkillsFrameworkTrackSpecializations.FindAsync(newItem.SfTrackSpecializationId);
-            newItem.EducationalQualityAssuranceType = await _dbContext.EducationalQualityAssuranceTypes.FindAsync(newItem.EducationalQualityAssuranceTypeId);
+            newItem.SfTrackSpecialization = _dbContext.SkillsFrameworkTrackSpecializations.Find(newItem.SfTrackSpecializationId);
+            newItem.EducationalQualityAssuranceType = _dbContext.EducationalQualityAssuranceTypes.Find(newItem.EducationalQualityAssuranceTypeId);
+            return _mapper.Map<GetCourseDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(Course updatedItem)
+    public async new Task<GetCourseDto?> UpdateAsync(Course updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.SfTrackSpecialization = await _dbContext.SkillsFrameworkTrackSpecializations.FindAsync(updatedItem.SfTrackSpecializationId);
-            updatedItem.EducationalQualityAssuranceType = await _dbContext.EducationalQualityAssuranceTypes.FindAsync(updatedItem.EducationalQualityAssuranceTypeId);
+            updatedItem.SfTrackSpecialization = _dbContext.SkillsFrameworkTrackSpecializations.Find(updatedItem.SfTrackSpecializationId);
+            updatedItem.EducationalQualityAssuranceType = _dbContext.EducationalQualityAssuranceTypes.Find(updatedItem.EducationalQualityAssuranceTypeId);
+            return _mapper.Map<GetCourseDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 
     public async new Task<ICollection<GetCourseDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetCourseDto>>(await _dbModel
-            .Include(c => c.EducationalQualityAssuranceType)
-            .Include(c => c.SfTrackSpecialization)
-            .ToListAsync()
-        );
+        var courses = await _dbModel
+        .Include(c => c.EducationalQualityAssuranceType)
+        .Include(c => c.SfTrackSpecialization)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetCourseDto>>(courses);
     }
 
     public async Task<ICollection<GetCourseDto>> GetAllWithRequisiteAsync()
     {
-        return _mapper.Map<ICollection<GetCourseDto>>(await _dbModel
-            .Include(c => c.EducationalQualityAssuranceType)
-            .Include(c => c.SfTrackSpecialization)
-            .Include(c => c.CourseRequisites)
+        var courses = await _dbModel
+        .Include(c => c.EducationalQualityAssuranceType)
+        .Include(c => c.SfTrackSpecialization)
+        .Include(c => c.CourseRequisites)
             .ThenInclude(cr => cr.RequisiteCourse)
-            .ToListAsync());
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetCourseDto>>(courses);
     }
 
     public async Task<GetCourseDto?> GetWithRequisiteAsync(int id)
     {
-        return _mapper.Map<GetCourseDto?>(await _dbModel
-            .Include(c => c.EducationalQualityAssuranceType)
-            .Include(c => c.SfTrackSpecialization)
-            .Include(c => c.CourseRequisites)
+        var course = await _dbModel
+        .Include(c => c.EducationalQualityAssuranceType)
+        .Include(c => c.SfTrackSpecialization)
+        .Include(c => c.CourseRequisites)
             .ThenInclude(cr => cr.RequisiteCourse)
-            .Where(c => c.Id == id)
-            .FirstOrDefaultAsync());
+        .FirstOrDefaultAsync(c => c.Id == id);
+        return _mapper.Map<GetCourseDto?>(course);
     }
 
     public async Task<ICollection<GetCourseDto>> GetCourseByEducationalQualityAssuranceType(int educationalQualityAssuranceTypeId, bool includeRequisites)
     {
+        var query = _dbModel
+            .Include(c => c.EducationalQualityAssuranceType)
+            .Include(c => c.SfTrackSpecialization)
+            .Where(c => c.EducationalQualityAssuranceTypeId == educationalQualityAssuranceTypeId);
         if (includeRequisites)
         {
-            return _mapper.Map<ICollection<GetCourseDto>>(await _dbModel
-                .Include(c => c.EducationalQualityAssuranceType)
-                .Include(c => c.SfTrackSpecialization)
+            query = query
                 .Include(c => c.CourseRequisites)
-                .ThenInclude(cr => cr.RequisiteCourse)
-                .Where(c => c.EducationalQualityAssuranceTypeId == educationalQualityAssuranceTypeId)
-                .ToListAsync());
+                .ThenInclude(cr => cr.RequisiteCourse);
         }
-        else
-        {
-            return _mapper.Map<ICollection<GetCourseDto>>(await _dbModel
-                .Include(c => c.EducationalQualityAssuranceType)
-                .Include(c => c.SfTrackSpecialization)
-                .Where(c => c.EducationalQualityAssuranceTypeId == educationalQualityAssuranceTypeId)
-                .ToListAsync());
-        }
+        var courses = await query.ToListAsync();
+        return _mapper.Map<ICollection<GetCourseDto>>(courses);
     }
 
     public async Task<ICollection<GetCourseDto>> GetCourseBySkillsFrameworkTrackSpecializationId(int trackSpecializationId, bool includeRequisites)
     {
+        var query = _dbModel
+            .Include(c => c.EducationalQualityAssuranceType)
+            .Include(c => c.SfTrackSpecialization)
+            .Where(c => c.SfTrackSpecializationId == trackSpecializationId);
+
         if (includeRequisites)
         {
-            return _mapper.Map<ICollection<GetCourseDto>>(await _dbModel
-                .Include(c => c.EducationalQualityAssuranceType)
-                .Include(c => c.SfTrackSpecialization)
+            query = query
                 .Include(c => c.CourseRequisites)
-                .ThenInclude(cr => cr.RequisiteCourse)
-                .Where(c => c.SfTrackSpecializationId == trackSpecializationId)
-                .ToListAsync());
+                .ThenInclude(cr => cr.RequisiteCourse);
         }
-        else
-        {
-            return _mapper.Map<ICollection<GetCourseDto>>(await _dbModel
-                .Include(c => c.EducationalQualityAssuranceType)
-                .Include(c => c.SfTrackSpecialization)
-                .Where(c => c.SfTrackSpecializationId == trackSpecializationId)
-                .ToListAsync()
-             );
-        }
+
+        var courses = await query.ToListAsync();
+        return _mapper.Map<ICollection<GetCourseDto>>(courses);
     }
 }

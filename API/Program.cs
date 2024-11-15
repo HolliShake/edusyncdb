@@ -3,6 +3,7 @@ using API;
 using API.Extensions;
 using APPLICATION;
 using INFRASTRUCTURE;
+using INFRASTRUCTURE.ErrorHandler;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.FileProviders;
 using static System.Net.Mime.MediaTypeNames;
@@ -35,23 +36,42 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 app.UseDeveloperExceptionPage();
+/*
 app.UseStatusCodePages();
-
 app.UseExceptionHandler(exceptionhandler =>
 {
     exceptionhandler.Run(async context =>
     {
-        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
         // using static System.Net.Mime.MediaTypeNames;
         context.Response.ContentType = Text.Plain;
 
         var exceptionHandlerPathFeature =
                 context.Features.Get<IExceptionHandlerPathFeature>();
 
+        if (exceptionHandlerPathFeature == null)
+        {
+            return;
+        }
+
+        if (exceptionHandlerPathFeature.Error is Error400)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        } else if (exceptionHandlerPathFeature.Error is Error401)
+        {
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        }
+        else if (exceptionHandlerPathFeature.Error is Error404){
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+        } 
+        else
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        }
+
         await context.Response.WriteAsync(exceptionHandlerPathFeature.Error.Message);
     });
 });
+*/
 
 app.UseCors(x => x
     .WithOrigins("https://*:3001", "https://*:3001")

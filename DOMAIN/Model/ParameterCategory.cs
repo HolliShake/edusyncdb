@@ -8,4 +8,7 @@ public class ParameterCategory
     // Fk Instrument
     public int InstrumentId { get; set; }
     public Instrument Instrument { get; set; }
+
+    // Navigation Properties
+    public ICollection<ParameterSubCategory> ParameterSubCategories { get; set; }
 }

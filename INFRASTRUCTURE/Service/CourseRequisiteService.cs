@@ -12,36 +12,37 @@ public class CourseRequisiteService:GenericService<CourseRequisite, GetCourseReq
     {
     }
 
-    public async Task<bool> CreateAsync(CourseRequisite newItem)
+    public async new Task<GetCourseRequisiteDto?> CreateAsync(CourseRequisite newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.Course = await _dbContext.Courses.FindAsync(newItem.CourseId);
-            newItem.RequisiteCourse = await _dbContext.Courses.FindAsync(newItem.RequisiteCourseId);
+            newItem.Course = _dbContext.Courses.Find(newItem.CourseId);
+            newItem.RequisiteCourse = _dbContext.Courses.Find(newItem.RequisiteCourseId);
+            return _mapper.Map<GetCourseRequisiteDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(CourseRequisite updatedItem)
+    public async new Task<GetCourseRequisiteDto?> UpdateAsync(CourseRequisite updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.Course = await _dbContext.Courses.FindAsync(updatedItem.CourseId);
-            updatedItem.RequisiteCourse = await _dbContext.Courses.FindAsync(updatedItem.RequisiteCourseId);
+            updatedItem.Course = _dbContext.Courses.Find(updatedItem.CourseId);
+            updatedItem.RequisiteCourse = _dbContext.Courses.Find(updatedItem.RequisiteCourseId);
+            return _mapper.Map<GetCourseRequisiteDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 
     public async Task<ICollection<GetCourseRequisiteDto>> GetCourseRequisitesByCourseIdAndType(int courseId, int type)
     {
-        return _mapper.Map<ICollection<GetCourseRequisiteDto>>(await _dbModel
+        var courseRequisites = await _dbModel
             .Include(cr => cr.RequisiteCourse)
             .Where(cr => cr.CourseId == courseId)
             .Where(cr => (int)cr.Type == type)
-            .ToListAsync());
+            .ToListAsync();
+        return _mapper.Map<ICollection<GetCourseRequisiteDto>>(courseRequisites);
     }
 }

@@ -8,6 +8,7 @@ using DOMAIN.Model;
 namespace APPLICATION.IService;
 public interface IScheduleTeacherService:IGenericService<ScheduleTeacher, GetScheduleTeacherDto>
 {
+    public Task<bool> IsTeacher(string userId);
     public Task<object> GetScheduleTeacherByUserId(string userId);
     public Task<bool> HasShedule(string userId, int scheduleId);
     public Task<object> GetTeacherScheduleGradeBookByUserIdAndAcademicProgramId(string userId, int academicProgramId);

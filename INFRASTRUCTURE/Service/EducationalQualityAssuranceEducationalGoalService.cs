@@ -14,31 +14,32 @@ public class EducationalQualityAssuranceEducationalGoalService:GenericService<Ed
 
     public async new Task<ICollection<GetEducationalQualityAssuranceEducationalGoalDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetEducationalQualityAssuranceEducationalGoalDto>>(await 
+        var eqaEducationalGoals = await 
             _dbModel
             .Include(eqaEducationalGoal => eqaEducationalGoal.EqaType)
-            .ToListAsync());
+            .ToListAsync();
+        return _mapper.Map<ICollection<GetEducationalQualityAssuranceEducationalGoalDto>>(eqaEducationalGoals);
     }
 
-    public async new Task<bool> CreateAsync(EducationalQualityAssuranceEducationalGoal newItem)
+    public async new Task<GetEducationalQualityAssuranceEducationalGoalDto?> CreateAsync(EducationalQualityAssuranceEducationalGoal newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.EqaType = await _dbContext.EducationalQualityAssuranceTypes.FindAsync(newItem.EqaTypeId);
+            newItem.EqaType = _dbContext.EducationalQualityAssuranceTypes.Find(newItem.EqaTypeId);
+            return _mapper.Map<GetEducationalQualityAssuranceEducationalGoalDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(EducationalQualityAssuranceEducationalGoal updatedItem)
+    public async new Task<GetEducationalQualityAssuranceEducationalGoalDto?> UpdateAsync(EducationalQualityAssuranceEducationalGoal updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.EqaType = await _dbContext.EducationalQualityAssuranceTypes.FindAsync(updatedItem.EqaTypeId);
+            updatedItem.EqaType = _dbContext.EducationalQualityAssuranceTypes.Find(updatedItem.EqaTypeId);
+            return _mapper.Map<GetEducationalQualityAssuranceEducationalGoalDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

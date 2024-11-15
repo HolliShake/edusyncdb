@@ -7,4 +7,6 @@ public interface IGradeBookScoreService:IGenericService<GradeBookScore, GetGrade
     public Task<object?> GetEnrolledStudentWithOrWithoutScoreByGradeBookItemDetailsId(int gradeBookItemDetailsId);
     public Task<object?> GiveScoreMultiple(GiveGradeBookScoreGroupDto item);
     public Task<object> GetStudentGradeBookInformationByScheduleAndStudentId(int scheduleId, int studentId);
+    public Task<bool> HasAnyScoreByEnrollmentAndGradeBookItemDetailsId(int enrollmentId, int gradeBookItemDetailId);
+    public Task<GetGradeBookScoreDto?> DefaultScoreByEnrollmentAndGradeBookItemDetailsIdOrNone(int enrollmentId, int gradeBookItemDetailId, int scoreId);
 }

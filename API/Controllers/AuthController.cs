@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using API.Constant;
 using API.Attributes;
-using API.utils;
+using API.Utility;
 using APPLICATION.IService;
+using Microsoft.EntityFrameworkCore;
+using Google.Apis.Util;
 
 namespace API.Controllers;
 
@@ -24,8 +26,23 @@ public class AuthController:ControllerBase
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly IUserAccessGroupDetailsService _userAccessGroupDetails;
+    private readonly IAcademicProgramChairService _academicProgramChairService;
+    private readonly IScheduleTeacherService _scheduleTeacher;
+    private readonly IEnrollmentService _enrollment;
+    private readonly ICollegeDeanService _collegeDean;
     
-    public AuthController(ConfigurationManager config, IMapper mapper, IJwtAuthManager jwtAuthManager, UserManager<User> userManager, SignInManager<User> signInManager, IUserAccessGroupDetailsService userAccessGroupDetails)
+    public AuthController(
+        ConfigurationManager config, 
+        IMapper mapper, 
+        IJwtAuthManager jwtAuthManager, 
+        UserManager<User> userManager, 
+        SignInManager<User> signInManager, 
+        IUserAccessGroupDetailsService userAccessGroupDetails,
+        IAcademicProgramChairService academicProgramChairService,
+        IScheduleTeacherService scheduleTeacher,
+        IEnrollmentService enrollment,
+        ICollegeDeanService collegeDean
+    )
     {
         _config = config;
         _mapper = mapper;
@@ -33,6 +50,10 @@ public class AuthController:ControllerBase
         _userManager = userManager;
         _signInManager = signInManager;
         _userAccessGroupDetails = userAccessGroupDetails;
+        _academicProgramChairService = academicProgramChairService;
+        _scheduleTeacher = scheduleTeacher;
+        _enrollment = enrollment;
+        _collegeDean = collegeDean;
     }
     
     /// <summary>
@@ -42,7 +63,7 @@ public class AuthController:ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult> LoginAttempt(AuthDto credential)
     {
-        var user = await _userManager.FindByEmailAsync(credential.Email);
+        var user = await _userManager.Users.Where(user => user.Email == credential.Email).FirstOrDefaultAsync();
 
         if (user == null)
         {
@@ -72,7 +93,16 @@ public class AuthController:ControllerBase
 
         userData.UserAccessGroupDetails = access;
 
-        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, "" /*userData.AccessListString*/);
+        var token = JwtGenerator.GenerateToken(
+            _jwtAuthManager,
+            user.Id,
+            user.Email,
+            user.Role,
+            (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
+            (await _collegeDean.GetCollegeByUserId(userData.Id))?.Id,
+            (await _scheduleTeacher.IsTeacher(userData.Id)),
+            (await _enrollment.IsStudent(userData.Id))
+        );
       
         userData.IsGoogle = false;
         userData.AccessToken = /**/
@@ -94,13 +124,20 @@ public class AuthController:ControllerBase
     [HttpPost("google-signin")]
     public async Task<ActionResult> GoogleLogin(GoogleDto google)
     {
+        Console.WriteLine(_config["Auth:Google:ClientId"]);
+
         var settings = new GoogleJsonWebSignature.ValidationSettings
         {
             // Change this to your google client ID
-            Audience = new List<string>() { _config["Auth:Google:ClientId"] }
+            Audience = new List<string>() { _config["Auth:Google:ClientId"] },
+
+            ForceGoogleCertRefresh = true,
+            // Allow a small positive tolerance for issued-at and expiration times
+            IssuedAtClockTolerance = TimeSpan.FromSeconds(50), // Positive tolerance
+            ExpirationTimeClockTolerance = TimeSpan.FromSeconds(-50),
         };
 
-        var payload  = GoogleJsonWebSignature.ValidateAsync(google.GToken, settings).Result;
+        var payload  = (GoogleJsonWebSignature.ValidateAsync(google.GToken, settings).Result);
 
         if (payload == null)
         {
@@ -116,7 +153,7 @@ public class AuthController:ControllerBase
         return BadRequest("Invalid google signin!");
         
         ok:;
-        var user = await _userManager.FindByEmailAsync(payload.Email);
+        var user = await _userManager.Users.Where(user => user.Email == payload.Email).FirstOrDefaultAsync();
 
         if (user != null)
         {
@@ -153,8 +190,17 @@ public class AuthController:ControllerBase
 
         userData.UserAccessGroupDetails = access;
 
-        var token = JwtGenerator.GenerateToken(_jwtAuthManager, user.Id, user.Email, user.Role, "" /*userData.AccessListString*/);
-        
+        var token = JwtGenerator.GenerateToken(
+            _jwtAuthManager,
+            user.Id,
+            user.Email,
+            user.Role,
+            (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
+            (await _collegeDean.GetCollegeByUserId(userData.Id))?.Id,
+            (await _scheduleTeacher.IsTeacher(userData.Id)),
+            (await _enrollment.IsStudent(userData.Id))
+        );
+
         userData.IsGoogle = true;
         userData.AccessToken = /**/
             token.AccessToken;
@@ -167,26 +213,12 @@ public class AuthController:ControllerBase
 
         return Ok(userData);
     }
-    
+
     /// <summary>
-    /// Register attempt.
+    /// Generate admin account.
     /// </summary>
-    /// <returns>Null|Errors</returns>
-    /*
-    [HttpPost("register")]
-    public async Task<ActionResult> Register(AuthRegisterDto registrationForm)
-    {
-        var result = await _userManager.CreateAsync(_mapper.Map<User>(registrationForm), registrationForm.Password);
-
-        if (result.Succeeded)
-        {
-            return NoContent();
-        }
-
-        return BadRequest(result.Errors);
-    }
-    */
-
+    /// <param name="secret"></param>
+    /// <returns></returns>
     [HttpPost("generate/{secret}")]
     public async Task<ActionResult> GenerateAdmin(string secret)
     {
@@ -199,16 +231,6 @@ public class AuthController:ControllerBase
             LastName = _config["Admin:Lastname"],
             EmailConfirmed = true,
             Role = Role.SuperAdmin
-            /*
-            Role = "[" +
-                   "{ \"subject\": \"Auth\" , \"action\": \"read\"   }," +
-                   "{ \"subject\": \"Admin\", \"action\": \"all\"    }," +
-                   "{ \"subject\": \"Admin\", \"action\": \"read\"   }," +
-                   "{ \"subject\": \"Admin\", \"action\": \"create\" }," +
-                   "{ \"subject\": \"Admin\", \"action\": \"update\" }," +
-                   "{ \"subject\": \"Admin\", \"action\": \"delete\" }"  +
-                   "]"
-            */
         };
         
         if (!secret.SequenceEqual(_config["Admin:Secret"]))
@@ -278,12 +300,19 @@ public class AuthController:ControllerBase
         
         ok:;
         var userData = _mapper.Map<AuthDataDto>(user);
-        var access = await _userAccessGroupDetails.GetUserAccessGroupByUserGuid(userData.Id);
+            userData.UserAccessGroupDetails = await _userAccessGroupDetails.GetUserAccessGroupByUserGuid(userData.Id); ;
 
-        userData.UserAccessGroupDetails = access;
+        var token = JwtGenerator.GenerateToken(
+           _jwtAuthManager,
+           user.Id,
+           user.Email,
+           user.Role,
+           (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
+           (await _collegeDean.GetCollegeByUserId(userData.Id))?.Id,
+           (await _scheduleTeacher.IsTeacher(userData.Id)),
+           (await _enrollment.IsStudent(userData.Id))
+        );
 
-        var token = JwtGenerator.GenerateToken(_jwtAuthManager, userData.Id, userData.Email, userData.Role, "" /*userData.AccessListString*/);
-        
         userData.AccessToken = /**/
             token.AccessToken;
         userData.RefreshToken = /**/

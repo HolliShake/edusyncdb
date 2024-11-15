@@ -14,37 +14,41 @@ public class EducationalQualityAssuranceLearningObjectiveService:GenericService<
 
     public async new Task<ICollection<GetEducationalQualityAssuranceLearningObjectiveDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetEducationalQualityAssuranceLearningObjectiveDto>>(await _dbModel
+        var eqaLearningObjectives = await _dbModel
             .Include(eqalo => eqalo.EqaCourseObjective)
-            .ToListAsync());
+            .ToListAsync();
+        return _mapper.Map<ICollection<GetEducationalQualityAssuranceLearningObjectiveDto>>(eqaLearningObjectives);
     }
 
-    public async new Task<GetEducationalQualityAssuranceLearningObjectiveDto?> GetAsync(int id)
+    public async new Task<EducationalQualityAssuranceLearningObjective?> GetAsync(int id)
     {
-        return _mapper.Map<GetEducationalQualityAssuranceLearningObjectiveDto?>(await _dbModel
-            .Include(eqalo => eqalo.EqaCourseObjective)
-            .Where(eqalo => eqalo.Id == id).FirstOrDefaultAsync());
+        var eqaLearningObjective = await _dbModel
+        .Include(eqalo => eqalo.EqaCourseObjective)
+        .Where(eqalo => eqalo.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return eqaLearningObjective;
     }
 
-    public async new Task<bool> CreateAsync(EducationalQualityAssuranceLearningObjective newItem)
+    public async new Task<GetEducationalQualityAssuranceLearningObjectiveDto?> CreateAsync(EducationalQualityAssuranceLearningObjective newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.EqaCourseObjective = await _dbContext.EducationalQualityAssuranceCourseObjectives.FindAsync(newItem.EqaCourseObjectiveId);
+            newItem.EqaCourseObjective = _dbContext.EducationalQualityAssuranceCourseObjectives.Find(newItem.EqaCourseObjectiveId);
+            return _mapper.Map<GetEducationalQualityAssuranceLearningObjectiveDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(EducationalQualityAssuranceLearningObjective updatedItem)
+    public async new Task<GetEducationalQualityAssuranceLearningObjectiveDto?> UpdateAsync(EducationalQualityAssuranceLearningObjective updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.EqaCourseObjective = await _dbContext.EducationalQualityAssuranceCourseObjectives.FindAsync(updatedItem.EqaCourseObjectiveId);
+            updatedItem.EqaCourseObjective = _dbContext.EducationalQualityAssuranceCourseObjectives.Find(updatedItem.EqaCourseObjectiveId);
+            return _mapper.Map<GetEducationalQualityAssuranceLearningObjectiveDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

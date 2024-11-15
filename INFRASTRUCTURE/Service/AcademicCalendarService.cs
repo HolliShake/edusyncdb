@@ -14,60 +14,65 @@ public class AcademicCalendarService:GenericService<AcademicCalendar, GetAcademi
 
     public async new Task<ICollection<GetAcademicCalendarDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(await 
-            _dbModel
-            .Include(ac => ac.Cycle)
-            .Include(ac => ac.GradingPeriod)
-            .ToListAsync());
+        var academicCalendars = await _dbModel
+        .Include(ac => ac.Cycle)
+        .Include(ac => ac.GradingPeriod)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(academicCalendars);
     }
 
     public async Task<ICollection<GetAcademicCalendarDto>> GetAcademicCalendarsByCampusId(int campusId)
     {
-        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(await
-            _dbModel
-            .Include(ac => ac.Cycle)
-            .Include(ac => ac.GradingPeriod)
-            .Where(ac => ac.Cycle.CampusId == campusId)
-            .ToListAsync());
+        var academicCalendars = await _dbModel
+        .Include(ac => ac.Cycle)
+        .Include(ac => ac.GradingPeriod)
+        .Where(ac => ac.Cycle.CampusId == campusId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(academicCalendars);
     }
 
-    public async new Task<GetAcademicCalendarDto?> GetAsync(int id)
+    public async new Task<AcademicCalendar?> GetAsync(int id)
     {
-        return _mapper.Map<GetAcademicCalendarDto?>(await 
-            _dbModel
-            .Include(ac => ac.Cycle)
-            .Include(ac => ac.GradingPeriod)
-            .Where(ac => ac.Id == id).FirstOrDefaultAsync());
+        var academicCalendar = await _dbModel
+        .Include(ac => ac.Cycle)
+        .Include(ac => ac.GradingPeriod)
+        .Where(ac => ac.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return academicCalendar;
     }
 
-    public async new Task<bool> CreateAsync(AcademicCalendar newItem)
+    public async new Task<GetAcademicCalendarDto?> CreateAsync(AcademicCalendar newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
             newItem.Cycle = await _dbContext.Cycles.FindAsync(newItem.CycleId);
+            newItem.GradingPeriod = await _dbContext.GradingPeriods.FindAsync(newItem.GradingPeriodId);
+            return _mapper.Map<GetAcademicCalendarDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(AcademicCalendar updatedItem)
+    public async new Task<GetAcademicCalendarDto?> UpdateAsync(AcademicCalendar updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
             updatedItem.Cycle = await _dbContext.Cycles.FindAsync(updatedItem.CycleId);
+            updatedItem.GradingPeriod = await _dbContext.GradingPeriods.FindAsync(updatedItem.GradingPeriodId);
+            return _mapper.Map<GetAcademicCalendarDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 
     public async Task<ICollection<GetAcademicCalendarDto>> GetAcademicCalendarsByGradingPeriodId(int gradingPeriodId)
     {
-        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(await
-            _dbModel
-            .Include(ac => ac.Cycle)
-            .Include(ac => ac.GradingPeriod)
-            .Where(ac => ac.GradingPeriodId == gradingPeriodId).ToListAsync());
+        var academicCalendars = await _dbModel
+        .Include(ac => ac.Cycle)
+        .Include(ac => ac.GradingPeriod)
+        .Where(ac => ac.GradingPeriodId == gradingPeriodId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(academicCalendars);
     }
 }

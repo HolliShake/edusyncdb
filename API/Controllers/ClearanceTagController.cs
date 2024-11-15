@@ -5,6 +5,10 @@ using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Net.Http.Headers;
+using APPLICATION.Jwt;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -13,11 +17,29 @@ namespace API.Controllers;
 [Casl("SuperAdmin:all")]
 public class ClearanceTagController : GenericController<ClearanceTag, IClearanceTagService, ClearanceTagDto, GetClearanceTagDto>
 {
-    public ClearanceTagController(IMapper mapper, IClearanceTagService repo):base(mapper, repo)
+    protected readonly IJwtAuthManager _jwtAuthManager;
+    public ClearanceTagController(
+        IMapper mapper, 
+        IClearanceTagService repo,
+        IJwtAuthManager jwtAuthManager
+    ):base(mapper, repo)
     {
+        _jwtAuthManager = jwtAuthManager;
     }
 
     /****************** ACTION ROUTES ******************/
+
+    /// <summary>
+    /// Get current user User Id
+    /// </summary>
+    /// <returns>string</returns>
+    protected string GetUserId()
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        return principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+    }
+
     /// <summary>
     /// Get all data.
     /// </summary>
@@ -53,11 +75,53 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
     /// </summary>
     /// <returns>ClearanceTag</returns>
     [HttpPost("create")]
-    public async Task<ActionResult> CreateAction(ClearanceTagDto item)
+    public async Task<ActionResult> CreateAction(ClearanceTagByUserDto item)
     {
-        return await GenericCreate(item);
+        return await GenericCreate(new ClearanceTagDto
+        {
+            IsExtensible = item.IsExtensible,
+            IsOptional = item.IsOptional,
+            IsSettled = false,
+            Amount = item.Amount,
+            Deadline = item.Deadline,
+            ExtendedDeadline = item.ExtendedDeadline,
+            RemindMeDate = item.RemindMeDate,
+            SettlementInstruction = item.SettlementInstruction,
+            Description = item.Description,
+            ClearanceTypeId = item.ClearanceTypeId,
+            UnclearedUserId = item.UnclearedUserId,
+            DuWhoTagId = GetUserId()
+        });
     }
-    
+
+    /// <summary>
+    /// Mark as cleared.
+    /// </summary>
+    /// <param name="clearanceTagId"></param>
+    /// <returns></returns>
+    [HttpPatch("MarkAsCleared/{clearanceTagId:int}")]
+    public async Task<ActionResult> MarkAsCleared(int clearanceTagId)
+    {
+        var result = await _repo.ChangedSettled(GetUserId(), clearanceTagId, true);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to mark as settled!");
+    }
+
+    /// <summary>
+    /// Mark as uncleared.
+    /// </summary>
+    /// <param name="clearanceTagId"></param>
+    /// <returns></returns>
+    [HttpPatch("MarkAsUnCleared/{clearanceTagId:int}")]
+    public async Task<ActionResult> MarkAsUnCleared(int clearanceTagId)
+    {
+        var result = await _repo.ChangedSettled(GetUserId(), clearanceTagId, false);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to mark as un-settled!");
+    }
+
     /*
     /// <summary>
     /// Creates multiple instance of ClearanceTag.
@@ -69,15 +133,29 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of ClearanceTag.
     /// </summary>
     /// <returns>ClearanceTag</returns>
     [HttpPut("update/{id:int}")]
-    public async Task<ActionResult> UpdateAction(int id, ClearanceTagDto item)
+    public async Task<ActionResult> UpdateAction(int id, ClearanceTagByUserDto item)
     {
-        return await GenericUpdate(id, item);
+        return await GenericUpdate(id, new ClearanceTagDto
+        {
+            IsExtensible = item.IsExtensible,
+            IsOptional = item.IsOptional,
+            IsSettled = false,
+            Amount = item.Amount,
+            Deadline = item.Deadline,
+            ExtendedDeadline = item.ExtendedDeadline,
+            RemindMeDate = item.RemindMeDate,
+            SettlementInstruction = item.SettlementInstruction,
+            Description = item.Description,
+            ClearanceTypeId = item.ClearanceTypeId,
+            UnclearedUserId = item.UnclearedUserId,
+            DuWhoTagId = GetUserId()
+        });
     }
     
     /// <summary>

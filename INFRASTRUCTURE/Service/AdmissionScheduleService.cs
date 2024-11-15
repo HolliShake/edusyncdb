@@ -16,68 +16,76 @@ public class AdmissionScheduleService:GenericService<AdmissionSchedule, GetAdmis
 
     public new async Task<ICollection<GetAdmissionScheduleDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetAdmissionScheduleDto>>(await _dbModel
-            .Include(ads => ads.AcademicProgram)
-            .Include(ads => ads.Cycle)
-            .ToListAsync());
+        var admissionSchedules = await _dbModel
+        .Include(ads => ads.AcademicProgram)
+        .Include(ads => ads.Cycle)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionScheduleDto>>(admissionSchedules);
     }
 
     public new async Task<ICollection<GetAdmissionScheduleDto>> GetByChunk(int max)
     {
-        return _mapper.Map<ICollection<GetAdmissionScheduleDto>>(await _dbModel
-            .Include(ads => ads.AcademicProgram)
-            .Include(ads => ads.Cycle)
-            .Take(max).ToListAsync());
+        var admissionSchedules = await _dbModel
+        .Include(ads => ads.AcademicProgram)
+        .Include(ads => ads.Cycle)
+        .Take(max)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionScheduleDto>>(admissionSchedules);
+
     }
 
     public new async Task<AdmissionSchedule?> GetAsync(int id)
     {
-        return _mapper.Map<AdmissionSchedule?>(await _dbModel
-            .Include(ads => ads.AcademicProgram)
-            .Include(ads => ads.Cycle)
-            .Where(ads => ads.Id == id)
-            .FirstOrDefaultAsync());
+        var admissionSchedule = await _dbModel
+        .Include(ads => ads.AcademicProgram)
+        .Include(ads => ads.Cycle)
+        .AsNoTracking()
+        .SingleOrDefaultAsync(ads => ads.Id == id);
+        return admissionSchedule;
     }
 
     public async Task<ICollection<GetAdmissionScheduleDto>> GetAdmissionSchedulesByAcademicProgramId(int academicProgramId)
     {
-        return _mapper.Map<ICollection<GetAdmissionScheduleDto>>(await _dbModel
-            .Include(ads => ads.AcademicProgram)
-            .Include(ads => ads.Cycle)
-            .Where(ads => ads.AcademicProgramId == academicProgramId)
-            .ToListAsync());
+        var admissionSchedules = await _dbModel
+        .Include(ads => ads.AcademicProgram)
+        .Include(ads => ads.Cycle)
+        .Where(ads => ads.AcademicProgramId == academicProgramId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionScheduleDto>>(admissionSchedules);
     }
 
     public async Task<ICollection<GetAdmissionScheduleDto>> GetAdmissionSchedulesByCycleId(int cycleId)
     {
-        return _mapper.Map<ICollection<GetAdmissionScheduleDto>>(await _dbModel
-            .Include(ads => ads.AcademicProgram)
-            .Include(ads => ads.Cycle)
-            .Where(ads => ads.CycleId == cycleId).ToListAsync());
+        var admissionSchedules = await _dbModel
+        .Include(ads => ads.AcademicProgram)
+        .Include(ads => ads.Cycle)
+        .Where(ads => ads.CycleId == cycleId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionScheduleDto>>(admissionSchedules);
     }
 
-    public async new Task<bool> CreateAsync(AdmissionSchedule newItem)
+    public async new Task<GetAdmissionScheduleDto?> CreateAsync(AdmissionSchedule newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.AcademicProgram = await _dbContext.AcademicPrograms.FindAsync(newItem.AcademicProgramId);
-            newItem.Cycle = await _dbContext.Cycles.FindAsync(newItem.CycleId);
+            newItem.AcademicProgram = _dbContext.AcademicPrograms.Find(newItem.AcademicProgramId);
+            newItem.Cycle = _dbContext.Cycles.Find(newItem.CycleId);
+            return _mapper.Map<GetAdmissionScheduleDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(AdmissionSchedule updatedItem)
+    public async new Task<GetAdmissionScheduleDto?> UpdateAsync(AdmissionSchedule updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.AcademicProgram = await _dbContext.AcademicPrograms.FindAsync(updatedItem.AcademicProgramId);
-            updatedItem.Cycle = await _dbContext.Cycles.FindAsync(updatedItem.CycleId);
+            updatedItem.AcademicProgram = _dbContext.AcademicPrograms.Find(updatedItem.AcademicProgramId);
+            updatedItem.Cycle = _dbContext.Cycles.Find(updatedItem.CycleId);
+            return _mapper.Map<GetAdmissionScheduleDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 
     public async Task<object> GetOpenAdmissionScheduleGroupedByCampus(int schoolId)
@@ -125,7 +133,6 @@ public class AdmissionScheduleService:GenericService<AdmissionSchedule, GetAdmis
         return groupedByCampus;
     }
 
-    // TODO: Implement this method
     public async Task<object> GetOpenAdmissionScheduleGroupedByCampusViaCampusName(string campusShortName)
     {
         // Query for admission schedules with conditions

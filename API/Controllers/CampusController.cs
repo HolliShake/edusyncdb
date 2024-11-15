@@ -6,9 +6,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
 using API.Constant;
-using INFRASTRUCTURE.Service;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using APPLICATION.Dto.Building;
 
 namespace API.Controllers;
 
@@ -87,16 +84,20 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
         var result = /**/
             await _repo.CreateAsync(model);
 
-        var data = _mapper.Map<GetCampusDto>(model);
+        if (result == null)
+        {
+            goto end;
+        }
 
         var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.CampusImagesScope, model.Id, files);
         if (fileResult != null)
         {
-            data.Images = fileResult.ToList()!;
+           result.Images = fileResult.ToList()!;
         }
 
-        return (result)
-            ? Ok(data)
+        end:;
+        return (result != null)
+            ? Ok(result)
             : BadRequest("Something went wrong!");
     }
     
@@ -129,9 +130,12 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
         var model = _mapper.Map<Campus>(record);
 
         var result = /**/
-            await _repo.UpdateSync(model);
+            await _repo.UpdateAsync(model);
 
-        var data = _mapper.Map<GetCampusDto>(model);
+        if (result == null)
+        {
+            goto end;
+        }
 
         if (files.Count > 0)
         {
@@ -140,17 +144,18 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
             var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.CampusImagesScope, model.Id, files);
             if (fileResult != null)
             {
-                data.Images = fileResult.ToList()!;
-                data.Images.AddRange(default_files);
+                result.Images = fileResult.ToList()!;
+                result.Images.AddRange(default_files);
             }
         }
         else
         {
-            data.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, model.Id);
+            result.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, model.Id);
         }
 
-        return (result)
-            ? Ok(data)
+        end:;
+        return (result != null)
+            ? Ok(result)
             : BadRequest("Something went wrong!");
     }
     

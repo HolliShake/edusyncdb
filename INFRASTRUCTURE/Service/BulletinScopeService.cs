@@ -15,19 +15,19 @@ public class BulletinScopeService:GenericService<BulletinScope, GetBulletinScope
 
     public async Task<ICollection<GetBulletinScopeDto>> GetBulletinScopesByAcademicProgramId(int academicProgramId)
     {
-        return _mapper.Map<ICollection<GetBulletinScopeDto>>(await _dbModel
-            .Include(bs => bs.Bulletin)
-            .Include(bs => bs.AcademicProgramId)
-            .Where(bs => bs.AcademicProgramId == academicProgramId)
-            .ToListAsync());
+        var bulletins = await _dbModel
+        .Include(bs => bs.Bulletin) // Correctly include the Bulletin navigation property
+        .Where(bs => bs.AcademicProgramId == academicProgramId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetBulletinScopeDto>>(bulletins);
     }
 
     public async Task<ICollection<GetBulletinScopeDto>> GetBulletinScopesByBulletinId(int bulletinId)
     {
-        return _mapper.Map<ICollection<GetBulletinScopeDto>>(await _dbModel
-            .Include(bs => bs.Bulletin)
-            .Include(bs => bs.AcademicProgramId)
-            .Where(bs => bs.BulletinId == bulletinId)
-            .ToListAsync());
+        var bulletins = await _dbModel
+        .Include(bs => bs.Bulletin)
+        .Where(bs => bs.BulletinId == bulletinId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetBulletinScopeDto>>(bulletins);
     }
 }

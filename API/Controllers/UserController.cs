@@ -109,10 +109,10 @@ public class UserController : GenericController<User, IUserService, UserDto, Get
         var model = _mapper.Map(item, record);
 
         var result = /**/
-            await _repo.UpdateSync(model);
+            await _repo.UpdateAsync(model);
 
-        return (result)
-            ? Ok(_mapper.Map<GetUserOnlyDto>(model))
+        return (result != null)
+            ? Ok(result)
             : BadRequest("Something went wrong!");
     }
 

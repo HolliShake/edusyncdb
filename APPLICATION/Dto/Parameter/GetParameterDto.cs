@@ -6,7 +6,7 @@ public class GetParameterDto
 {
     public int Id { get; set; }
     public string ParameterName { get; set; }
-    public string QuestionTypeLikertOrText { get; set; }
+    public bool QuestionTypeLikertOrText { get; set; }
 
     // Fk Parameter
     public int? ParentId { get; set; }

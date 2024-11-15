@@ -30,25 +30,37 @@ public class GenericService <TModel, TGetter> : IGenericService<TModel, TGetter>
 
     public async Task<TModel?> GetAsync(int id)
     {
-        return _mapper.Map<TModel?>(await _dbModel.FindAsync(id));
+        return await _dbModel.FindAsync(id);
     }
 
-    public async Task<bool> CreateAsync(TModel newItem)
+    public async Task<TGetter?> CreateAsync(TModel newItem)
     {
         await _dbModel.AddAsync(newItem);
-        return await Save();
+        if (await Save())
+        {
+            return _mapper.Map<TGetter>(newItem);
+        }
+        return null;
     }
 
-    public async Task<bool> CreateAllAsync(IList<TModel> newItems)
+    public async Task<ICollection<TGetter>?> CreateAllAsync(List<TModel> newItems)
     {
         await _dbModel.AddRangeAsync(newItems);
-        return await Save();
+        if (await Save())
+        {
+            return _mapper.Map<ICollection<TGetter>>(newItems);
+        }
+        return null;
     }
 
-    public async Task<bool> UpdateSync(TModel updatedItem)
+    public async Task<TGetter?> UpdateAsync(TModel updatedItem)
     {
         _dbModel.Update(updatedItem);
-        return await Save();
+        if (await Save())
+        {
+            return _mapper.Map<TGetter>(updatedItem);
+        }
+        return null;
     }
 
     public async Task<bool> DeleteSync(TModel oldItem)

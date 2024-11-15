@@ -1,5 +1,6 @@
 ﻿using APPLICATION.IService;
 using APPLICATION.Jwt;
+using DOMAIN.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
@@ -15,17 +16,31 @@ public class FacultyModuleController:ControllerBase
     private readonly IScheduleTeacherService _scheduleTeacher;
     private readonly IEnrollmentService _enrollment;
     private readonly IUserCampusDetailsService _userCampus;
+    private readonly IScheduleAttendanceService _scheduleAttendance;
     public FacultyModuleController(
         IJwtAuthManager jwtAuthManager,
         IScheduleTeacherService scheduleTeacher,
         IEnrollmentService enrollment,
-        IUserCampusDetailsService userCampus
+        IUserCampusDetailsService userCampus,
+        IScheduleAttendanceService scheduleAttendance
     )
     {
         _jwtAuthManager = jwtAuthManager;
         _scheduleTeacher = scheduleTeacher;
         _enrollment = enrollment;
         _userCampus = userCampus;
+        _scheduleAttendance = scheduleAttendance;
+    }
+
+    /// <summary>
+    /// Get current user User Id
+    /// </summary>
+    /// <returns></returns>
+    protected string GetUserId()
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        return principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
     }
 
     /****************** ACTION ROUTES ******************/
@@ -36,9 +51,7 @@ public class FacultyModuleController:ControllerBase
     [HttpGet("Schedules/My")]
     public async Task<ActionResult> GetCurrentFacultySchedules()
     {
-        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         return Ok(await _scheduleTeacher.GetScheduleTeacherByUserId(userId));
     }
 
@@ -49,9 +62,7 @@ public class FacultyModuleController:ControllerBase
     [HttpGet("GradeBook/My")]
     public async Task<ActionResult> GetCurrentFacultyGradeBook()
     {
-        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         return Ok(await _scheduleTeacher.GetTeacherScheduleGradeBookByUserId(userId));
     }
 
@@ -62,9 +73,7 @@ public class FacultyModuleController:ControllerBase
     [HttpGet("GradeBook/My/AcademicProgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetCurrentFacultyGradeBook(int academicProgramId)
     {
-        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         return Ok(await _scheduleTeacher.GetTeacherScheduleGradeBookByUserIdAndAcademicProgramId(userId, academicProgramId));
     }
 
@@ -76,9 +85,7 @@ public class FacultyModuleController:ControllerBase
     [HttpGet("Students/My/{scheduleId:int}")]
     public async Task<ActionResult> GetEnrolledStudentByScheduleId(int scheduleId)
     {
-        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         if (!(await _scheduleTeacher.HasShedule(userId, scheduleId)))
         {
             return NotFound("Schedule not found for user!");
@@ -93,9 +100,7 @@ public class FacultyModuleController:ControllerBase
     [HttpGet("CampusAccess/My")]
     public async Task<ActionResult> GetFacultyCampusAccess()
     {
-        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         return Ok(await _scheduleTeacher.GetTeacherScheduleWhereHeOrSheTeach(userId));
     }
 
@@ -104,12 +109,21 @@ public class FacultyModuleController:ControllerBase
     /// </summary>
     /// <param name="campusId"></param>
     /// <returns></returns>
-    [HttpGet("AcademicProgram/Campus/{campusId:int}/my")]
+    [HttpGet("AcademicProgram/Campus/{campusId:int}/My")]
     public async Task<ActionResult> GetFacultyAcademicProgram(int campusId)
     {
-        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         return Ok(await _scheduleTeacher.GetAcademicProgramByUserAndCampusId(userId, campusId));
+    }
+
+    /// <summary>
+    /// Get Current user's attendance.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Attendance/My")]
+    public async Task<ActionResult> GetAttendance()
+    {
+        var userId = GetUserId();
+        return Ok(await _scheduleAttendance.GetAttendanceByAnyUserId(userId));
     }
 }

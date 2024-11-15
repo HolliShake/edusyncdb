@@ -21,30 +21,33 @@ public class EducationalQualityAssuranceCourseObjectiveService:GenericService<Ed
 
     public async new Task<EducationalQualityAssuranceCourseObjective?> GetAsync(int id)
     {
-        return _mapper.Map<EducationalQualityAssuranceCourseObjective?>(await _dbModel
-            .Include(eqaco => eqaco.EqaProgramObjective)
-            .Where(eqaco => eqaco.Id == id).FirstOrDefaultAsync());
+        var eqaCourseObjective = await _dbModel
+        .Include(eqaco => eqaco.EqaProgramObjective)
+        .Where(eqaco => eqaco.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return eqaCourseObjective;
     }
 
-    public async new Task<bool> CreateAsync(EducationalQualityAssuranceCourseObjective newItem)
+    public async new Task<GetEducationalQualityAssuranceCourseObjectiveDto?> CreateAsync(EducationalQualityAssuranceCourseObjective newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.EqaProgramObjective = await _dbContext.EducationalQualityAssuranceProgramObjectives.FindAsync(newItem.EqaProgramObjectiveId);
+            newItem.EqaProgramObjective = _dbContext.EducationalQualityAssuranceProgramObjectives.Find(newItem.EqaProgramObjectiveId);
+            return _mapper.Map<GetEducationalQualityAssuranceCourseObjectiveDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async Task<bool> UpdateSync(EducationalQualityAssuranceCourseObjective updatedItem)
+    public async new Task<GetEducationalQualityAssuranceCourseObjectiveDto?> UpdateAsync(EducationalQualityAssuranceCourseObjective updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.EqaProgramObjective = await _dbContext.EducationalQualityAssuranceProgramObjectives.FindAsync(updatedItem.EqaProgramObjectiveId);
+            updatedItem.EqaProgramObjective = _dbContext.EducationalQualityAssuranceProgramObjectives.Find(updatedItem.EqaProgramObjectiveId);
+            return _mapper.Map<GetEducationalQualityAssuranceCourseObjectiveDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

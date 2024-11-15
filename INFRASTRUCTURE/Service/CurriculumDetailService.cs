@@ -22,25 +22,26 @@ public class CurriculumDetailService:GenericService<CurriculumDetail, GetCurricu
                 .ThenInclude(course => course.CourseRequisites)
             .Where(cd => cd.CurriculumId == curriculumId);
 
-        return items.GroupBy(cd => cd.YearLevel)
+        return await items.GroupBy(cd => cd.YearLevel)
             .Select(yearLevels => new
             {
                 AcademicProgramId = yearLevels.First().Curriculum.AcademicProgramId,
                 AcademicProgramName = yearLevels.First().Curriculum.AcademicProgram.ProgramName,
 
-                YearLevel = $"{AddSuffix(int.Parse(yearLevels.Key.ToString()))} Year",
+                YearLevel = $"{Utility.AddSuffix(int.Parse(yearLevels.Key.ToString()))} Year",
                 Terms = yearLevels
                     .GroupBy(curriculumDetail => curriculumDetail.TermNumber)
                     .Select(curriculumDetail => new 
                     { 
-                        TermName = AddSuffix(int.Parse(curriculumDetail.Key.ToString())) + " " + curriculumDetail.First().Curriculum.AcademicTerm.Label,
+                        TermName = Utility.AddSuffix(int.Parse(curriculumDetail.Key.ToString())) + " " + curriculumDetail.First().Curriculum.AcademicTerm.Label,
                         TermNumber = curriculumDetail.Key,
                         Courses = curriculumDetail
                             .Select(c => new
                             {
                                 CurriculumDetailsId = c.Id,
                                 CourseId = c.CourseId,
-                                CouseCode = c.Course.CourseCode,
+                                CourseTitle = c.Course.CourseTitle,
+                                CourseCode = c.Course.CourseCode,
                                 CourseDescription = c.Course.CourseDescription,
                                 LectureUnits = c.Course.LectureUnits,
                                 LaboratoryUnits = c.Course.LaboratoryUnits,
@@ -65,41 +66,7 @@ public class CurriculumDetailService:GenericService<CurriculumDetail, GetCurricu
                                 })
                             })
                     })
-            });
-    }
-
-    static string AddSuffix(int number)
-    {
-        if (number <= 0) return number.ToString();
-
-        // Get the last digit of the number
-        int lastDigit = number % 10;
-
-        // Determine the suffix
-        string suffix = "th"; // Default suffix
-
-        if (number % 100 is < 11 or > 13) // Handle the exceptions for 11th, 12th, and 13th
-        {
-            suffix = lastDigit switch
-            {
-                1 => "st",
-                2 => "nd",
-                3 => "rd",
-                _ => "th"
-            };
-        }
-
-        return $"{number}{suffix}";
-    }
-
-    private IQueryable<int> GenerateTerms(int number_of_terms)
-    {
-        List<int> items = [];
-        for (var i = 1; i <= number_of_terms; i++)
-        {
-            items.Add(i);
-        }
-        return items.AsQueryable();
+            }).ToListAsync();
     }
 
     public async Task<ICollection<GetCurriculumDetailDto>> GetCurriculumDetailsByCourseId(int courseId)
@@ -122,7 +89,7 @@ public class CurriculumDetailService:GenericService<CurriculumDetail, GetCurricu
         }).ToList();
 
         var result = await CreateAllAsync(curriculumDetails);
-        return (result)
+        return (result != null)
             ? curriculumDetails.Select(cd => 
                 _dbModel
                     .Include(cd2 => cd2.Course)
@@ -135,8 +102,8 @@ public class CurriculumDetailService:GenericService<CurriculumDetail, GetCurricu
                     .Select(cd2 => new
                     {
                         Id = cd2.Id,
-                        YearLevel = $"{AddSuffix(int.Parse(cd2.YearLevel.ToString()))} Year",
-                        TermNumber = $"{AddSuffix(int.Parse(cd2.TermNumber.ToString()))} {cd2.Curriculum.AcademicTerm.Label}",
+                        YearLevel = $"{Utility.AddSuffix(int.Parse(cd2.YearLevel.ToString()))} Year",
+                        TermNumber = $"{Utility.AddSuffix(int.Parse(cd2.TermNumber.ToString()))} {cd2.Curriculum.AcademicTerm.Label}",
                         IsIncludeGWA = cd2.IsIncludeGWA,
                         CurriculumId = cd2.CurriculumId,
                         Curriculum = cd2.Curriculum,

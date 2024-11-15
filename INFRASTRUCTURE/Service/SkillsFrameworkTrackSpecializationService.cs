@@ -15,38 +15,40 @@ public class SkillsFrameworkTrackSpecializationService:GenericService<SkillsFram
 
     public async new Task<ICollection<GetSkillsFrameworkTrackSpecializationDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetSkillsFrameworkTrackSpecializationDto>>(await _dbModel
-                .Include(ts => ts.SectorDiscipline)
-                .ToListAsync()
-        );
+        var sfTrackSpecialization = await _dbModel
+        .Include(ts => ts.SectorDiscipline)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetSkillsFrameworkTrackSpecializationDto>>(sfTrackSpecialization);
     }
 
-    public async new Task<bool> CreateAsync(SkillsFrameworkTrackSpecialization newItem)
+    public async new Task<GetSkillsFrameworkTrackSpecializationDto?> CreateAsync(SkillsFrameworkTrackSpecialization newItem)
     {
-        if (newItem.SectorDisciplineId != 0)
-        {
-            newItem.SectorDiscipline = await _dbContext.SectorDisciplines.FindAsync(newItem.SectorDisciplineId);
-        }
         await _dbModel.AddAsync(newItem);
-        return await Save();
+        if (await Save())
+        {
+            newItem.SectorDiscipline = _dbContext.SectorDisciplines.Find(newItem.SectorDisciplineId);
+            return _mapper.Map<GetSkillsFrameworkTrackSpecializationDto>(newItem);
+        }
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(SkillsFrameworkTrackSpecialization updatedItem)
+    public async new Task<GetSkillsFrameworkTrackSpecializationDto?> UpdateAsync(SkillsFrameworkTrackSpecialization updatedItem)
     {
-        if (updatedItem.SectorDisciplineId != 0)
-        {
-            updatedItem.SectorDiscipline = await _dbContext.SectorDisciplines.FindAsync(updatedItem.SectorDisciplineId);
-        }
-
         _dbModel.Update(updatedItem);
-        return await Save();
+        if (await Save())
+        {
+            updatedItem.SectorDiscipline = _dbContext.SectorDisciplines.Find(updatedItem.SectorDisciplineId);
+            return _mapper.Map<GetSkillsFrameworkTrackSpecializationDto>(updatedItem);
+        }
+        return null;
     }
 
     public async Task<ICollection<GetSkillsFrameworkTrackSpecializationDto>> GetSkillsFrameworkTrackSpecializationsBySectorDisciplineId(int sectorDisciplineId)
     {
-        return _mapper.Map<ICollection<GetSkillsFrameworkTrackSpecializationDto>>(await _dbModel
-            .Include(sfts => sfts.SectorDiscipline)
-            .Where(sfts => sfts.SectorDisciplineId == sectorDisciplineId)
-            .ToListAsync());
+        var sfTrackSpecialization = await _dbModel
+        .Include(sfts => sfts.SectorDiscipline)
+        .Where(sfts => sfts.SectorDisciplineId == sectorDisciplineId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetSkillsFrameworkTrackSpecializationDto>>(sfTrackSpecialization);
     }
 }

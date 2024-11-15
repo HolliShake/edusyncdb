@@ -1,9 +1,12 @@
 ﻿using System.Runtime.InteropServices;
+using System.Text;
+using Google.Apis.Auth;
 using INFRASTRUCTURE.Data;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 namespace API;
 
@@ -16,17 +19,16 @@ public class ApiInjector
         
 
         // Authentication
-        services.AddAuthentication(
-                options =>
-                {
-                    options.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-                })
-            .AddGoogle(options =>
-            {
-                options.ClientId = configuration["Auth:Google:ClientId"];
-                options.ClientSecret = configuration["Auth:Google:ClientSecret"];
-            });
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = GoogleDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+        })
+        .AddGoogle(options => 
+        {
+            options.ClientId = configuration["Auth:Google:ClientId"];
+            options.ClientSecret = configuration["Auth:Google:ClientSecret"];
+        });
         
         // Cors
         services.AddCors();

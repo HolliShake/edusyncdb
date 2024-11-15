@@ -103,7 +103,43 @@ public class GradeBookScoreController : GenericController<GradeBookScore, IGrade
     {
         return await GenericUpdate(id, item);
     }
-    
+
+    /// <summary>
+    /// Updates score property of GradeBookScore.
+    /// </summary>
+    /// <returns>GradeBookScore</returns>
+    [HttpPut("update/Enrollment/{enrollmentId:int}/GradeBookItemDetail/{gradeBookItemDetailId:int}/score/{id:int}")]
+    public async Task<ActionResult> UpdateScoreAction(int enrollmentId, int gradeBookItemDetailId, int id, GradeBookScoreOnlyDto item)
+    {
+
+        if (!(await _repo.HasAnyScoreByEnrollmentAndGradeBookItemDetailsId(enrollmentId, gradeBookItemDetailId)))
+        {
+            // Create Mode
+            return await GenericCreate(new GradeBookScoreDto
+            {
+                EnrollmentId = enrollmentId,
+                GradeBookItemDetailId = gradeBookItemDetailId,
+                Score = item.Score,
+                Remarks = ""
+            });
+        }
+
+        var current = await _repo.DefaultScoreByEnrollmentAndGradeBookItemDetailsIdOrNone(enrollmentId, gradeBookItemDetailId, id);
+        if (current == null)
+        {
+            return NotFound("Score not found");
+        }
+
+        current.Score = item.Score;
+        return await GenericUpdate(current.Id, new GradeBookScoreDto
+        {
+            EnrollmentId = current.EnrollmentId,
+            GradeBookItemDetailId = current.GradeBookItemDetailId,
+            Score = current.Score,
+            Remarks = current.Remarks
+        });
+    }
+
     /// <summary>
     /// Deletes single GradeBookScore entry.
     /// </summary>

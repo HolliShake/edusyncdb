@@ -1,3 +1,6 @@
+using APPLICATION.Dto.AcademicProgram;
+using APPLICATION.Dto.Campus;
+using APPLICATION.Dto.Course;
 using APPLICATION.Dto.Enrollment;
 using APPLICATION.Dto.GradeBookScore;
 using APPLICATION.Dto.User;
@@ -5,6 +8,7 @@ using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
+using INFRASTRUCTURE.ErrorHandler;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
@@ -146,6 +150,11 @@ public class GradeBookScoreService:GenericService<GradeBookScore, GetGradeBookSc
 
     public async Task<object> GetStudentGradeBookInformationByScheduleAndStudentId(int scheduleId, int studentId)
     {
+        if (!_dbContext.Users.Any(u => u.ReferenceId == studentId))
+        {
+            throw new Error404("Student not found...");
+        }
+
         var gradeBooksScores = await _dbModel
             .Include(gb => gb.Enrollment)
                 .ThenInclude(e => e.StudentUser)
@@ -155,26 +164,36 @@ public class GradeBookScoreService:GenericService<GradeBookScore, GetGradeBookSc
             .Where(gb => gb.Enrollment.StudentUser.ReferenceId == studentId)
             .ToListAsync();
 
-        var modelGradeBook = _dbContext.GradeBooks
+        var modelGradeBook = await _dbContext.GradeBooks
             .Include(gb => gb.GradeBookItems)
                 .ThenInclude(gbi => gbi.GradeBookItemDetails)
+            .Include(gb => gb.GradeBookItems)
+                .ThenInclude(gbi => gbi.GradingPeriod)
             .Where(gb => gb.ScheduleId == scheduleId)
-            .FirstOrDefault();
-
+            .FirstOrDefaultAsync();
 
         if (modelGradeBook == null)
         {
-            throw new Exception("GradeBook not found or generated for this schedule...");
+            throw new Error404("GradeBook not found or generated for this schedule...");
         }
 
         var studentEnrollment = _dbContext.Enrollments.Include(e => e.StudentUser)
+                .Include(e => e.Schedule)
+                    .ThenInclude(s => s.CurriculumDetail)
+                        .ThenInclude(s => s.Course)
+                .Include(e => e.Schedule)
+                    .ThenInclude(s => s.CurriculumDetail)
+                        .ThenInclude(s => s.Curriculum)
+                            .ThenInclude(c => c.AcademicProgram)
+                                .ThenInclude(ap => ap.College)
+                                    .ThenInclude(c => c.Campus)
             .Where(e => e.ScheduleId == scheduleId)
             .Where(e => e.StudentUser.ReferenceId == studentId)
             .FirstOrDefault();
 
         if (studentEnrollment == null)
         {
-            throw new Exception("Student not found in this schedule (not enrolled)...");
+            throw new Error404("Student not found in this schedule (not enrolled)...");
         }
 
         var student = studentEnrollment.StudentUser;
@@ -183,6 +202,37 @@ public class GradeBookScoreService:GenericService<GradeBookScore, GetGradeBookSc
         {
             StudentId = studentId,
             StudentUser = _mapper.Map<GetUserOnlyDto>(student),
+            //
+            CampusId = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.CampusId,
+            Campus = new
+            {
+                Id = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.CampusId,
+                CampusName = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus.CampusName,
+                CampusCode = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus.Address,
+                Longitude = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus.Longitude,
+                Latitude = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus.Latitude,
+            },
+            //
+            CollegeId = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.CollegeId,
+            College = new
+            {
+                Id = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.CollegeId,
+                CollegeName = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.CollegeName
+            },
+            //
+            YearLevel = studentEnrollment.YearLevel,
+            //
+            AcademicProgramId = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgramId,
+            AcademicProgram = new
+            {
+                Id = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgramId,
+                ProgramName = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ProgramName,
+                ShortName = studentEnrollment.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ShortName
+            },
+            //
+            CourseId = studentEnrollment.Schedule.CurriculumDetail.CourseId,
+            Course = _mapper.Map<GetCourseDto>(studentEnrollment.Schedule.CurriculumDetail.Course),
+            //
             GradingPeriods = modelGradeBook.GradeBookItems
             .GroupBy(gbi => gbi.GradingPeriod)
             .Select(gp => new
@@ -192,6 +242,11 @@ public class GradeBookScoreService:GenericService<GradeBookScore, GetGradeBookSc
                 GradingNumber = gp.Key.GradingNumber,
                 CollegeId = gp.Key.CollegeId,
                 College = gp.Key.College,
+                IsPosted = _dbContext.EnrollmentGrades
+                    .Where(eg => eg.GradingPeriodId == gp.Key.Id)
+                    .Where(eg => eg.EnrollmentId == studentEnrollment.Id)
+                    .Where(eg => eg.IsPosted)
+                    .Any(),
                 GradeBookItems = modelGradeBook.GradeBookItems
                     .Where(gbi => gbi.GradingPeriodId == gp.Key.Id)
                     .Select(gbi => new
@@ -213,6 +268,8 @@ public class GradeBookScoreService:GenericService<GradeBookScore, GetGradeBookSc
                                 return new
                                 {
                                     Id = gbid.Id,
+                                    ItemDetail = gbid.ItemDetail,
+                                    ItemDetailDescription = gbid.ItemDetailDescription,
                                     MaxScore = gbid.MaxScore,
                                     PassingScore = gbid.PassingScore,
                                     Weight = gbid.Weight,
@@ -226,7 +283,7 @@ public class GradeBookScoreService:GenericService<GradeBookScore, GetGradeBookSc
                                         Id = result.Id,
                                         EnrollmentId = result.EnrollmentId,
                                         Enrollment = (Enrollment) null,
-                                        GradeBookItemDetailId = gbid.GradeBookItemId,
+                                        GradeBookItemDetailId = gbid.Id,
                                         GradeBookItemDetail = (GradeBookItemDetail) null,
                                         Score = result.Score,
                                     }
@@ -244,5 +301,24 @@ public class GradeBookScoreService:GenericService<GradeBookScore, GetGradeBookSc
                     })
             })
         };
+    }
+
+    public async Task<bool> HasAnyScoreByEnrollmentAndGradeBookItemDetailsId(int enrollmentId, int gradeBookItemDetailId)
+    {
+        return await _dbModel
+            .AnyAsync(gbs => gbs.EnrollmentId == enrollmentId && gbs.GradeBookItemDetailId == gradeBookItemDetailId);
+    }
+
+    public async Task<GetGradeBookScoreDto?> DefaultScoreByEnrollmentAndGradeBookItemDetailsIdOrNone(int enrollmentId, int gradeBookItemDetailId, int scoreId)
+    {
+        var result = (await HasAnyScoreByEnrollmentAndGradeBookItemDetailsId(enrollmentId, gradeBookItemDetailId))
+            ? _mapper.Map<GetGradeBookScoreDto>(await _dbModel
+                .Include(gbs => gbs.Enrollment)
+                .Include(gbs => gbs.GradeBookItemDetail)
+                .Where(gbs => gbs.EnrollmentId == enrollmentId)
+                .Where(gbs => gbs.GradeBookItemDetailId == gradeBookItemDetailId)
+                .FirstOrDefaultAsync())
+            : _mapper.Map<GetGradeBookScoreDto>(await GetAsync(scoreId));
+        return result;
     }
 }

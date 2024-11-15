@@ -15,16 +15,38 @@ public class ScheduleTeacherService:GenericService<ScheduleTeacher, GetScheduleT
     {
     }
 
+    public async Task<bool> IsTeacher(string userId)
+    {
+        return await _dbModel.AnyAsync(st => st.TeacherUserId == userId);
+    }
+
+    public async new Task<ScheduleTeacher?> GetAsync(int id)
+    {
+        var scheduleTeacher = await _dbModel
+            .Include(st => st.TeacherUser)
+            .Include(st => st.Schedule)
+            .Where(st => st.Id == id)
+            .AsNoTracking()
+            .SingleOrDefaultAsync();
+        return scheduleTeacher;
+    }
+
     public async Task<object> GetScheduleTeacherByUserId(string userId)
     {
         return await _dbModel
             .Include(st => st.Schedule)
-                .ThenInclude(s => s.Course)
+                .ThenInclude(s => s.CurriculumDetail)
+                    .ThenInclude(cd => cd.Course)
+            .Include(st => st.Schedule)
+                .ThenInclude(s => s.CurriculumDetail)
+                    .ThenInclude(cd => cd.Curriculum)
+                        .ThenInclude(c => c.AcademicProgram)
+                            .ThenInclude(ap => ap.College)
+            .Include(st => st.Schedule)
+                .ThenInclude(s => s.CurriculumDetail)
+                    .ThenInclude(cd => cd.Course)
             .Include(st => st.Schedule)
                 .ThenInclude(s => s.Cycle)
-            .Include(st => st.Schedule)
-                .ThenInclude(s => s.AcademicProgram)
-                    .ThenInclude(ap => ap.College)
             .Include(st => st.EnrollmentRole)
             .Where(st => st.TeacherUserId == userId)
             .Select(st => new
@@ -32,24 +54,26 @@ public class ScheduleTeacherService:GenericService<ScheduleTeacher, GetScheduleT
                 Id = st.Schedule.Id,
                 GeneratedReference = st.Schedule.GeneratedReference,
                 GeneratedSection = st.Schedule.GeneratedSection,
-                AcademicProgramId = st.Schedule.AcademicProgramId,
-                AcademicProgram = st.Schedule.AcademicProgram,
+                AcademicProgramId = st.Schedule.CurriculumDetail.Curriculum.AcademicProgramId,
+                AcademicProgram = new
+                {
+                    Id = st.Schedule.CurriculumDetail.Curriculum.AcademicProgramId,
+                    ProgramName = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ProgramName,
+                    ShortName = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ShortName,
+                    CollegeId = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.CollegeId,
+                    College = (College) null,
+                },
                 CycleId = st.Schedule.CycleId,
                 Cycle = st.Schedule.Cycle,
-                CourseId = st.Schedule.CourseId,
-                Course = st.Schedule.Course,
-                DaySchedule = st.Schedule.DaySchedule,
-                TimeScheduleIn = st.Schedule.TimeScheduleIn,
-                TimeScheduleOut = st.Schedule.TimeScheduleOut,
-                RoomId = st.Schedule.RoomId,
-                Room = st.Schedule.Room,
+                CourseId = st.Schedule.CurriculumDetail.CourseId,
+                Course = st.Schedule.CurriculumDetail.Course,
                 MinStudent = st.Schedule.MinStudent,
                 MaxStudent = st.Schedule.MaxStudent,
                 IsPetitionSchedule = st.Schedule.IsPetitionSchedule,
                 IsExclusive = st.Schedule.IsExclusive,
                 CreatedByUser = st.Schedule.CreatedByUser,
-                CollegeId = st.Schedule.AcademicProgram.CollegeId,
-                College = st.Schedule.AcademicProgram.College,
+                CollegeId = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.CollegeId,
+                College = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College,
             })
             .ToListAsync();
     }
@@ -71,7 +95,9 @@ public class ScheduleTeacherService:GenericService<ScheduleTeacher, GetScheduleT
                 //.ThenInclude(s => s.GradeBooks)
                 //.Include(st => st.EnrollmentRole)
                 .Include(st => st.Schedule)
-                    .ThenInclude(s => s.AcademicProgram)
+                    .ThenInclude(s => s.CurriculumDetail)
+                        .ThenInclude(cd => cd.Curriculum)
+                            .ThenInclude(c => c.AcademicProgram)
                 .Where(st => st.TeacherUserId == userId)
                 .ToList();
 
@@ -102,7 +128,7 @@ public class ScheduleTeacherService:GenericService<ScheduleTeacher, GetScheduleT
                     //.ThenInclude(s => s.GradeBooks)
                         //.Include(st => st.EnrollmentRole)
                 .Include(st => st.Schedule)
-                    .ThenInclude(s => s.AcademicProgram)
+                    
                 .Where(st => st.TeacherUserId == userId)
                 .ToList();
 
@@ -128,27 +154,34 @@ public class ScheduleTeacherService:GenericService<ScheduleTeacher, GetScheduleT
     {
         var items = await _dbModel.
             Include(st => st.Schedule)
-                .ThenInclude(s => s.Room)
-                    .ThenInclude(r => r.Building)
-                        .ThenInclude(b => b.Campus)
+                .ThenInclude(s => s.CurriculumDetail)
+                    .ThenInclude(cd => cd.Curriculum)
+                        .ThenInclude(c => c.AcademicProgram)
+                            .ThenInclude(ap => ap.College)
+                                .ThenInclude(c => c.Campus)
             .Where(st => st.TeacherUserId == userId)
             .ToListAsync();
 
-        return items.Select(st => _mapper.Map<GetCampusDto>(st.Schedule.Room.Building.Campus)).Distinct().ToList();
+        return items.Select(st => _mapper.Map<GetCampusDto>(st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus)).Distinct().ToList();
     }
 
     public async Task<ICollection<GetAcademicProgramDto>> GetAcademicProgramByUserAndCampusId(string userId, int campusId)
     {
         var items = await _dbModel.
             Include(st => st.Schedule)
-                .ThenInclude(s => s.AcademicProgram)
-            .Include(st => st.Schedule)
-                .ThenInclude(s => s.Room)
-                        .ThenInclude(r => r.Building)
-                            .ThenInclude(b => b.Campus)
+                .ThenInclude(s => s.CurriculumDetail)
+                    .ThenInclude(cd => cd.Curriculum)
+                        .ThenInclude(c => c.AcademicProgram)
+                            .ThenInclude(ap => ap.College)
+                                .ThenInclude(c => c.Campus)
             .Where(st => st.TeacherUserId == userId)
-            .Where(st => st.Schedule.Room.Building.CampusId == campusId)
             .ToListAsync();
-        return items.Select(st => _mapper.Map<GetAcademicProgramDto>(st.Schedule.AcademicProgram)).Distinct().ToList();
+        return items.Select(st => new GetAcademicProgramDto
+        {
+            Id = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.Id,
+            ProgramName = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ProgramName,
+            ShortName = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ShortName,
+            YearFirstImplemented = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.YearFirstImplemented,
+        }).Distinct().ToList();
     }
 }

@@ -16,7 +16,7 @@ public class EnrollmentGrade
     public Enrollment Enrollment { get; set; }
 
     // Fk GradingInput
-    public int GradeInputId { get; set; }
+    public int? GradeInputId { get; set; }
     public GradeInput GradeInput { get; set; }
 
     // Fk GradingPeriod

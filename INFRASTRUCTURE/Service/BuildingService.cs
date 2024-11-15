@@ -14,6 +14,9 @@ public class BuildingService:GenericService<Building, GetBuildingDto>, IBuilding
 
     public async Task<ICollection<GetBuildingDto>> GetBuildingByCampusId(int campusId)
     {
-        return _mapper.Map<ICollection<GetBuildingDto>>(await _dbModel.Where(b => b.CampusId == campusId).ToListAsync());
+        var buildings = await _dbModel
+        .Where(b => b.CampusId == campusId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetBuildingDto>>(buildings);
     }
 }

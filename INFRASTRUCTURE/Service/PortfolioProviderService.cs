@@ -14,38 +14,41 @@ public class PortfolioProviderService:GenericService<PortfolioProvider, GetPortf
 
     public async new Task<ICollection<GetPortfolioProviderDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetPortfolioProviderDto>>(await _dbModel
-            .Include(pp => pp.SectorDiscipline)
-            .ToListAsync());
+        var portfolioProviders = await _dbModel
+        .Include(pp => pp.SectorDiscipline)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetPortfolioProviderDto>>(portfolioProviders);
     }
 
-    public async new Task<GetPortfolioProviderDto?> GetAsync(int id)
+    public async new Task<PortfolioProvider?> GetAsync(int id)
     {
-        return _mapper.Map<GetPortfolioProviderDto?>(await _dbModel
-            .Include(pp => pp.SectorDiscipline)
-            .Where(pp => pp.Id == id)
-            .FirstOrDefaultAsync());
+        var portfolioProvider = await _dbModel
+        .Include(pp => pp.SectorDiscipline)
+        .Where(pp => pp.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return portfolioProvider;
     }
 
-    public async new Task<bool> CreateAsync(PortfolioProvider newItem)
+    public async new Task<GetPortfolioProviderDto?> CreateAsync(PortfolioProvider newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.SectorDiscipline = await _dbContext.SectorDisciplines.FindAsync(newItem.SectorDisciplineId);
+            newItem.SectorDiscipline = _dbContext.SectorDisciplines.Find(newItem.SectorDisciplineId);
+            return _mapper.Map<GetPortfolioProviderDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(PortfolioProvider updatedItem)
+    public async new Task<GetPortfolioProviderDto?> UpdateAsync(PortfolioProvider updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.SectorDiscipline = await _dbContext.SectorDisciplines.FindAsync(updatedItem.SectorDisciplineId);
+            updatedItem.SectorDiscipline = _dbContext.SectorDisciplines.Find(updatedItem.SectorDisciplineId);
+            return _mapper.Map<GetPortfolioProviderDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

@@ -24,6 +24,18 @@ public class EnrollmentGradeController : GenericController<EnrollmentGrade, IEnr
     }
 
     /****************** ACTION ROUTES ******************/
+
+    /// <summary>
+    /// Get current user id.
+    /// </summary>
+    /// <returns>string</returns>
+    protected string GetUserId()
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        return principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+    }
+
     /// <summary>
     /// Get all data.
     /// </summary>
@@ -53,7 +65,72 @@ public class EnrollmentGradeController : GenericController<EnrollmentGrade, IEnr
     {
         return await GenericGet(id);
     }
-    
+
+
+    /// <summary>
+    /// Post Enrollment Grade by schedule id.
+    /// </summary>
+    /// <param name="scheduleId"></param>
+    /// <param name="gradingPeriodId"></param>
+    /// <returns>Array[EnrollmentGrade]?</returns>
+    [HttpPost("post/Schedule/{scheduleId:int}/GradingPeriod/{gradingPeriodId:int}")]
+    public async Task<ActionResult> PostScheduleGrade(int scheduleId, int gradingPeriodId)
+    {
+        var userId = GetUserId();
+        var result = await _repo.PostOrUnPostGradeByScheduleId(scheduleId, gradingPeriodId, userId, true);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to post grade");
+    }
+
+    /// <summary>
+    /// Post Enrollment Grade by schedule id.
+    /// </summary>
+    /// <param name="scheduleId"></param>
+    /// <param name="gradingPeriodId"></param>
+    /// <returns>Array[EnrollmentGrade]?</returns>
+    [HttpPut("unpost/Schedule/{scheduleId:int}/GradingPeriod/{gradingPeriodId:int}")]
+    public async Task<ActionResult> UnPostScheduleGrade(int scheduleId, int gradingPeriodId)
+    {
+        var userId = GetUserId();
+        var result = await _repo.PostOrUnPostGradeByScheduleId(scheduleId, gradingPeriodId, userId, false);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to unpost grade");
+    }
+
+    /// <summary>
+    /// Post single enrollment grade.
+    /// </summary>
+    /// <param name="enrollmentId"></param>
+    /// <param name="gradingPeriodId"></param>
+    /// <returns></returns>
+    [HttpPost("post/Enrollment/{enrollmentId:int}/GradingPeriod/{gradingPeriodId:int}")]
+    public async Task<ActionResult> PostGrade(int enrollmentId, int gradingPeriodId)
+    {
+        var userId = GetUserId();
+        var result = await _repo.PostOrUnPostGrade(enrollmentId, gradingPeriodId, userId, true);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to post grade");
+    }
+
+    /// <summary>
+    /// UnPost single enrollment grade.
+    /// </summary>
+    /// <param name="enrollmentId"></param>
+    /// <param name="gradingPeriodId"></param>
+    /// <returns>EnrollmentGrade</returns>
+    [HttpPut("unpost/Enrollment/{enrollmentId:int}/GradingPeriod/{gradingPeriodId:int}")]
+    public async Task<ActionResult> UnPostGrade(int enrollmentId, int gradingPeriodId)
+    {
+        var userId = GetUserId();
+        var result = await _repo.PostOrUnPostGrade(enrollmentId, gradingPeriodId, userId, false);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to unpost grade");
+    }
+
     /// <summary>
     /// Creates new EnrollmentGrade entry.
     /// </summary>
@@ -61,9 +138,7 @@ public class EnrollmentGradeController : GenericController<EnrollmentGrade, IEnr
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(EnrollmentGradeDto item)
     {
-        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         item.EncodedByUserId = (item.EncodedByUserId.Length > 0) ? item.EncodedByUserId : userId;
         return await GenericCreate(item);
     }
@@ -87,9 +162,7 @@ public class EnrollmentGradeController : GenericController<EnrollmentGrade, IEnr
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, EnrollmentGradeDto item)
     {
-        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         item.EncodedByUserId = (item.EncodedByUserId.Length > 0) ? item.EncodedByUserId : userId;
         return await GenericUpdate(id, item);
     }

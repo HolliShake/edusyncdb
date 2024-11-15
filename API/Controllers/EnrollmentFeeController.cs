@@ -68,6 +68,7 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
         return await GenericCreate(item);
     }
     
+    /*
     /// <summary>
     /// Creates multiple instance of EnrollmentFee.
     /// </summary>
@@ -77,8 +78,8 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     {
         return await GenericCreateAll(items);
     }
+    */
     
-    /*
     /// <summary>
     /// Updates multiple property of EnrollmentFee.
     /// </summary>
@@ -88,7 +89,6 @@ public class EnrollmentFeeController : GenericController<EnrollmentFee, IEnrollm
     {
         return await GenericUpdate(id, item);
     }
-    */
     
     /// <summary>
     /// Deletes single EnrollmentFee entry.

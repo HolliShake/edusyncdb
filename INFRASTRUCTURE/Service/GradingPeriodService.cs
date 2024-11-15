@@ -14,36 +14,39 @@ public class GradingPeriodService:GenericService<GradingPeriod, GetGradingPeriod
 
     public async new Task<ICollection<GetGradingPeriodDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetGradingPeriodDto>>(await _dbModel
-            .Include(gp => gp.College)
-            .ToListAsync());
+        var gradingPeriods = await _dbModel
+        .Include(gp => gp.College)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetGradingPeriodDto>>(gradingPeriods);
     }
 
-    public async new Task<bool> CreateAsync(GradingPeriod newItem)
+    public async new Task<GetGradingPeriodDto?> CreateAsync(GradingPeriod newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result) 
+        if (await Save()) 
         {
             newItem.College = _dbContext.Colleges.Find(newItem.CollegeId);
+            return _mapper.Map<GetGradingPeriodDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(GradingPeriod updatedItem)
+    public async new Task<GetGradingPeriodDto?> UpdateAsync(GradingPeriod updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
             updatedItem.College = _dbContext.Colleges.Find(updatedItem.CollegeId);
+            return _mapper.Map<GetGradingPeriodDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 
     public async Task<ICollection<GetGradingPeriodDto>> GetGradingPeriodByCollegeId(int collegeId)
     {
-       return _mapper.Map<ICollection<GetGradingPeriodDto>>(await _dbModel
-            .Where(g => g.CollegeId == collegeId).ToListAsync());
+        var gradingPeriods = await _dbModel
+        .Where(g => g.CollegeId == collegeId)
+        .ToListAsync();
+       return _mapper.Map<ICollection<GetGradingPeriodDto>>(gradingPeriods);
     }
 }

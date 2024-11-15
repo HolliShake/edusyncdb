@@ -14,38 +14,41 @@ public class ParameterCategoryService:GenericService<ParameterCategory, GetParam
 
     public async new Task<ICollection<GetParameterCategoryDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetParameterCategoryDto>>(await _dbModel
-            .Include(pc => pc.Instrument)
-            .ToListAsync());
+        var parameterCategories = await _dbModel
+        .Include(pc => pc.Instrument)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetParameterCategoryDto>>(parameterCategories);
     }
     
-    public async new Task<GetParameterCategoryDto?> GetAsync(int id)
+    public async new Task<ParameterCategory?> GetAsync(int id)
     {
-        return _mapper.Map<GetParameterCategoryDto?>(await _dbModel
-            .Include(pc => pc.Instrument)
-            .Where(pc => pc.Id == id)
-            .FirstOrDefaultAsync());
+        var parameterCategory = await _dbModel
+        .Include(pc => pc.Instrument)
+        .Where(pc => pc.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return parameterCategory;
     }
 
-    public async new Task<bool> CreateAsync(ParameterCategory newItem)
+    public async new Task<GetParameterCategoryDto?> CreateAsync(ParameterCategory newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.Instrument = await _dbContext.Instruments.FindAsync(newItem.InstrumentId);
+            newItem.Instrument = _dbContext.Instruments.Find(newItem.InstrumentId);
+            return _mapper.Map<GetParameterCategoryDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(ParameterCategory updatedItem)
+    public async new Task<GetParameterCategoryDto?> UpdateAsync(ParameterCategory updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.Instrument = await _dbContext.Instruments.FindAsync(updatedItem.InstrumentId);
+            updatedItem.Instrument = _dbContext.Instruments.Find(updatedItem.InstrumentId);
+            return _mapper.Map<GetParameterCategoryDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

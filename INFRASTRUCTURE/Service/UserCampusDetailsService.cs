@@ -15,11 +15,12 @@ public class UserCampusDetailsService:GenericService<UserCampusDetails, GetUserC
 
     public async Task<ICollection<GetCampusDto>> GetAllCampusByUserId(string userId)
     {
-        return _mapper.Map<ICollection<GetCampusDto>>(await _dbModel
-            .Include(ucd => ucd.Campus)
-                .ThenInclude(c => c.Agency)
-            .Where(ucd => ucd.UserId == userId)
-            .Select(ucd => ucd.Campus)
-            .ToListAsync());
+        var campus = await _dbModel
+        .Include(ucd => ucd.Campus)
+            .ThenInclude(c => c.Agency)
+        .Where(ucd => ucd.UserId == userId)
+        .Select(ucd => ucd.Campus)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetCampusDto>>(campus);
     }
 }

@@ -3,6 +3,7 @@ using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
+using INFRASTRUCTURE.ErrorHandler;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
@@ -17,7 +18,7 @@ public class GradeBookService:GenericService<GradeBook, GetGradeBookDto>, IGrade
         var hasOne = await _dbModel.AnyAsync(gb => gb.ScheduleId == scheduleId);
         if (hasOne)
         {
-            throw new Exception("GradeBook already exists for this Schedule");
+            throw new Error400("GradeBook already exists for this Schedule");
         }
 
         var templateGradeBook = _dbContext.TemplateGradeBooks
@@ -29,7 +30,7 @@ public class GradeBookService:GenericService<GradeBook, GetGradeBookDto>, IGrade
         
         if (templateGradeBook == null)
         {
-            throw new Exception("GradeBook Template not found");
+            throw new Error404("GradeBook Template not found");
         }
 
         var gradeBook = new GradeBook
@@ -38,7 +39,7 @@ public class GradeBookService:GenericService<GradeBook, GetGradeBookDto>, IGrade
             ScheduleId = scheduleId
         };
 
-        if (!(await CreateAsync(gradeBook)))
+        if ((await CreateAsync(gradeBook) == null))
         {
             return null;
         }
@@ -56,7 +57,7 @@ public class GradeBookService:GenericService<GradeBook, GetGradeBookDto>, IGrade
 
         if (!wasSaved || (templateGradeBook.TemplateGradeBookItems.Count != gradeBookItems.Count))
         {
-           throw new Exception("GradeBook Items not saved");
+           throw new Error400("GradeBook Items not saved");
         }
 
         List<GradeBookItemDetail> itemDetails = [];
@@ -91,21 +92,16 @@ public class GradeBookService:GenericService<GradeBook, GetGradeBookDto>, IGrade
                     Id = gradeBook.Schedule.Id,
                     GeneratedReference = gradeBook.Schedule.GeneratedReference,
                     GeneratedSection = gradeBook.Schedule.GeneratedSection,
-                    AcademicProgramId = gradeBook.Schedule.AcademicProgramId,
-                    AcademicProgram = gradeBook.Schedule.AcademicProgram,
-                    CourseId = gradeBook.Schedule.CourseId,
-                    Course = gradeBook.Schedule.Course,
+                    AcademicProgramId = gradeBook.Schedule.CurriculumDetail.Curriculum.AcademicProgramId,
+                    AcademicProgram = gradeBook.Schedule.CurriculumDetail.Curriculum.AcademicProgram,
+                    CourseId = gradeBook.Schedule.CurriculumDetail.CourseId,
+                    Course = gradeBook.Schedule.CurriculumDetail.Course,
                     CycleId = gradeBook.Schedule.CycleId,
                     Cycle = gradeBook.Schedule.Cycle,
-                    DaySchedule = gradeBook.Schedule.DaySchedule,
-                    TimeScheduleIn = gradeBook.Schedule.TimeScheduleIn,
-                    TimeScheduleOut = gradeBook.Schedule.TimeScheduleOut,
                     IsExclusive = gradeBook.Schedule.IsExclusive,
                     IsPetitionSchedule = gradeBook.Schedule.IsPetitionSchedule,
                     MaxStudent = gradeBook.Schedule.MaxStudent,
-                    MinStudent = gradeBook.Schedule.MinStudent,
-                    RoomId = gradeBook.Schedule.RoomId,
-                    Room = gradeBook.Schedule.Room
+                    MinStudent = gradeBook.Schedule.MinStudent
                 },
                 // GradeBookItems Grouped By GradingPeriod
                 GradingPeriods = gradeBookItems
@@ -148,16 +144,21 @@ public class GradeBookService:GenericService<GradeBook, GetGradeBookDto>, IGrade
 
     public async Task<object?> GetGradeBookByScheduleId(int scheduleId)
     {
-        var item = _dbModel
+        var item = await _dbModel
         .Include(gb => gb.Schedule)
-            .ThenInclude(s => s.Course)
+            .ThenInclude(s => s.CurriculumDetail)
+                .ThenInclude(cd => cd.Course)
+        .Include(gb => gb.Schedule)
+            .ThenInclude(s => s.CurriculumDetail)
+                .ThenInclude(cd => cd.Curriculum)
+                    .ThenInclude(c => c.AcademicProgram)
         .Include(gb => gb.GradeBookItems)
              .ThenInclude(gbi => gbi.GradingPeriod)
         .Include(gb => gb.GradeBookItems)
             .ThenInclude(gbi => gbi.GradeBookItemDetails)
                 .ThenInclude(gbid => gbid.EqaAssessmentType)
         .Where(gb => gb.ScheduleId == scheduleId)
-        .FirstOrDefault();
+        .FirstOrDefaultAsync();
 
         return (item == null)
             ? null
@@ -169,16 +170,12 @@ public class GradeBookService:GenericService<GradeBook, GetGradeBookDto>, IGrade
                 Schedule = new
                 {
                     Id = item.Schedule.Id,
-                    RoomId = item.Schedule.RoomId,
-                    Room = item.Schedule.Room,
-                    CourseId = item.Schedule.CourseId,
-                    Course = item.Schedule.Course,  // Changed this to directly use the course from the included navigation property
-                    AcademicProgramId = item.Schedule.AcademicProgramId,
-                    AcademicProgram = item.Schedule.AcademicProgram,
+                    CourseId = item.Schedule.CurriculumDetail.CourseId,
+                    Course = item.Schedule.CurriculumDetail.Course,  // Changed this to directly use the course from the included navigation property
+                    AcademicProgramId = item.Schedule.CurriculumDetail.Curriculum.AcademicProgramId,
+                    AcademicProgram = item.Schedule.CurriculumDetail.Curriculum.AcademicProgram,
                     CycleId = item.Schedule.CycleId,
                     Cycle = item.Schedule.Cycle,
-                    TimeScheduleIn = item.Schedule.TimeScheduleIn,
-                    TimeScheduleOut = item.Schedule.TimeScheduleOut,
                     MaxStudent = item.Schedule.MaxStudent,
                     MinStudent = item.Schedule.MinStudent
                 },
@@ -222,38 +219,53 @@ public class GradeBookService:GenericService<GradeBook, GetGradeBookDto>, IGrade
 
     public async new Task<ICollection<GetGradeBookDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetGradeBookDto>>(await _dbModel
-            .Include(gb => gb.Schedule)
-            .ToListAsync());
+        var gradeBooks = await _dbModel
+        .Include(gb => gb.Schedule)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetGradeBookDto>>(gradeBooks);
     }
 
-    public async new Task<GetGradeBookDto?> GetAsync(int id)
+    public async new Task<GradeBook?> GetAsync(int id)
     {
-        return _mapper.Map<GetGradeBookDto?>(await _dbModel
-            .Include(gb => gb.Schedule)
-            .Where(gb => gb.Id == id)
-            .FirstOrDefaultAsync());
+        var gradeBook = await _dbModel
+        .Include(gb => gb.Schedule)
+        .Where(gb => gb.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return gradeBook;
     }
 
-    public async new Task<bool> CreateAsync(GradeBook newItem)
+    public async new Task<GetGradeBookDto?> CreateAsync(GradeBook newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.Schedule = await _dbContext.Schedules.FindAsync(newItem.ScheduleId);
+            newItem.Schedule = await _dbContext.Schedules
+                .Include(s => s.CurriculumDetail)
+                    .ThenInclude(cd => cd.Course)
+                .Include(s => s.CurriculumDetail)
+                    .ThenInclude(cd => cd.Curriculum)
+                        .ThenInclude(c => c.AcademicProgram)
+                .Where(s => s.Id == newItem.ScheduleId)
+                .FirstOrDefaultAsync();
+            return _mapper.Map<GetGradeBookDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(GradeBook updatedItem)
+    public async new Task<GetGradeBookDto?> UpdateAsync(GradeBook updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.Schedule = await _dbContext.Schedules.FindAsync(updatedItem.ScheduleId);
+            updatedItem.Schedule = await _dbContext
+                .Schedules
+                .Include(s => s.CurriculumDetail)
+                    .ThenInclude(cd => cd.Course)
+                .Where(s => s.Id == updatedItem.ScheduleId)
+                .FirstOrDefaultAsync();
+            return _mapper.Map<GetGradeBookDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

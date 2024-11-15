@@ -14,6 +14,7 @@ public class AppDbContext : DbContext
     // A
     public DbSet<AcademicCalendar> AcademicCalendars { get; set; }
     public DbSet<AcademicProgram> AcademicPrograms { get; set; }
+    public DbSet<AcademicProgramChair> AcademicProgramChairs { get; set; }
     public DbSet<AcademicTerm> AcademicTerms { get; set; }
     public DbSet<AccountGroup> AccountGroups { get; set; }
     public DbSet<AccessGroup> AccessGroups { get; set; }
@@ -36,6 +37,7 @@ public class AppDbContext : DbContext
     public DbSet<ClearanceTag> ClearanceTags { get; set; }
     public DbSet<ClearanceType> ClearanceTypes { get; set; }
     public DbSet<College> Colleges { get; set; }
+    public DbSet<CollegeDean> CollegeDeans { get; set; }
     public DbSet<Course> Courses { get; set; }
     public DbSet<CourseCrediting> CourseCreditings { get; set; }
     public DbSet<CourseFee> CourseFees { get; set; }
@@ -66,7 +68,6 @@ public class AppDbContext : DbContext
     public DbSet<FileTable> FileTables { get; set; }
     public DbSet<FundSource> FundSources { get; set; }
     // G
-    public DbSet<GeneratedSections> GeneratedSections { get; set; }
     public DbSet<GradeBook> GradeBooks { get; set; }
     public DbSet<GradeBookItem> GradeBookItems { get; set; }
     public DbSet<GradeBookItemDetail> GradeBookItemDetails { get; set; }
@@ -103,6 +104,7 @@ public class AppDbContext : DbContext
     public DbSet<Room> Rooms { get; set; }
     // S
     public DbSet<Schedule> Schedules { get; set; }
+    public DbSet<ScheduleAssignment> ScheduleAssignments { get; set; }
     public DbSet<ScheduleAttendance> ScheduleAttendances { get; set; }
     public DbSet<ScheduleMerge> ScheduleMerges { get; set; }
     public DbSet<ScheduleTeacher> ScheduleTeachers { get; set; }
@@ -150,6 +152,16 @@ public class AppDbContext : DbContext
                 relationship.DeleteBehavior = DeleteBehavior.Cascade;
             }
         }
+
+        // College Dean
+        modelBuilder.Entity<CollegeDean>()
+            .HasIndex(u => u.UserId)
+            .IsUnique();
+
+        // Program Chair
+        modelBuilder.Entity<AcademicProgramChair>()
+            .HasIndex(u => u.UserId)
+            .IsUnique();
 
         base.OnModelCreating(modelBuilder);
     }

@@ -15,6 +15,9 @@ public class AdmissionEvaluationScheduleService:GenericService<AdmissionEvaluati
 
     public async Task<ICollection<GetAdmissionEvaluationScheduleDto>> GetAdmissionEvaluationSchedulesByAdmissionScheduleId(int admissionSchedueId)
     {
-        return _mapper.Map<ICollection<GetAdmissionEvaluationScheduleDto>>(await _dbModel.Where(aes => aes.AdmissionScheduleId == admissionSchedueId).ToListAsync());
+        var admissionEvaluationSchedules = await _dbModel
+        .Where(aes => aes.AdmissionScheduleId == admissionSchedueId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionEvaluationScheduleDto>>(admissionEvaluationSchedules);
     }
 }

@@ -22,6 +22,17 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
         _jwtAuthManager = jwtAuthManager;
     }
 
+    /// <summary>
+    /// Get current user's id.
+    /// </summary>
+    /// <returns>string</returns>
+    protected string GetUserId()
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        return principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+    }
+
     /****************** ACTION ROUTES ******************/
     /// <summary>
     /// Get all data.
@@ -34,17 +45,40 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     }
 
     /// <summary>
-    /// Get schedules by section name and cycleId
+    /// Get all Schedule by Room id.
     /// </summary>
-    /// <param name="sectionName"></param>
-    /// <param name="cycleId"></param>
+    /// <param name="roomId"></param>
     /// <returns></returns>
-    [HttpGet("Section/{sectionName}/Cycle/{cycleId:int}")]
-    public async Task<ActionResult> GetSchedulesBySectionAndCycle(string sectionName, int cycleId)
+    [HttpGet("Room/{roomId:int}")]
+    public async Task<ActionResult> GetScheduleByRoomAction(int roomId)
     {
-        return Ok(await _repo.GetSectionsBySectionNameAndCycleId(sectionName, cycleId));
+        return Ok(await _repo.GetScheduleByRoom(roomId));
     }
 
+    /// <summary>
+    /// Get schedules by section name and cycleId and year level.
+    /// </summary>
+    /// <param name="curriculumId"></param>
+    /// <param name="cycleId"></param>
+    /// <param name="yearLevel"></param>
+    /// <returns></returns>
+    [HttpGet("Curriculum/{curriculumId:int}/Cycle/{cycleId:int}/YearLevel/{yearLevel:int}")]
+    public async Task<ActionResult> GetSchedulesBySectionAndCycle(int curriculumId, int cycleId, int yearLevel)
+    {
+        return Ok(await _repo.GetSchedulesByCurriculumAndCycleIdAndYearLevel(curriculumId, cycleId, yearLevel));
+    }
+
+    /// <summary>
+    /// Get all generated section names by curriculum and cycle id.
+    /// </summary>
+    /// <returns>Array[object]</returns>
+    [HttpGet("Section/{sectionName}/Cycle/{cycleId:int}")]
+    public async Task<ActionResult> GetSchedulesByCurriculum(string sectionName, int cycleId)
+    {
+        return Ok(await _repo.GetSchedulesBySectionNameAndCycleId(sectionName, cycleId));
+    }
+
+    /*
     /// <summary>
     /// Get all schedule that belongs to the current user.
     /// </summary>
@@ -52,11 +86,10 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     [HttpGet("Scheduler/My")]
     public async Task<ActionResult> GetSchedulerSchedules()
     {
-        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
+        var userId = GetUserId();
         return Ok(await _repo.GetByCreatedByUserId(userId));
     }
+    */
 
     /// <summary>
     /// Get Schedule by AcademicPorgram id.
@@ -90,16 +123,6 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     }
 
     /// <summary>
-    /// Get Schedule by Room id.
-    /// </summary>
-    /// <returns>Array[Schedule]</returns>
-    [HttpGet("Room/{roomId:int}")]
-    public async Task<ActionResult> GetScheduleByRoomId(int roomId)
-    {
-        return Ok(await _repo.GetSchedulesByRoomId(roomId));
-    }
-
-    /// <summary>
     /// Get Schedule by Course id.
     /// </summary>
     /// <returns>Array[Schedule]</returns>
@@ -128,6 +151,32 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     {
         return await GenericCreate(item);
     }
+
+    /// <summary>
+    /// Add another schedule to the section (usable if morethan 2 meeting per week).
+    /// </summary>
+    /// <returns>Schedule?</returns>
+    [HttpPost("add/Schedule/{generatedReference}")]
+    public async Task<ActionResult> AddAnotherSection(string generatedReference)
+    {
+        var result = await _repo.AddAnotherSchedule(generatedReference);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to add another schedule");
+    }
+
+    /// <summary>
+    /// Generates One Section
+    /// </summary>
+    /// <returns>Array[Schedule]</returns>
+    [HttpPost("add/SectionAndSchedules")]
+    public async Task<ActionResult> AddOneSection(ScheduleGenerateDto sched)
+    {
+        var result = await _repo.AddSection(GetUserId(), sched);
+        return (result != null) 
+            ? Ok(result)
+            : BadRequest("Failed to add a section");
+    }
     
     /// <summary>
     /// Creates multiple instance of Schedule.
@@ -136,12 +185,8 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<ScheduleDto> items)
     {
-        var accessToken = HttpContext.Request.Headers.Authorization.ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
-
-        var model = _mapper.Map<IList<Schedule>>(items);
-
+        var userId = GetUserId();
+        var model  = _mapper.Map<List<Schedule>>(items);
         var result = /**/
             await _repo.CreateAllWithUserIdAsync(userId, model);
 
@@ -157,12 +202,8 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     [HttpPost("generate/{numberOfSchedules:int}")]
     public async Task<ActionResult> GenerateSchedule(int numberOfSchedules, ScheduleGenerateDto items)
     {
-        var accessToken = HttpContext.Request.Headers.Authorization.ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
-        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        var userId = principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
-
+        var userId = GetUserId();
         var items_or_null = await _repo.GenerateSchedule(userId, numberOfSchedules, items);
-
         return (items_or_null != null)
             ? Ok(items_or_null)
             : BadRequest("Failed to create multiple schedules");
@@ -186,5 +227,20 @@ public class ScheduleController : GenericController<Schedule, IScheduleService, 
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);
+    }
+
+    /// <summary>
+    /// Delete Section by section name and cycle id.
+    /// </summary>
+    /// <param name="sectionName"></param>
+    /// <param name="cycleId"></param>
+    /// <returns>Null</returns>
+    [HttpDelete("delete/SectionAndSchedules/{sectionName}/Cycle/{cycleId:int}")]
+    public async Task<ActionResult> DeleteSectionByNameAndCycle(string sectionName, int cycleId)
+    {
+        var result = await _repo.DeleteSectionBySectionNameAndCycleId(sectionName, cycleId);
+        return (result)
+            ? Ok("Successfully deleted section")
+            : BadRequest("Failed to delete section");
     }
 }

@@ -1,5 +1,4 @@
 using APPLICATION.Dto.Agency;
-using APPLICATION.Dto.UserAccessGroupDetails;
 using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;

@@ -8,7 +8,7 @@ public class EvaluationRatingDetail
     public string QuestionTextResponse { get; set; }
 
     // Fk EvaluationRating
-    public int EvaulationRatingId { get; set; }
+    public int EvaluationRatingId { get; set; }
     public EvaluationRating EvaluationRating { get; set; }
 
     // Fk LikertQuestion

@@ -7,4 +7,6 @@ public class Instrument
     public string Description { get; set; }
     public int NumberOfChoices { get; set; }
     public bool IsEnabled { get; set; }
+    // Navigation Properties
+    public ICollection<ParameterCategory> ParameterCategories { get; set; }
 }

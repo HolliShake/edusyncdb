@@ -14,6 +14,9 @@ public class BulletinService:GenericService<Bulletin, GetBulletinDto>, IBulletin
 
     public async Task<ICollection<GetBulletinDto>> GetBulletinsByBulletinCategoryId(int bulletinCategoryId)
     {
-        return _mapper.Map<ICollection<GetBulletinDto>>(await _dbModel.Where(b => b.BulletinCategoryId == bulletinCategoryId).ToListAsync());
+        var bulletins = await _dbModel
+        .Where(b => b.BulletinCategoryId == bulletinCategoryId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetBulletinDto>>(bulletins);
     }
 }

@@ -15,6 +15,9 @@ public class AdmissionApplicationService:GenericService<AdmissionApplication, Ge
 
     public async Task<ICollection<GetAdmissionApplicationDto>> GetAdmissionApplicationsByAdmissionScheduleId(int admissionScheduleId)
     {
-        return _mapper.Map<ICollection<GetAdmissionApplicationDto>>(await _dbModel.Where(aa => aa.AdmissionScheduleId == admissionScheduleId).ToListAsync());
+        var admissionApplications = await _dbModel
+        .Where(aa => aa.AdmissionScheduleId == admissionScheduleId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAdmissionApplicationDto>>(admissionApplications);
     }
 }

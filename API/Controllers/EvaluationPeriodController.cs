@@ -37,7 +37,21 @@ public class EvaluationPeriodController : GenericController<EvaluationPeriod, IE
     {
         return await GenericGet(id);
     }
-    
+
+    /// <summary>
+    /// Get EvaluationPeriod information
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("EvaluationPeriod/Instrument/info/{id:int}")]
+    public async Task<ActionResult> GetEvaluationPeriodInformation(int id)
+    {
+        var result = await _repo.GetEvaluationPeriodInformation(id);
+        return (result != null)
+            ? Ok(result)
+            : NotFound("EvaluationPeriod not found");
+    }
+
     /// <summary>
     /// Creates new EvaluationPeriod entry.
     /// </summary>

@@ -14,42 +14,45 @@ public class GradeBookItemService:GenericService<GradeBookItem, GetGradeBookItem
 
     public async new Task<ICollection<GetGradeBookItemDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetGradeBookItemDto>>(await _dbModel
-            .Include(gbi => gbi.GradeBook)
-            .Include(gbi => gbi.GradingPeriod)
-            .ToListAsync());
+        var gradeBookItems = await _dbModel
+        .Include(gbi => gbi.GradeBook)
+        .Include(gbi => gbi.GradingPeriod)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetGradeBookItemDto>>(gradeBookItems);
     }
 
-    public async new Task<GetGradeBookItemDto?> GetAsync(int id)
+    public async new Task<GradeBookItem?> GetAsync(int id)
     {
-        return _mapper.Map<GetGradeBookItemDto?>(await _dbModel
-            .Include(gbi => gbi.GradeBook)
-            .Include(gbi => gbi.GradingPeriod)
-            .Where(gbi => gbi.Id == id)
-            .FirstOrDefaultAsync());
+        var gradeBookItem = await _dbModel
+        .Include(gbi => gbi.GradeBook)
+        .Include(gbi => gbi.GradingPeriod)
+        .Where(gbi => gbi.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return gradeBookItem;
     }
 
-    public async new Task<bool> CreateAsync(GradeBookItem newItem)
+    public async new Task<GetGradeBookItemDto?> CreateAsync(GradeBookItem newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.GradeBook = await _dbContext.GradeBooks.FindAsync(newItem.GradeBookId);
-            newItem.GradingPeriod = await _dbContext.GradingPeriods.FindAsync(newItem.GradingPeriodId);
+            newItem.GradeBook = _dbContext.GradeBooks.Find(newItem.GradeBookId);
+            newItem.GradingPeriod = _dbContext.GradingPeriods.Find(newItem.GradingPeriodId);
+            return _mapper.Map<GetGradeBookItemDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(GradeBookItem updatedItem)
+    public async new Task<GetGradeBookItemDto> UpdateAsync(GradeBookItem updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.GradeBook = await _dbContext.GradeBooks.FindAsync(updatedItem.GradeBookId);
-            updatedItem.GradingPeriod = await _dbContext.GradingPeriods.FindAsync(updatedItem.GradingPeriodId);
+            updatedItem.GradeBook = _dbContext.GradeBooks.Find(updatedItem.GradeBookId);
+            updatedItem.GradingPeriod = _dbContext.GradingPeriods.Find(updatedItem.GradingPeriodId);
+            return _mapper.Map<GetGradeBookItemDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

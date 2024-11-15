@@ -14,15 +14,19 @@ public class AccessGroupService : GenericService<AccessGroup, GetAccessGroupDto>
 
     public async new Task<ICollection<GetAccessGroupDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetAccessGroupDto>>(await _dbModel
-            .Include(ag => ag.AccessGroupActions)
-            .ToListAsync());
+        var accessGroups = await _dbModel
+        .Include(ag => ag.AccessGroupActions)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAccessGroupDto>>(accessGroups);
     }
 
-    public async new Task<AccessGroup?> GetAsync(int id)
+    public async new Task<GetAccessGroupDto?> GetAsync(int id)
     {
-        return _mapper.Map<AccessGroup?>(await _dbModel
-            .Include(ag => ag.AccessGroupActions)
-            .Where(ag => ag.Id == id).FirstOrDefaultAsync());
+        var accessGroup = await _dbModel
+        .Include(ag => ag.AccessGroupActions)
+        .Where(ag => ag.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return _mapper.Map<GetAccessGroupDto?>(accessGroup);
     }
 }

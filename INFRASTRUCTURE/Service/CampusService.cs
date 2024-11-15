@@ -14,6 +14,9 @@ public class CampusService:GenericService<Campus, GetCampusDto>, ICampusService
 
     public async Task<ICollection<GetCampusDto>> GetCampusByAgendyId(int agencyId)
     {
-        return _mapper.Map<ICollection<GetCampusDto>>(await _dbModel.Where(c => c.AgencyId == agencyId).ToListAsync());
+        var campuses = await _dbModel
+        .Where(c => c.AgencyId == agencyId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetCampusDto>>(campuses);
     }
 }

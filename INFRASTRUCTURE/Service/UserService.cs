@@ -17,7 +17,7 @@ public class UserService:GenericService<User, GetUserDto>, IUserService
     {
         return await _dbModel
             .Where(user => user.Id == userId)
-            .FirstOrDefaultAsync();
+            .SingleOrDefaultAsync();
     }
 
     public async Task<ICollection<GetUserOnlyDto>> SearchUserByName(string search)

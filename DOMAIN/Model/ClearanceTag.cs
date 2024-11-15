@@ -8,6 +8,7 @@ public class ClearanceTag
     public DateTime DateCreated { get; set; } = DateTime.Now;
     public string Description { get; set; }
     public string SettlementInstruction { get; set; }
+
     [Column(TypeName = "decimal(18,4)")]
     public decimal Amount { get; set; }
     public bool IsExtensible { get; set; }
@@ -15,7 +16,7 @@ public class ClearanceTag
     public bool IsSettled { get; set; }
     public DateTime Deadline { get; set; }
     public DateTime ExtendedDeadline { get; set; }
-    public DateTime SettledDate { get; set; }
+    public DateTime? SettledDate { get; set; }
     public DateTime RemindMeDate { get; set; }
 
     // Fk ClearanceType
@@ -31,6 +32,6 @@ public class ClearanceTag
     public User UnclearedUser { get; set; }
 
     // Fk User
-    public string UserWhoClearedId { get; set; }
+    public string? UserWhoClearedId { get; set; }
     public User UserWhoCleared { get; set; }
 }

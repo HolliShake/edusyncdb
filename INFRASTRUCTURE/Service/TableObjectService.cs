@@ -14,48 +14,57 @@ public class TableObjectService:GenericService<TableObject, GetTableObjectDto>, 
 
     public async new Task<ICollection<GetTableObjectDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetTableObjectDto>>(await _dbModel
-            .Include(to => to.AccountGroup)
-            .ToListAsync());
+        var tableObject = await _dbModel
+        .Include(to => to.AccountGroup)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetTableObjectDto>>(tableObject);
     }
 
-    public async new Task<GetTableObjectDto?> GetAsync(int id)
+    public async new Task<TableObject?> GetAsync(int id)
     {
-        return _mapper.Map<GetTableObjectDto?>(await _dbModel
-            .Include(to => to.AccountGroup)
-            .Where(to => to.Id == id)
-            .FirstOrDefaultAsync());
+        var tableObject = await _dbModel
+        .Include(to => to.AccountGroup)
+        .Where(to => to.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return tableObject;
     }
 
-    public async new Task<bool> CreateAsync(TableObject newItem)
+    public async new Task<GetTableObjectDto?> CreateAsync(TableObject newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.AccountGroup = await _dbContext.AccountGroups.FindAsync(newItem.AccountGroupId);
+            newItem.AccountGroup = _dbContext.AccountGroups.Find(newItem.AccountGroupId);
+            return _mapper.Map<GetTableObjectDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(TableObject updatedItem)
+    public async new Task<GetTableObjectDto?> UpdateAsync(TableObject updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.AccountGroup = await _dbContext.AccountGroups.FindAsync(updatedItem.AccountGroupId);
+            updatedItem.AccountGroup = _dbContext.AccountGroups.Find(updatedItem.AccountGroupId);
+            return _mapper.Map<GetTableObjectDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 
     public async Task<ICollection<GetTableObjectDto>> GetParentObject()
     {
-        return _mapper.Map<ICollection<GetTableObjectDto>>(await _dbModel.Where(p => p.ParentId == null).ToListAsync());
+        var parentObject = await _dbModel
+        .Where(p => p.ParentId == null)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetTableObjectDto>>(parentObject);
     }
 
     public async Task<ICollection<GetTableObjectDto>> GetObjectByAccountGroupId(int accountGroupId)
     {
-        return _mapper.Map<ICollection<GetTableObjectDto>>(await _dbModel.Where(p => p.AccountGroupId == accountGroupId).ToListAsync());
+        var tableObject = await _dbModel
+        .Where(p => p.AccountGroupId == accountGroupId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetTableObjectDto>>(tableObject);
     }
 }

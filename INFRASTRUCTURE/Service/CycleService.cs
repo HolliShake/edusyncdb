@@ -14,18 +14,28 @@ public class CycleService:GenericService<Cycle, GetCycleDto>, ICycleService
 
     public async new Task<ICollection<GetCycleDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetCycleDto>>(await _dbModel.Include(c => c.Campus).ToListAsync());
+        var cycles = await _dbModel
+        .Include(c => c.Campus)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetCycleDto>>(cycles);
     }
 
     public async new Task<GetCycleDto?> GetAsync(int id)
     {
-        return _mapper.Map<GetCycleDto?>(await _dbModel.Include(c => c.Campus).Where(c => c.Id == id).FirstOrDefaultAsync());
+        var cycle = await _dbModel
+        .Include(c => c.Campus)
+        .Where(c => c.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return _mapper.Map<GetCycleDto?>(cycle);
     }
 
     public async Task<ICollection<GetCycleDto>> GetCycleByCampusId(int campusId)
     {
-        return _mapper.Map<ICollection<GetCycleDto>>(await _dbModel
-            .Include(c => c.Campus)
-            .Where(c => c.CampusId == campusId).ToListAsync());
+        var cycles = await _dbModel
+        .Include(c => c.Campus)
+        .Where(c => c.CampusId == campusId)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetCycleDto>>(cycles);
     }
 }

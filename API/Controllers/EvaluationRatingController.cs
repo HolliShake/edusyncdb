@@ -37,7 +37,39 @@ public class EvaluationRatingController : GenericController<EvaluationRating, IE
     {
         return await GenericGet(id);
     }
-    
+
+    /// <summary>
+    /// Creates new EvaluationRating entry.
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("create/EvaluationRating")]
+    public async Task<ActionResult> CreateEvaluationRating(EvaluationRatingGroupDto item)
+    {
+        return Ok(await _repo.CreateEvaluationRatingScore(item));
+    }
+
+    /// <summary>
+    /// Post EvaluationRating entry.
+    /// </summary>
+    /// <param name="evaluationPeriodId"></param>
+    /// <returns></returns>
+    [HttpPost("post/EvaluationPeriod/{evaluationPeriodId:int}")]
+    public async Task<ActionResult> PostEvaluationRating(int evaluationPeriodId)
+    {
+        return Ok(await _repo.UpdatePostedPostStatusByEvaluationPeriodId(evaluationPeriodId, true));
+    }
+
+    /// <summary>
+    /// UnPost EvaluationRating entry.
+    /// </summary>
+    /// <param name="evaluationPeriodId"></param>
+    /// <returns></returns>
+    [HttpPost("unpost/EvaluationPeriod/{evaluationPeriodId:int}")]
+    public async Task<ActionResult> UnPostEvaluationRating(int evaluationPeriodId)
+    {
+        return Ok(await _repo.UpdatePostedPostStatusByEvaluationPeriodId(evaluationPeriodId, false));
+    }
+
     /// <summary>
     /// Creates new EvaluationRating entry.
     /// </summary>

@@ -14,37 +14,41 @@ public class ScheduleMergeService:GenericService<ScheduleMerge, GetScheduleMerge
 
     public async new Task<ICollection<GetScheduleMergeDto>> GetAllAsync()
     {
-        return _mapper.Map<ICollection<GetScheduleMergeDto>>(await _dbModel
-            .Include(s => s.Schedule)
-            .ToListAsync());
+        var scheduleMerged = await _dbModel
+        .Include(s => s.Schedule)
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetScheduleMergeDto>>(scheduleMerged);
     }
 
-    public async new Task<GetScheduleMergeDto?> GetAsync(int id)
+    public async new Task<ScheduleMerge?> GetAsync(int id)
     {
-        return _mapper.Map<GetScheduleMergeDto?>(await _dbModel
-            .Include(s => s.Schedule)
-            .Where(s => s.Id == id).FirstOrDefaultAsync());
+        var scheduleMerge = await _dbModel
+        .Include(s => s.Schedule)
+        .Where(s => s.Id == id)
+        .AsNoTracking()
+        .SingleOrDefaultAsync();
+        return scheduleMerge;
     }
 
-    public async new Task<bool> CreateAsync(ScheduleMerge newItem)
+    public async new Task<GetScheduleMergeDto?> CreateAsync(ScheduleMerge newItem)
     {
         await _dbModel.AddAsync(newItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            newItem.Schedule = await _dbContext.Schedules.FindAsync(newItem.ScheduleId);
+            newItem.Schedule = _dbContext.Schedules.Find(newItem.ScheduleId);
+            return _mapper.Map<GetScheduleMergeDto>(newItem);
         }
-        return result;
+        return null;
     }
 
-    public async new Task<bool> UpdateSync(ScheduleMerge updatedItem)
+    public async new Task<GetScheduleMergeDto?> UpdateAsync(ScheduleMerge updatedItem)
     {
         _dbModel.Update(updatedItem);
-        var result = await Save();
-        if (result)
+        if (await Save())
         {
-            updatedItem.Schedule = await _dbContext.Schedules.FindAsync(updatedItem.ScheduleId);
+            updatedItem.Schedule = _dbContext.Schedules.Find(updatedItem.ScheduleId);
+            return _mapper.Map<GetScheduleMergeDto>(updatedItem);
         }
-        return result;
+        return null;
     }
 }

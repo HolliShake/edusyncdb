@@ -4,7 +4,7 @@ namespace APPLICATION.Dto.Parameter;
 public class ParameterDto
 {
     public string ParameterName { get; set; }
-    public string QuestionTypeLikertOrText { get; set; }
+    public bool QuestionTypeLikertOrText { get; set; }
 
     // Fk Parameter
     public int? ParentId { get; set; }

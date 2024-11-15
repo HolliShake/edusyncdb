@@ -71,7 +71,7 @@ public class TemplateGradeBookService:GenericService<TemplateGradeBook, GetTempl
             TemplateName = template.TemplateName
         };
 
-        if (!(await CreateAsync(templateGradeBook)))
+        if ((await CreateAsync(templateGradeBook)) == null)
         {
             return null;
         }
