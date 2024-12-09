@@ -12,6 +12,30 @@ public class InstrumentService:GenericService<Instrument, GetInstrumentDto>, IIn
     {
     }
 
+    public async new Task<ICollection<GetInstrumentDto>> GetAllAsync()
+    {
+        var result = await _dbModel
+            .Include(i => i.ParameterCategories)
+                .ThenInclude(pc => pc.ParameterSubCategories)
+                    .ThenInclude(psc => psc.Parameters)
+                        .ThenInclude(p => p.LikertQuestions)
+            .AsNoTracking()
+            .ToListAsync();
+        return _mapper.Map<ICollection<GetInstrumentDto>>(result);
+    }
+
+    public async new Task<Instrument?> GetAsync(int id)
+    {
+        var result = await _dbModel
+            .Include(i => i.ParameterCategories)
+                .ThenInclude(pc => pc.ParameterSubCategories)
+                    .ThenInclude(psc => psc.Parameters)
+                        .ThenInclude(p => p.LikertQuestions)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(i => i.Id == id);
+        return result;
+    }
+
     public async Task<object?> GetInstrumentInfo(int id)
     {
         var instrument = await _dbModel

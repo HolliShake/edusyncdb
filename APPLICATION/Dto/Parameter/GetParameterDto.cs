@@ -1,3 +1,4 @@
+using APPLICATION.Dto.LikertQuestion;
 using APPLICATION.Dto.ParameterSubCategory;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,5 +16,6 @@ public class GetParameterDto
     // Fk ParameterSubCategory
     public int ParameterSubCategoryId { get; set; }
     public GetParameterSubCategoryDto ParameterSubCategory { get; set; }
-
+    // Navigation Properties
+    public ICollection<GetLikertQuestionDto> LikertQuestions { get; set; }
 }

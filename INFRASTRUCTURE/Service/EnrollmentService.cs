@@ -84,14 +84,19 @@ public class EnrollmentService:GenericService<Enrollment, GetEnrollmentDto>, IEn
                 GradingPeriods = gradeBook.GradeBookItems
                 .Select(gbi => gbi.GradingPeriod)
                 .Distinct()
-                .Select(gp => new 
-                { 
-                   Id = gp.Id,
-                   GradingPeriod = gp.GradingPeriodDescription,
-                   Grade = (decimal) (gradingPeriods
-                            .Where(gpws => gpws.GradingPeriodId == gp.Id)
-                            .Select(gpws => gpws.Grade)
-                            .FirstOrDefault())
+                .Select(gp =>
+                {
+                    var grade = (decimal)(gradingPeriods
+                        .Where(gpws => gpws.GradingPeriodId == gp.Id)
+                        .Select(gpws => gpws.Grade)
+                        .FirstOrDefault());
+                    return new
+                    {
+                        Id = gp.Id,
+                        GradingPeriod = gp.GradingPeriodDescription,
+                        Grade = grade,
+                        GradeInput = _dbContext.GradeInputs.Where(gi => grade >= gi.StartRange && grade <= gi.EndRange).FirstOrDefault()
+                    };
                 }),
                 Course = e.Schedule.CurriculumDetail.Course,
                 FinalGrade = finalGrade,
@@ -191,6 +196,71 @@ public class EnrollmentService:GenericService<Enrollment, GetEnrollmentDto>, IEn
             .ToListAsync();
 
         return enrollments;
+    }
+
+    public async Task<object> GetUserTodaysScheduleIfEnrolled(string userId)
+    {
+        var today = await _dbModel.Where(e => e.StudentUserId == userId)
+                .Include(e => e.Schedule)
+                    .ThenInclude(s => s.ScheduleAssignments)
+                        .ThenInclude(sa => sa.Room)
+                            .ThenInclude(r => r.Building)
+                .Include(e => e.Schedule)
+                    .ThenInclude(s => s.CurriculumDetail)
+                        .ThenInclude(cd => cd.Course)
+                .AsNoTracking()
+                .ToListAsync();
+
+        var schedules = today.SelectMany(e => e.Schedule.ScheduleAssignments)
+            .Where(sa =>
+            {
+                var now = DateTime.Now;
+                return sa.DaySchedule.Year == now.Year && sa.DaySchedule.DayOfWeek == now.DayOfWeek;
+            })
+            .Select(sa =>
+            {
+                return new
+                { 
+                    Id = sa.Id,
+                    //
+                    DaySchedule = sa.DaySchedule,
+                    TimeScheduleIn = sa.TimeScheduleIn,
+                    TimeScheduleOut = sa.TimeScheduleOut,
+                    //
+                    BuildingId = sa.Room.BuildingId,
+                    Building = new
+                    {
+                        sa.Room.Building.Id,
+                        sa.Room.Building.BuildingName,
+                    },
+                    //
+                    RoomId = sa.RoomId,
+                    Room = new
+                    {
+                        Id = sa.Room.Id,
+                        RoomName = sa.Room.RoomName,
+                        IsLab = sa.Room.IsLab,
+                        IsEspecializedLab = sa.Room.IsEspecializedLab
+                    },
+                    //
+                    CourseId = sa.Schedule.CurriculumDetail.CourseId,
+                    Course = new
+                    {
+                        Id = sa.Schedule.CurriculumDetail.Course.Id,
+                        CourseTitle = sa.Schedule.CurriculumDetail.Course.CourseTitle,
+                        CourseCode = sa.Schedule.CurriculumDetail.Course.CourseCode,
+                        CourseDescription = sa.Schedule.CurriculumDetail.Course.CourseDescription,
+                    },
+                    //
+                    Info = new
+                    {
+                        Ongoing = 
+                            (DateTime.Now.TimeOfDay >= sa.TimeScheduleIn.TimeOfDay  && DateTime.Now.TimeOfDay <= sa.TimeScheduleOut.TimeOfDay)
+                    }
+                };
+            });
+
+        return schedules;
     }
 
 }

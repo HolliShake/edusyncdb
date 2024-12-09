@@ -12,6 +12,17 @@ public class CourseService:GenericService<Course, GetCourseDto>, ICourseService
     {
     }
 
+    public async new Task<ICollection<GetCourseDto>> GetAllAsync()
+    {
+        var result = await _dbModel
+            .Include(c => c.EducationalQualityAssuranceType)
+            .Include(c => c.SfTrackSpecialization)
+            .Include(c => c.CourseRequisites)
+            .AsNoTracking()
+            .ToListAsync();
+        return _mapper.Map<ICollection<GetCourseDto>>(result);
+    }
+
     public async new Task<GetCourseDto?> CreateAsync(Course newItem)
     {
         await _dbModel.AddAsync(newItem);
@@ -34,15 +45,6 @@ public class CourseService:GenericService<Course, GetCourseDto>, ICourseService
             return _mapper.Map<GetCourseDto>(updatedItem);
         }
         return null;
-    }
-
-    public async new Task<ICollection<GetCourseDto>> GetAllAsync()
-    {
-        var courses = await _dbModel
-        .Include(c => c.EducationalQualityAssuranceType)
-        .Include(c => c.SfTrackSpecialization)
-        .ToListAsync();
-        return _mapper.Map<ICollection<GetCourseDto>>(courses);
     }
 
     public async Task<ICollection<GetCourseDto>> GetAllWithRequisiteAsync()

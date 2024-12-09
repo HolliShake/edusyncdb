@@ -10,4 +10,5 @@ public interface IEnrollmentService:IGenericService<Enrollment, GetEnrollmentDto
     public Task<ICollection<GetEnrollmentDto>> GetEnrollmentsByScheduleId(int scheduleId);
     public Task<object> GetEnrollmentsWithScoreByScheduleId(int scheduleId);
     public Task<object> GetEnrollmentsByStudentUserId(string userId);
+    public Task<object> GetUserTodaysScheduleIfEnrolled(string userId);
 }

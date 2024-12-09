@@ -44,6 +44,7 @@ public class EvaluationPeriodService:GenericService<EvaluationPeriod, GetEvaluat
             .Where(e => e.StudentUserId == userId)
             .ToList())
             .Where(e => !evaluationPeriod.EvaluationRatings.Any(er => er.EnrollmentId == e.Id))
+            .Where(e => e.Schedule.CycleId == evaluationPeriod.CycleId)
             .ToList();
 
         List<object> items = [];

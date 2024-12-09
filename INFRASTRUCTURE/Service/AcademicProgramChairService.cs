@@ -266,7 +266,7 @@ public class AcademicProgramChairService:GenericService<AcademicProgramChair, Ge
                     {
                         // Find evaluations completed by this teacher's students
                         var evaluated = evalRating
-                            .Where(er => er.ScheduleTeacherId == er.Id)
+                            .Where(er => er.ScheduleTeacherId == st.Id)
                             .ToList();
 
                         // Find students who haven't completed the evaluation

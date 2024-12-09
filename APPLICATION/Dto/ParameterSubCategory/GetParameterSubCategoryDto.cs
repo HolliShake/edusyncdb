@@ -1,3 +1,4 @@
+using APPLICATION.Dto.Parameter;
 using APPLICATION.Dto.ParameterCategory;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,4 +11,6 @@ public class GetParameterSubCategoryDto
     // Fk ParameterCategory
     public int ParameterCategoryId { get; set; }
     public GetParameterCategoryDto ParameterCategory { get; set; }
+    // Navigation Properties
+    public ICollection<GetParameterDto> Parameters { get; set; }
 }

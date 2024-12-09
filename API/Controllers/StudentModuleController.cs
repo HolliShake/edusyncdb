@@ -1,4 +1,5 @@
-﻿using APPLICATION.IService;
+﻿using API.Attributes;
+using APPLICATION.IService;
 using APPLICATION.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -47,6 +48,28 @@ public class StudentModuleController : ControllerBase
     }
 
     /// <summary>
+    /// Get schedule. (for dashboard display)
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Dashboard/TodaySchedules/My")]
+    public async Task<ActionResult> GetDashboardSchedules()
+    {
+        var userId = GetUserId();
+        return Ok(await _enrollment.GetUserTodaysScheduleIfEnrolled(userId));
+    }
+
+    /// <summary>
+    /// Get enrolled course with schedule. (for dashboard display)
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Dashboard/EnrolledCourseSchedule")]
+    public async Task<ActionResult> GetDashboardEnrolledCourse()
+    {
+        var userId = GetUserId();
+        return Ok(await _enrollment.GetUserTodaysScheduleIfEnrolled(userId));
+    }
+
+    /// <summary>
     /// Get Enrolled courses
     /// </summary>
     /// <returns></returns>
@@ -61,6 +84,7 @@ public class StudentModuleController : ControllerBase
     /// Get Current user's Grades
     /// </summary>
     /// <returns>Array[object]</returns>
+    [Casl("Admin:read", "Student:read")]
     [HttpGet("Grades/My")]
     public async Task<ActionResult> GetGrades()
     {

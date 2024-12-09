@@ -164,7 +164,7 @@ public class Utility
             var totalWeightedScore = g.Sum(g =>
                 (((g.Score / g.GradeBookItemDetail.MaxScore) * 100)
                 * g.GradeBookItemDetail.Weight)
-                * g.GradeBookItemDetail.GradeBookItem.Weight);
+                * g.GradeBookItemDetail.GradeBookItem.Weight); 
 
             return new SimplifiedGradingPeriod
             {

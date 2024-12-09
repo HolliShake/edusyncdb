@@ -25,6 +25,10 @@ public class ScheduleTeacherService:GenericService<ScheduleTeacher, GetScheduleT
         var scheduleTeacher = await _dbModel
             .Include(st => st.TeacherUser)
             .Include(st => st.Schedule)
+                .ThenInclude(s => s.CurriculumDetail)
+                    .ThenInclude(cd => cd.Course)
+            .Include(st => st.Schedule)
+                    .ThenInclude(cd => cd.Cycle)
             .Where(st => st.Id == id)
             .AsNoTracking()
             .SingleOrDefaultAsync();

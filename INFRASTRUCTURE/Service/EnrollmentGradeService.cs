@@ -92,7 +92,8 @@ public class EnrollmentGradeService:GenericService<EnrollmentGrade, GetEnrollmen
                                         return new
                                         {
                                             GradingPeriodDescription = gp.GradingPeriodDescription,
-                                            Grade = grade
+                                            Grade = grade,
+                                            GradeInput = _dbContext.GradeInputs.Where(gi => grade >= gi.StartRange && grade <= gi.EndRange).FirstOrDefault(),
                                         };
                                     }),
                                     GradeStatus = eg.GradeStatus,
