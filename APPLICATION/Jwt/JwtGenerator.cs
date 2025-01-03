@@ -12,6 +12,7 @@ public abstract class JwtGenerator
         string role,
         int? academicProgramId,
         int? collegeId,
+        int? specializationId,
         bool isFaculty,
         bool isStudent
     )
@@ -25,6 +26,8 @@ public abstract class JwtGenerator
             new Claim("CollegeId", ((collegeId != null) ? collegeId.ToString() : "0")!),
             // Flags for Program Chair
             new Claim("AcademicProgramId", ((academicProgramId != null) ? academicProgramId.ToString() : "0")!),
+            // Flags for Faculty
+            new Claim("SpecializationId", ((specializationId != null) ? specializationId.ToString() : "0")!),
             //
             new Claim("IsProgramChair", (
                  academicProgramId.ToString() != "0"    &&

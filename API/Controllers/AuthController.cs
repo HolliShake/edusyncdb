@@ -30,6 +30,7 @@ public class AuthController:ControllerBase
     private readonly IScheduleTeacherService _scheduleTeacher;
     private readonly IEnrollmentService _enrollment;
     private readonly ICollegeDeanService _collegeDean;
+    private readonly ISpecializationChairService _specializationChair;
     
     public AuthController(
         ConfigurationManager config, 
@@ -41,7 +42,8 @@ public class AuthController:ControllerBase
         IAcademicProgramChairService academicProgramChairService,
         IScheduleTeacherService scheduleTeacher,
         IEnrollmentService enrollment,
-        ICollegeDeanService collegeDean
+        ICollegeDeanService collegeDean,
+        ISpecializationChairService specializationChairService
     )
     {
         _config = config;
@@ -54,6 +56,7 @@ public class AuthController:ControllerBase
         _scheduleTeacher = scheduleTeacher;
         _enrollment = enrollment;
         _collegeDean = collegeDean;
+        _specializationChair = specializationChairService;
     }
     
     /// <summary>
@@ -100,6 +103,7 @@ public class AuthController:ControllerBase
             user.Role,
             (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
             (await _collegeDean.GetCollegeByUserId(userData.Id))?.Id,
+            (await _specializationChair.GetTrackSpecializationByUserId(userData.Id))?.Id,
             (await _scheduleTeacher.IsTeacher(userData.Id)),
             (await _enrollment.IsStudent(userData.Id))
         );
@@ -197,6 +201,7 @@ public class AuthController:ControllerBase
             user.Role,
             (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
             (await _collegeDean.GetCollegeByUserId(userData.Id))?.Id,
+            (await _specializationChair.GetTrackSpecializationByUserId(userData.Id))?.Id,
             (await _scheduleTeacher.IsTeacher(userData.Id)),
             (await _enrollment.IsStudent(userData.Id))
         );
@@ -309,6 +314,7 @@ public class AuthController:ControllerBase
            user.Role,
            (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
            (await _collegeDean.GetCollegeByUserId(userData.Id))?.Id,
+           (await _specializationChair.GetTrackSpecializationByUserId(userData.Id))?.Id,
            (await _scheduleTeacher.IsTeacher(userData.Id)),
            (await _enrollment.IsStudent(userData.Id))
         );

@@ -102,4 +102,51 @@ public class CourseService:GenericService<Course, GetCourseDto>, ICourseService
         var courses = await query.ToListAsync();
         return _mapper.Map<ICollection<GetCourseDto>>(courses);
     }
+
+    public async Task<object> GetAllCourseGroupByTrackSpecialization()
+    {
+        var result = await _dbModel
+            .Include(c => c.SfTrackSpecialization)
+            .Include(c => c.CourseRequisites)
+                .ThenInclude(cr => cr.RequisiteCourse)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var distinctOverride = result
+            .Select(c => c.SfTrackSpecializationId)
+            .Distinct()
+            .Select(c => result.Where(r => r.SfTrackSpecializationId == c).Select(r => r.SfTrackSpecialization).FirstOrDefault());
+
+        return distinctOverride.Select(c => new
+        {
+            Id = c.Id,
+            Specialization = c.Specialization,
+            SectorDisciplineId = c.SectorDisciplineId,
+            SectorDiscipline = c.SectorDiscipline,
+            Courses = result.Where(r => r.SfTrackSpecializationId == c.Id).Select(r => new
+            {
+                Id = r.Id,
+                CourseCode = r.CourseCode,
+                CourseTitle = r.CourseTitle,
+                CourseDescription = r.CourseDescription,
+                CreditUnits = r.CreditUnits,
+                LaboratoryUnits = r.LaboratoryUnits,
+                LectureUnits = r.LectureUnits,
+                WithLaboratory = r.WithLaboratory,
+                EducationalQualityAssuranceTypeId = r.EducationalQualityAssuranceTypeId,
+                EducationalQualityAssuranceType = r.EducationalQualityAssuranceType,
+                SfTrackSpecializationId = r.SfTrackSpecializationId,
+                SfTrackSpecialization = r.SfTrackSpecialization,
+                CourseRequisites = r.CourseRequisites.Select(cr => new
+                {
+                    Id = cr.Id,
+                    CourseId = cr.CourseId,
+                    RequisiteCourseId = cr.RequisiteCourseId,
+                    RequisiteCourse = cr.RequisiteCourse,
+                    Type = cr.Type,
+                    TypeName = cr.GetType().Name,
+                })
+            })
+        }).ToList();
+    }
 }

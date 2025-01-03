@@ -15,8 +15,12 @@ namespace API.Controllers;
 //FileTable, GetFileTableDto
 public class FileTableController : GenericController<FileTable, IFileTableService, FileTableDto, GetFileTableDto>
 {
-    public FileTableController(IMapper mapper, IFileTableService repo):base(mapper, repo)
+    private readonly ConfigurationManager _configurationManager;
+    private readonly IFileManagerService _fileManagerService;
+    public FileTableController(ConfigurationManager configurationManager, IMapper mapper, IFileTableService repo, IFileManagerService fileManagerService):base(mapper, repo)
     {
+        _configurationManager = configurationManager;
+        _fileManagerService   = fileManagerService;
     }
 
     /****************** ACTION ROUTES ******************/
@@ -28,6 +32,26 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
+    }
+
+    /// <summary>
+    /// Upload file to server.
+    /// </summary>
+    /// <param name="scope"></param>
+    /// <param name="referenceId"></param>
+    /// <param name="file"></param>
+    /// <returns></returns>
+    [HttpPost("upload/{scope}/{referenceId:int}")]
+    public async Task<ActionResult> UploadAction(string scope, int referenceId, IFormFile file)
+    {
+        if (file.Length <= 0)
+        {
+            return BadRequest("File is empty!");
+        }
+        var upload = await _fileManagerService.UploadFile(_configurationManager, scope, referenceId, file);
+        return (upload != null)
+            ? Ok(upload)
+            : BadRequest();
     }
     
     /// <summary>

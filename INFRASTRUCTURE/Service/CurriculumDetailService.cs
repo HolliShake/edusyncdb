@@ -48,21 +48,22 @@ public class CurriculumDetailService:GenericService<CurriculumDetail, GetCurricu
                                 CreditUnits = c.Course.CreditUnits,
                                 PreRequisites = c.Course.CourseRequisites.Where(cr => cr.Type == CourseRequisiteType.PreRequisite).Select(cr => new
                                 {
-                                    CourseId = cr.CourseId,
-                                    CourseCode = cr.Course.CourseCode,
-                                    CourseDescription = cr.Course.CourseDescription
+                                    CourseId = cr.RequisiteCourse.Id,
+                                    CourseCode = cr.RequisiteCourse.CourseCode,
+                                    CourseDescription = cr.RequisiteCourse.CourseDescription
                                 }),
-                                CoRequisites = c.Course.CourseRequisites.Where(cr => cr.Type == CourseRequisiteType.CoRequisite).Select(cr => new
+                                CoRequisites = c.Course.CourseRequisites
+                                .Where(cr => cr.Type == CourseRequisiteType.CoRequisite).Select(cr => new
                                 {
-                                    CourseId = cr.CourseId,
-                                    CourseCode = cr.Course.CourseCode,
-                                    CourseDescription = cr.Course.CourseDescription
+                                    CourseId = cr.RequisiteCourse.Id,
+                                    CourseCode = cr.RequisiteCourse.CourseCode,
+                                    CourseDescription = cr.RequisiteCourse.CourseDescription
                                 }),
                                 Equivalents = c.Course.CourseRequisites.Where(cr => cr.Type == CourseRequisiteType.Equivalent).Select(cr => new
                                 {
-                                    CourseId = cr.CourseId,
-                                    CourseCode = cr.Course.CourseCode,
-                                    CourseDescription = cr.Course.CourseDescription
+                                    CourseId = cr.RequisiteCourse.Id,
+                                    CourseCode = cr.RequisiteCourse.CourseCode,
+                                    CourseDescription = cr.RequisiteCourse.CourseDescription
                                 })
                             })
                     })
@@ -77,16 +78,69 @@ public class CurriculumDetailService:GenericService<CurriculumDetail, GetCurricu
             .ToListAsync());
     }
 
+    public async new Task<GetCurriculumDetailDto?> CreateAsync(CurriculumDetail newItem) {
+        var courseCoRequisites = _dbContext
+                .Courses
+                .Include(c => c.CourseRequisites)
+                    .ThenInclude(c => c.RequisiteCourse)
+                .Where(c => c.Id == newItem.CourseId)
+                .AsNoTracking()
+                .ToList()
+                .SelectMany(c => c.CourseRequisites)
+                .Where(cr => cr.Type == CourseRequisiteType.CoRequisite)
+                .Select(cr => cr.RequisiteCourse)
+                .Select(cr => new CurriculumDetail {
+                    CourseId = cr.Id,
+                    CurriculumId = newItem.CurriculumId,
+                    IsIncludeGWA = newItem.IsIncludeGWA,
+                    YearLevel = newItem.YearLevel,
+                    TermNumber = newItem.TermNumber
+                })
+                .ToList();
+        courseCoRequisites.Add(newItem);
+        await _dbModel.AddRangeAsync(courseCoRequisites);
+        if (await Save()) {
+            return _mapper.Map<GetCurriculumDetailDto>(newItem);
+        }
+        return null;
+    }
+
     public async Task<object?> CreateCurriculumDetailGroupedByCourse(CurriculumDetailGroup curriculumDetailGroup)
     {
-        var curriculumDetails = curriculumDetailGroup.CourseId.Select(courseId => new CurriculumDetail
-        {
-            CurriculumId = curriculumDetailGroup.CurriculumId,
-            IsIncludeGWA = curriculumDetailGroup.IsIncludeGWA,
-            YearLevel = curriculumDetailGroup.YearLevel,
-            TermNumber = curriculumDetailGroup.TermNumber,
-            CourseId = courseId,
-        }).ToList();
+        var curriculumDetails = curriculumDetailGroup.CourseId.Select(courseId => {
+               
+            var courseRequisites = _dbContext
+                .Courses
+                .Include(c => c.CourseRequisites)
+                    .ThenInclude(c => c.RequisiteCourse)
+                .Where(c => c.Id == courseId)
+                .AsNoTracking()
+                .ToList()
+                .SelectMany(c => c.CourseRequisites)
+                .Where(cr => cr.Type == CourseRequisiteType.CoRequisite)
+                .Select(cr => cr.RequisiteCourse)
+                .Select(cr => new CurriculumDetail {
+                    CourseId = cr.Id,
+                    CurriculumId = curriculumDetailGroup.CurriculumId,
+                    IsIncludeGWA = curriculumDetailGroup.IsIncludeGWA,
+                    YearLevel = curriculumDetailGroup.YearLevel,
+                    TermNumber = curriculumDetailGroup.TermNumber
+                })
+                .ToList();
+
+            courseRequisites.Add(new CurriculumDetail {
+                CurriculumId = curriculumDetailGroup.CurriculumId,
+                IsIncludeGWA = curriculumDetailGroup.IsIncludeGWA,
+                YearLevel = curriculumDetailGroup.YearLevel,
+                TermNumber = curriculumDetailGroup.TermNumber,
+                CourseId = courseId,
+            });
+
+            return courseRequisites;
+
+        })
+        .SelectMany(c => c)
+        .ToList();
 
         var result = await CreateAllAsync(curriculumDetails);
         return (result != null)
@@ -139,5 +193,46 @@ public class CurriculumDetailService:GenericService<CurriculumDetail, GetCurricu
                     .FirstOrDefault()
             )
             : null;
+    }
+
+    public async new Task<bool> DeleteSync(CurriculumDetail oldItem) {
+        var courseRequisites = _dbContext
+            .Courses
+            .Include(c => c.CourseRequisites)
+                .ThenInclude(c => c.RequisiteCourse)
+            .Where(c => c.Id == oldItem.CourseId)
+            .AsNoTracking()
+            .ToList()
+            .SelectMany(c => c.CourseRequisites)
+            .Where(cr => cr.Type == CourseRequisiteType.CoRequisite)
+            .Select(cr => cr.RequisiteCourse)
+            .Where(cr => _dbModel
+                    .Where(cd => cd.CurriculumId == oldItem.CurriculumId)
+                    .Where(cd => cd.TermNumber == oldItem.TermNumber)
+                    .Where(cd => cd.YearLevel == oldItem.YearLevel)
+                    .Where(cd => cd.CourseId == cr.Id).Any())
+            .Select(cr => {
+                var match = _dbModel
+                    .Where(cd => cd.CurriculumId == oldItem.CurriculumId)
+                    .Where(cd => cd.TermNumber == oldItem.TermNumber)
+                    .Where(cd => cd.YearLevel == oldItem.YearLevel)
+                    .Where(cd => cd.CourseId == cr.Id)
+                    .AsNoTracking()
+                    .FirstOrDefault();
+                return new CurriculumDetail {
+                    Id = match.Id,
+                    CourseId = cr.Id,
+                    CurriculumId = match.CurriculumId,
+                    IsIncludeGWA = match.IsIncludeGWA,
+                    YearLevel = match.YearLevel,
+                    TermNumber = match.TermNumber
+                };
+            })
+            .ToList();
+        if (!courseRequisites.Where(cr => cr.Id == oldItem.Id).Any()) {
+            courseRequisites.Add(oldItem);
+        }
+        _dbModel.RemoveRange(courseRequisites);
+        return await Save();
     }
 }

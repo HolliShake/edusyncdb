@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using System.Text;
 using APPLICATION.Dto.FileManager;
 using APPLICATION.IService;
 using AutoMapper;
@@ -32,12 +33,16 @@ public class FileManagerService : GenericService<FileTable, GetFileManagerTableD
             ? Path.Combine(configuration["File:LocationWIN32"], configuration["File:DestinationWIN32"])
             : Path.Combine(configuration["File:LocationLINUX"], configuration["File:DestinationLINUX"]);
 
+        var reader = new StreamReader(file.OpenReadStream(), Encoding.UTF8);
+
         var names = file.FileName.Split('.');
         var extension = "." + names[^1];
 
         string fileName;
         try
         {
+            var content = reader.ReadToEnd();
+
             fileName = Path.GetRandomFileName() + $"-{Guid.NewGuid()}" + extension;
             var targetPath = Path.Combine(uploadPath, "");
 
@@ -80,9 +85,11 @@ public class FileManagerService : GenericService<FileTable, GetFileManagerTableD
             UploadDate = DateTime.Now
         });
 
-        return _mapper.Map<GetFileManagerTableDto?>((await Save())
-            ? result.Entity
-            : null);
+        var saved = await Save();
+
+        return saved
+            ? _mapper.Map<GetFileManagerTableDto?>(result.Entity)
+            : null;
     }
 
     public async Task<ICollection<GetFileManagerTableDto>?> UploadMultipleFile(ConfigurationManager configuration, string scope, int referenceId, List<IFormFile> files)

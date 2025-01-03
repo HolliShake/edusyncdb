@@ -130,6 +130,7 @@ public class AppDbContext : DbContext
     public DbSet<SkillsFrameworkSkills> SkillsFrameworkSkills { get; set; }
     public DbSet<SkillsFrameworkSkillsToCompetency> SkillsFrameworkSkillsToCompetencies { get; set; }
     public DbSet<SkillsFrameworkTrackSpecialization> SkillsFrameworkTrackSpecializations { get; set; }
+    public DbSet<SpecializationChair> SpecializationChairs { get; set; }
     // T
     public DbSet<TableObject> TableObjects { get; set; }
     public DbSet<TemplateGradeBook> TemplateGradeBooks { get; set; }
@@ -161,6 +162,16 @@ public class AppDbContext : DbContext
         // Program Chair
         modelBuilder.Entity<AcademicProgramChair>()
             .HasIndex(u => u.UserId)
+            .IsUnique();
+
+        // Specialization Chair
+        modelBuilder.Entity<SpecializationChair>()
+            .HasIndex(u => u.UserId)
+            .IsUnique();
+
+        // Schedule Teacher
+        modelBuilder.Entity<ScheduleTeacher>()
+            .HasIndex(u => new { u.ScheduleId, u.TeacherUserId })
             .IsUnique();
 
         base.OnModelCreating(modelBuilder);

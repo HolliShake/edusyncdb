@@ -4,6 +4,7 @@ using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241210090806_AddSpecializationChair")]
+    partial class AddSpecializationChair
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -887,7 +890,7 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<decimal>("CreditUnits")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime?>("CreditedDateTime")
+                    b.Property<DateTime>("CreditedDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreditedFromCourseCode")
@@ -905,6 +908,7 @@ namespace INFRASTRUCTURE.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("EvaluatedByUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("OtherSchoolId")
@@ -913,9 +917,6 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<string>("Remarks")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -2883,10 +2884,9 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("EnrollmentRoleId");
 
-                    b.HasIndex("TeacherUserId");
+                    b.HasIndex("ScheduleId");
 
-                    b.HasIndex("ScheduleId", "TeacherUserId")
-                        .IsUnique();
+                    b.HasIndex("TeacherUserId");
 
                     b.ToTable("ScheduleTeachers");
                 });
@@ -3484,8 +3484,7 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("SFTrackSpecializationId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("SpecializationChairs");
                 });
@@ -4142,7 +4141,8 @@ namespace INFRASTRUCTURE.Migrations
                     b.HasOne("DOMAIN.Model.User", "EvaluatedByUser")
                         .WithMany()
                         .HasForeignKey("EvaluatedByUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DOMAIN.Model.OtherSchool", "OtherSchool")
                         .WithMany()

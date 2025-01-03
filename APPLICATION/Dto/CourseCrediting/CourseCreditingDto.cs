@@ -1,6 +1,5 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace APPLICATION.Dto.CourseCrediting;
+
 public class CourseCreditingDto
 {
     public string CreditedFromCourseTitle { get; set; }
@@ -9,13 +8,15 @@ public class CourseCreditingDto
     public decimal CreditUnits { get; set; }
     public string Remarks { get; set; }
     public DateTime EncodedDateTime { get; set; }
-    public DateTime CreditedDateTime { get; set; }
+    public DateTime? CreditedDateTime { get; set; }
+
+    // public GlobalValidityStatusEnum Status { get; set; }
 
     // Fk User (To Credit)
     public string CreditToUserId { get; set; }
 
     // Fk User (Evaluated By)
-    public string EvaluatedByUserId { get; set; }
+    public string? EvaluatedByUserId { get; set; }
 
     // Fk Course
     public int CourseId { get; set; }

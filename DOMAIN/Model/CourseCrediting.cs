@@ -13,15 +13,16 @@ public class CourseCrediting
     public decimal CreditUnits { get; set; }
     public string Remarks { get; set; }
     public DateTime EncodedDateTime { get; set; }
-    public DateTime CreditedDateTime { get; set; }
+    public DateTime? CreditedDateTime { get; set; }
+    public GlobalValidityStatusEnum Status { get; set; }
 
     // Fk User (To Credit)
     public string CreditToUserId { get; set; }
     public User CreditToUser { get; set; }
 
     // Fk User (Evaluated By)
-    public string EvaluatedByUserId { get; set; }
-    public User EvaluatedByUser { get; set; }
+    public string? EvaluatedByUserId { get; set; }
+    public User? EvaluatedByUser { get; set; }
 
     // Fk Course
     public int CourseId { get; set; }

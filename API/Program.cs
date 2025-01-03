@@ -5,6 +5,7 @@ using APPLICATION;
 using INFRASTRUCTURE;
 using INFRASTRUCTURE.ErrorHandler;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -31,9 +32,19 @@ builder.Services.AddControllers()
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-  
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = int.Parse(builder.Configuration["File:Limit"]); // (1024 * 1024 * 800) 800 MB
+});
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = int.Parse(builder.Configuration["File:Limit"]); // (1024 * 1024 * 800) 800 MB
+});
 
 var app = builder.Build();
+
 
 app.UseDeveloperExceptionPage();
 /*

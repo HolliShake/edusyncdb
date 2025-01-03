@@ -1,6 +1,7 @@
 ﻿using API.Attributes;
 using APPLICATION.IService;
 using APPLICATION.Jwt;
+using DOMAIN.Model;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +20,16 @@ public class StudentModuleController : ControllerBase
     private readonly IScheduleAttendanceService _scheduleAttendance;
     private readonly IClearanceTagService _clearanceTagService;
     private readonly IEvaluationPeriodService _evaluationPeriodService;
+    private readonly ICourseCreditingService _courseCreditingService;
+
     public StudentModuleController(
         IJwtAuthManager jwtAuthManager,
         IEnrollmentService enrollment,
         IEnrollmentGradeService enrollmentGrade,
         IScheduleAttendanceService scheduleAttendance,
         IClearanceTagService clearanceTagService,
-        IEvaluationPeriodService evaluationPeriodService
+        IEvaluationPeriodService evaluationPeriodService,
+        ICourseCreditingService courseCreditingService
     )
     {
         _jwtAuthManager = jwtAuthManager;
@@ -34,6 +38,7 @@ public class StudentModuleController : ControllerBase
         _scheduleAttendance = scheduleAttendance;
         _clearanceTagService = clearanceTagService;
         _evaluationPeriodService = evaluationPeriodService;
+        _courseCreditingService = courseCreditingService;
     }
 
     /// <summary>
@@ -146,5 +151,38 @@ public class StudentModuleController : ControllerBase
     {
         var userId = GetUserId();
         return Ok(await _evaluationPeriodService.GetAllEvaluationTeachsByEvaluationPeriodAndUserId(userId, evaluationPeriodId));
+    }
+
+    /// <summary>(
+    /// Get current's user approved course crediting.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("CourseCrediting/Pending/My")]
+    public async Task<ActionResult> GetMyPendingCourseCrediting()
+    {
+        var userId = GetUserId();
+        return Ok(await _courseCreditingService.GetCourseCreditingByStatusAndAssignToUserId(GlobalValidityStatusEnum.PENDING, userId));
+    }
+
+    /// <summary>
+    /// Get current's user approved course crediting.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("CourseCrediting/Approved/My")]
+    public async Task<ActionResult> GetMyApprovedCourseCrediting()
+    {
+        var userId = GetUserId();
+        return Ok(await _courseCreditingService.GetCourseCreditingByStatusAndAssignToUserId(GlobalValidityStatusEnum.APPROVED, userId));
+    }
+
+    /// <summary>
+    /// Get current's user approved course crediting.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("CourseCrediting/Rejected/My")]
+    public async Task<ActionResult> GetMyRejectedCourseCrediting()
+    {
+        var userId = GetUserId();
+        return Ok(await _courseCreditingService.GetCourseCreditingByStatusAndAssignToUserId(GlobalValidityStatusEnum.REJECTED, userId));
     }
 }

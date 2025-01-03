@@ -42,6 +42,16 @@ public class CourseController : GenericController<Course, ICourseService, Course
     }
 
     /// <summary>
+    /// Get all data grouped by TrackSpecialization.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("TrackSpecialization")]
+    public async Task<ActionResult> GetAllCourseGroupByTrackSpecialization()
+    {
+        return Ok(await _repo.GetAllCourseGroupByTrackSpecialization());
+    }
+
+    /// <summary>
     /// Get Course by EducationalQualityAssuranceType id (without requisites).
     /// </summary>
     /// <returns>Array[Course]</returns>

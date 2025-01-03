@@ -5,6 +5,10 @@ using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Net.Http.Headers;
+using APPLICATION.Jwt;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -13,8 +17,17 @@ namespace API.Controllers;
 [Casl("SuperAdmin:all")]
 public class CourseCreditingController : GenericController<CourseCrediting, ICourseCreditingService, CourseCreditingDto, GetCourseCreditingDto>
 {
-    public CourseCreditingController(IMapper mapper, ICourseCreditingService repo):base(mapper, repo)
+    private readonly IJwtAuthManager _jwtAuthManager;
+    public CourseCreditingController(IMapper mapper, IJwtAuthManager jwtAuthManager, ICourseCreditingService repo):base(mapper, repo)
     {
+        _jwtAuthManager = jwtAuthManager;
+    }
+
+    protected string UserId()
+    {
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        return principal.Item1.FindFirst(c => c.Type.Equals(ClaimTypes.NameIdentifier))?.Value ?? "0";
     }
 
     /****************** ACTION ROUTES ******************/
@@ -37,7 +50,30 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     {
         return await GenericCreate(item);
     }
-    
+
+    /// <summary>
+    /// Creates new CourseCrediting application.
+    /// </summary>
+    /// <returns>CourseCrediting</returns>
+    [HttpPost("application")]
+    public async Task<ActionResult> CreateApplicationAction(CourseCreditingSelfServiceDto item)
+    {
+        var userId = UserId();
+        return await GenericCreate(new CourseCreditingDto
+        {
+            CourseId = item.CourseId,
+            CreditToUserId = userId,
+            CreditUnits = item.CreditUnits,
+            CreditGrades = item.CreditGrades,
+            EncodedDateTime = DateTime.Now,
+            CreditedFromCourseCode = item.CreditedFromCourseCode,
+            CreditedFromCourseTitle = item.CreditedFromCourseTitle,
+            CreditedFromSchoolId = item.CreditedFromSchoolId,
+            Remarks = "",
+            EvaluatedByUserId = null
+        });
+    }
+
     /*
     /// <summary>
     /// Creates multiple instance of CourseCrediting.
@@ -49,7 +85,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of CourseCrediting.
     /// </summary>
@@ -68,5 +104,61 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);
+    }
+
+    /// <summary>
+    /// Approve course credit
+    /// </summary>
+    /// <param name="courseCreditingId"></param>
+    /// <returns></returns>
+    [HttpPut("Approve/{courseCreditingId:int}")]
+    public async Task<ActionResult> ApproveAction(int courseCreditingId)
+    {
+        var result = await _repo.ApproveByUserAndId(UserId(), courseCreditingId);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to approve course");
+    }
+
+    /// <summary>
+    /// Reject course credit
+    /// </summary>
+    /// <param name="courseCreditingId"></param>
+    /// <returns></returns>
+    [HttpPut("Reject/{courseCreditingId:int}")]
+    public async Task<ActionResult> RejectAction(int courseCreditingId)
+    {
+        var result = await _repo.RejectByUserAndId(UserId(), courseCreditingId);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to reject course");
+    }
+
+    /// <summary>
+    /// Return course credit
+    /// </summary>
+    /// <param name="courseCreditingId"></param>
+    /// <returns></returns>
+    [HttpPut("Return/{courseCreditingId:int}")]
+    public async Task<ActionResult> ReturnAction(int courseCreditingId)
+    {
+        var result = await _repo.ReturnByUserAndId(UserId(), courseCreditingId);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to return course");
+    }
+
+    /// <summary>
+    /// Revert course credit
+    /// </summary>
+    /// <param name="courseCreditingId"></param>
+    /// <returns></returns>
+    [HttpPut("Revert/{courseCreditingId:int}")]
+    public async Task<ActionResult> RevertAction(int courseCreditingId)
+    {
+        var result = await _repo.RevertByUserAndId(UserId(), courseCreditingId);
+        return (result != null)
+            ? Ok(result)
+            : BadRequest("Failed to revert course");
     }
 }
