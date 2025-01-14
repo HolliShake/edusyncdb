@@ -35,7 +35,16 @@ public class ScheduleAssignmentController : GenericController<ScheduleAssignment
     {
         return await GenericGet(id);
     }
-    
+
+    /// <summary>
+    /// Creates new ScheduleAssignment by merge code.
+    /// </summary>
+    /// <returns>ScheduleAssignment</returns>
+    [HttpPost("SchedulerModule/create/{mergeCode}")]
+    public async Task<ActionResult> CreateAction(string mergeCode, ScheduleAssignmentMergeCodeDto item) {
+        return Ok(await _repo.CreateScheduleAssignmentByMergeCode(mergeCode, item));
+    }
+
     /// <summary>
     /// Creates new ScheduleAssignment entry.
     /// </summary>
@@ -74,5 +83,16 @@ public class ScheduleAssignmentController : GenericController<ScheduleAssignment
     public async Task<ActionResult> DeleteAction(int id)
     {
         return await GenericDelete(id);
+    }
+
+    /// <summary>
+    /// Get all data by merge code.
+    /// </summary>
+    /// <param name="mergeCode"></param>
+    /// <returns></returns>
+    [HttpGet("SchedulerModule/delete/{mergeCode}")]
+    public async Task<ActionResult> DeleteByMergeCodeAction(string mergeCode)
+    {
+        return Ok(await _repo.DeleteScheduleAssignmentByMergeCode(mergeCode));
     }
 }

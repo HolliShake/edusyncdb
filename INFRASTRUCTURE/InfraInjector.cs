@@ -135,6 +135,7 @@ public class InfraInjector
 			services.AddScoped<IAcademicProgramChairService, AcademicProgramChairService>(); /* added by make.py */
 			services.AddScoped<ICollegeDeanService, CollegeDeanService>(); /* added by make.py */
 			services.AddScoped<ISpecializationChairService, SpecializationChairService>(); /* added by make.py */
+			services.AddScoped<ICampusSchedulerService, CampusSchedulerService>(); /* added by make.py */
 		#endregion
 
         // Identity

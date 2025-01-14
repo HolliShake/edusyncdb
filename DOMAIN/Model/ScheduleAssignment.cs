@@ -6,6 +6,8 @@ public class ScheduleAssignment
     public DateTime DaySchedule { get; set; }
     public DateTime TimeScheduleIn { get; set; }
     public DateTime TimeScheduleOut { get; set; }
+    public DateTime? ExpiryDate { get; set; }
+    public string? MergeCode { get; set; }
 
     // Fk Room
     public int RoomId { get; set; }

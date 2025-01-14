@@ -1,5 +1,6 @@
-namespace APPLICATION.Dto.ScheduleAssignment;
-public class ScheduleAssignmentDto
+﻿namespace APPLICATION.Dto.ScheduleAssignment;
+
+public class ScheduleAssignmentMergeCodeDto 
 {
     public DateTime DaySchedule { get; set; }
     public DateTime TimeScheduleIn { get; set; }
@@ -8,7 +9,4 @@ public class ScheduleAssignmentDto
 
     // Fk Room
     public int RoomId { get; set; }
-
-    // Fk Schedule
-    public int ScheduleId { get; set; }
 }

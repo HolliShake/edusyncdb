@@ -35,12 +35,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = int.Parse(builder.Configuration["File:Limit"]); // (1024 * 1024 * 800) 800 MB
+    options.MultipartBodyLengthLimit = long.Parse(builder.Configuration["File:Limit"]); // (1024 * 1024 * 2048) 800 MB
 });
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.Limits.MaxRequestBodySize = int.Parse(builder.Configuration["File:Limit"]); // (1024 * 1024 * 800) 800 MB
+    options.Limits.MaxRequestBodySize = long.Parse(builder.Configuration["File:Limit"]); // (1024 * 1024 * 2048) 800 MB
 });
 
 var app = builder.Build();
