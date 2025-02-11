@@ -23,7 +23,11 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
         _jwtAuthManager = jwtAuthManager;
     }
 
-    protected string UserId()
+    /// <summary>
+    /// Get current user User Id
+    /// </summary>
+    /// <returns></returns>
+    protected string GetUserId()
     {
         var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
         var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
@@ -52,13 +56,34 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     }
 
     /// <summary>
+    /// Creates new CourseCrediting entry.
+    /// </summary>
+    /// <returns>CourseCrediting</returns>
+    [HttpPost("create/user")]
+    public async Task<ActionResult> CreateByUserAction(LoggedUserCourseCreditingDto item)
+    {
+        return await GenericCreate(new CourseCreditingDto
+        {
+            CreditedFromCourseTitle = item.CreditedFromCourseTitle,
+            CreditedFromCourseCode = item.CreditedFromCourseCode,
+            CreditedFromSchoolId = item.CreditedFromSchoolId,
+            CreditGrades = item.CreditGrades,
+            CreditUnits = item.CreditUnits,
+            CreditToUserId = GetUserId(),
+            Remarks = item.Remarks,
+            EncodedDateTime = item.EncodedDateTime,
+            CourseId = item.CourseId
+        });
+    }
+
+    /// <summary>
     /// Creates new CourseCrediting application.
     /// </summary>
     /// <returns>CourseCrediting</returns>
     [HttpPost("application")]
     public async Task<ActionResult> CreateApplicationAction(CourseCreditingSelfServiceDto item)
     {
-        var userId = UserId();
+        var userId = GetUserId();
         return await GenericCreate(new CourseCreditingDto
         {
             CourseId = item.CourseId,
@@ -114,7 +139,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     [HttpPut("Approve/{courseCreditingId:int}")]
     public async Task<ActionResult> ApproveAction(int courseCreditingId)
     {
-        var result = await _repo.ApproveByUserAndId(UserId(), courseCreditingId);
+        var result = await _repo.ApproveByUserAndId(GetUserId(), courseCreditingId);
         return (result != null)
             ? Ok(result)
             : BadRequest("Failed to approve course");
@@ -128,7 +153,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     [HttpPut("Reject/{courseCreditingId:int}")]
     public async Task<ActionResult> RejectAction(int courseCreditingId)
     {
-        var result = await _repo.RejectByUserAndId(UserId(), courseCreditingId);
+        var result = await _repo.RejectByUserAndId(GetUserId(), courseCreditingId);
         return (result != null)
             ? Ok(result)
             : BadRequest("Failed to reject course");
@@ -142,7 +167,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     [HttpPut("Return/{courseCreditingId:int}")]
     public async Task<ActionResult> ReturnAction(int courseCreditingId)
     {
-        var result = await _repo.ReturnByUserAndId(UserId(), courseCreditingId);
+        var result = await _repo.ReturnByUserAndId(GetUserId(), courseCreditingId);
         return (result != null)
             ? Ok(result)
             : BadRequest("Failed to return course");
@@ -156,7 +181,7 @@ public class CourseCreditingController : GenericController<CourseCrediting, ICou
     [HttpPut("Revert/{courseCreditingId:int}")]
     public async Task<ActionResult> RevertAction(int courseCreditingId)
     {
-        var result = await _repo.RevertByUserAndId(UserId(), courseCreditingId);
+        var result = await _repo.RevertByUserAndId(GetUserId(), courseCreditingId);
         return (result != null)
             ? Ok(result)
             : BadRequest("Failed to revert course");

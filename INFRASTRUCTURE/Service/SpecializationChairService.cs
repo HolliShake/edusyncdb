@@ -14,14 +14,26 @@ public class SpecializationChairService:GenericService<SpecializationChair, GetS
     {
     }
 
+    public async Task<bool> IsSpecializationChair(string userId)
+    {
+        return await _dbModel.Where(sc => sc.UserId == userId).AnyAsync();
+    }
+
     public async Task<GetSkillsFrameworkTrackSpecializationDto> GetTrackSpecializationByUserId(string userId)
     {
-        var result = await _dbContext.SpecializationChairs
+        return await _dbModel
             .Include(x => x.SFTrackSpecialization)
             .Where(x => x.UserId == userId)
-            .Select(x => x.SFTrackSpecialization)
-            .FirstOrDefaultAsync();
-        return _mapper.Map<GetSkillsFrameworkTrackSpecializationDto>(result);
+            .Select(x => _mapper.Map<GetSkillsFrameworkTrackSpecializationDto>(x.SFTrackSpecialization))
+            .SingleOrDefaultAsync();
+    }
+
+    public async new Task<ICollection<GetSpecializationChairDto>> GetAllAsync()
+    {
+        return _mapper.Map<ICollection<GetSpecializationChairDto>>(await _dbModel
+            .Include(sf => sf.SFTrackSpecialization)
+            .Include(sf => sf.User)
+            .ToListAsync());
     }
 
     public async Task<object> GetAllPendingCourseCrediting(string userId, int trackSpecializationId)

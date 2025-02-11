@@ -22,6 +22,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get all data.
     /// </summary>
     /// <returns>Array[AdmissionScore]</returns>
+    /// <operationId>getAllAdmissionScore</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
@@ -32,6 +33,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get AdmissionScore by AdmissionEvaluationSchedule id.
     /// </summary>
     /// <returns>Array[AdmissionScore]</returns>
+    /// <operationId>getAdmissionScoreByAdmissionEvaluationScheduleId</operationId>
     [HttpGet("AdmissionEvaluationSchedule/{admissionEvaluationScheduleId:int}")]
     public async Task<ActionResult> GetAdmissionScoreByAdmissionEvaluationScheduleId(int admissionEvaluationScheduleId)
     {
@@ -42,6 +44,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get AdmissionScore by AdmissionProgramRequirement id.
     /// </summary>
     /// <returns>Array[AdmissionScore]</returns>
+    /// <operationId>getAdmissionScoreByAdmissionProgramRequirementId</operationId>
     [HttpGet("AdmissionProgramRequirement/{admissionProgramRequirementId:int}")]
     public async Task<ActionResult> GetAdmissionScoreByAdmissionProgramRequirementId(int admissionProgramRequirementId)
     {
@@ -52,6 +55,7 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get AdmissionScore by AdmissionApplicant id.
     /// </summary>
     /// <returns>Array[AdmissionScore]</returns>
+    /// <operationId>getAdmissionScoreByApllicationApplicantId</operationId>
     [HttpGet("AdmissionApplicant/{admissionApplicantId:int}")]
     public async Task<ActionResult> GetAdmissionScoreByAdmissionApplicantId(int admissionApplicantId)
     {
@@ -62,22 +66,24 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
     /// Get specific data (AdmissionScore) by id.
     /// </summary>
     /// <returns>Array[AdmissionScore]></returns>
+    /// <operationId>getAdmissionScoreById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
     }
-    
+
     /// <summary>
     /// Creates new AdmissionScore entry.
     /// </summary>
     /// <returns>AdmissionScore</returns>
+    /// <operationId>createAdmissionScore</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AdmissionScoreDto item)
     {
         return await GenericCreate(item);
     }
-    
+
     /*
     /// <summary>
     /// Creates multiple instance of AdmissionScore.
@@ -89,21 +95,23 @@ public class AdmissionScoreController : GenericController<AdmissionScore, IAdmis
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of AdmissionScore.
     /// </summary>
     /// <returns>AdmissionScore</returns>
+    /// <operationId>updateAdmissionScore</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AdmissionScoreDto item)
     {
         return await GenericUpdate(id, item);
     }
-    
+
     /// <summary>
     /// Deletes single AdmissionScore entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteAdmissionScore</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

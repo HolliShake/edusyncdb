@@ -22,16 +22,18 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Get all data.
     /// </summary>
     /// <returns>Array[BulletinScope]</returns>
+    /// <operationId>getAllBulletinScope</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
     }
-    
+
     /// <summary>
     /// Get BulletinScope by Bulletin id.
     /// </summary>
     /// <returns>Array[BulletinScope]</returns>
+    /// <operationId>getBulletinScopeByBulletinId</operationId>
     [HttpGet("Bulletin/{bulletinId:int}")]
     public async Task<ActionResult> GetBulletinScopeByBulletinId(int bulletinId)
     {
@@ -42,6 +44,7 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Get BulletinScope by AcademicProgram id.
     /// </summary>
     /// <returns>Array[BulletinScope]</returns>
+    /// <operationId>getBulletinScopeByAcademicProgramId</operationId>
     [HttpGet("AcademicProgram/{academicProgramId:int}")]
     public async Task<ActionResult> GetBulletinScopeByAcademicProgramId(int academicProgramId)
     {
@@ -52,22 +55,24 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
     /// Get specific data (BulletinScope) by id.
     /// </summary>
     /// <returns>Array[BulletinScope]></returns>
+    /// <operationId>getBulletinScopeById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
     }
-    
+
     /// <summary>
     /// Creates new BulletinScope entry.
     /// </summary>
     /// <returns>BulletinScope</returns>
+    /// <operationId>createBulletinScope</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(BulletinScopeDto item)
     {
         return await GenericCreate(item);
     }
-    
+
     /*
     /// <summary>
     /// Creates multiple instance of BulletinScope.
@@ -79,21 +84,23 @@ public class BulletinScopeController : GenericController<BulletinScope, IBulleti
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of BulletinScope.
     /// </summary>
     /// <returns>BulletinScope</returns>
+    /// <operationId>updateBulletinScope</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, BulletinScopeDto item)
     {
         return await GenericUpdate(id, item);
     }
-    
+
     /// <summary>
     /// Deletes single BulletinScope entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteBulletinScope</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

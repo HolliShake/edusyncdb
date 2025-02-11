@@ -70,7 +70,7 @@ public class FacultyModuleController:ControllerBase
     /// Get current loggedin faculty gradebook by Academic Program Id.
     /// </summary>
     /// <returns>Array[ScheduleTeacher]</returns>
-    [HttpGet("GradeBook/My/AcademicProgram/{academicProgramId:int}")]
+    [HttpGet("GradeBook/AcademicProgram/{academicProgramId:int}/My")]
     public async Task<ActionResult> GetCurrentFacultyGradeBook(int academicProgramId)
     {
         var userId = GetUserId();
@@ -82,7 +82,7 @@ public class FacultyModuleController:ControllerBase
     /// </summary>
     /// <param name="scheduleId"></param>
     /// <returns>Array[Enrollment]</returns>
-    [HttpGet("Students/My/{scheduleId:int}")]
+    [HttpGet("Students/{scheduleId:int}/My")]
     public async Task<ActionResult> GetEnrolledStudentByScheduleId(int scheduleId)
     {
         var userId = GetUserId();

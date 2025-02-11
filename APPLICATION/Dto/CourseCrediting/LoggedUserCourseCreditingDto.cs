@@ -1,34 +1,29 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DOMAIN.Model;
+namespace APPLICATION.Dto.CourseCrediting;
 
-public class CourseCrediting
+public class LoggedUserCourseCreditingDto
 {
-    public int Id { get; set; }
     public string CreditedFromCourseTitle { get; set; }
     public string CreditedFromCourseCode { get; set; }
-    [Column(TypeName = "decimal(18,4)")]
     public decimal CreditGrades { get; set; }
-    [Column(TypeName = "decimal(18,2)")]
     public decimal CreditUnits { get; set; }
     public string Remarks { get; set; }
     public DateTime EncodedDateTime { get; set; }
     public DateTime? CreditedDateTime { get; set; }
-    public GlobalValidityStatusEnum Status { get; set; }
 
-    // Fk User (To Credit)
-    public string CreditToUserId { get; set; }
-    public User CreditToUser { get; set; }
+    // public GlobalValidityStatusEnum Status { get; set; }
 
     // Fk User (Evaluated By)
     public string? EvaluatedByUserId { get; set; }
-    public User? EvaluatedByUser { get; set; }
 
     // Fk Course
     public int CourseId { get; set; }
-    public Course Course { get; set; }
 
     // Fk OtherSchool
     public int CreditedFromSchoolId { get; set; }
-    public OtherSchool CreditedFromSchool { get; set; }
 }

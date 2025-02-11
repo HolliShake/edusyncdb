@@ -22,32 +22,35 @@ public class AccountGroupController : GenericController<AccountGroup, IAccountGr
     /// Get all data.
     /// </summary>
     /// <returns>Array[AccountGroup]</returns>
+    /// <operationId>getAllAccountGroup</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
     }
-    
+
     /// <summary>
     /// Get specific data (AccountGroup) by id.
     /// </summary>
     /// <returns>Array[AccountGroup]></returns>
+    /// <operationId>getAccountGroupById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
     }
-    
+
     /// <summary>
     /// Creates new AccountGroup entry.
     /// </summary>
     /// <returns>AccountGroup</returns>
+    /// <operationId>createAccountGroup</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AccountGroupDto item)
     {
         return await GenericCreate(item);
     }
-    
+
     /*
     /// <summary>
     /// Creates multiple instance of AccountGroup.
@@ -59,21 +62,23 @@ public class AccountGroupController : GenericController<AccountGroup, IAccountGr
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of AccountGroup.
     /// </summary>
     /// <returns>AccountGroup</returns>
+    /// <operationId>updateAccountGroup</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AccountGroupDto item)
     {
         return await GenericUpdate(id, item);
     }
-    
+
     /// <summary>
     /// Deletes single AccountGroup entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteAccountGroup</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

@@ -22,16 +22,18 @@ public class AdmissionApplicationController : GenericController<AdmissionApplica
     /// Get all data.
     /// </summary>
     /// <returns>Array[AdmissionApplication]</returns>
+    /// <operationId>getAllAdmissionApplication</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
     }
-    
+
     /// <summary>
     /// Get 1st to n (where n := size(parameter)) data.
     /// </summary>
     /// <returns>Array[AdmissionApplication]</returns>
+    /// <operationId>getAdmissionApplicationByChunk</operationId>
     [HttpGet("chunk/{size:int}")]
     public async Task<ActionResult> GetByChunk(int size)
     {
@@ -42,6 +44,7 @@ public class AdmissionApplicationController : GenericController<AdmissionApplica
     /// Get AdmissionApplication by AdmissionSchedule id.
     /// </summary>
     /// <returns>Array[AdmissionApplication]</returns>
+    /// <operationId>getAdmissionApplicationByScheduleId</operationId>
     [HttpGet("AdmissionSchedule/{admissionScheduleId:int}")]
     public async Task<ActionResult> GetAdmissionApplicationByAdmissionScheduleId(int admissionScheduleId)
     {
@@ -52,22 +55,24 @@ public class AdmissionApplicationController : GenericController<AdmissionApplica
     /// Get specific data (AdmissionApplication) by id.
     /// </summary>
     /// <returns>Array[AdmissionApplication]></returns>
+    /// <operationId>getAdmissionApplicationById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
     }
-    
+
     /// <summary>
     /// Creates new AdmissionApplication entry.
     /// </summary>
     /// <returns>AdmissionApplication</returns>
+    /// <operationId>createAdmissionApplication</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AdmissionApplicationDto item)
     {
         return await GenericCreate(item);
     }
-    
+
     /*
     /// <summary>
     /// Creates multiple instance of AdmissionApplication.
@@ -84,16 +89,18 @@ public class AdmissionApplicationController : GenericController<AdmissionApplica
     /// Updates multiple property of AdmissionApplication.
     /// </summary>
     /// <returns>AdmissionApplication</returns>
+    /// <operationId>updateAdmissionApplication</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AdmissionApplicationDto item)
     {
         return await GenericUpdate(id, item);
     }
-    
+
     /// <summary>
     /// Deletes single AdmissionApplication entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteAdmissionApplication</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

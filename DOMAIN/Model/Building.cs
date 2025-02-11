@@ -10,4 +10,7 @@ public class Building
     // Fk Campus
     public int CampusId { get; set; }
     public Campus Campus { get; set; }
+
+    // Nav
+    public ICollection<Room> Rooms { get; set; }
 }

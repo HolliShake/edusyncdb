@@ -55,56 +55,62 @@ public class AdmissionEducationalBackgroundController : GenericController<Admiss
     /// Get all data.
     /// </summary>
     /// <returns>Array[AdmissionEducationalBackground]</returns>
+    /// <operationId>getAllAdmissionEducationalBackground</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
     }
-    
+
     /// <summary>
     /// Get specific data (AdmissionEducationalBackground) by id.
     /// </summary>
     /// <returns>Array[AdmissionEducationalBackground]></returns>
+    /// <operationId>getAdmissionEducationalBackgroundById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
     }
-    
+
     /// <summary>
     /// Creates new AdmissionEducationalBackground entry.
     /// </summary>
     /// <returns>AdmissionEducationalBackground</returns>
+    /// <operationId>createAdmissionEducationalBackground</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AdmissionEducationalBackgroundDto item)
     {
         return await GenericCreate(item);
     }
-    
+
     /// <summary>
     /// Creates multiple instance of AdmissionEducationalBackground.
     /// </summary>
     /// <returns>Array[AdmissionEducationalBackground]</returns>
+    /// <operationId>insertAdmissionEducationalBackground</operationId>
     [HttpPost("insert")]
     public async Task<ActionResult> CreateAllAction(List<AdmissionEducationalBackgroundDto> items)
     {
         return await GenericCreateAll(items);
     }
-    
+
     /// <summary>
     /// Updates multiple property of AdmissionEducationalBackground.
     /// </summary>
     /// <returns>AdmissionEducationalBackground</returns>
+    /// <operationId>updateAdmissionEducationalBackground</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AdmissionEducationalBackgroundDto item)
     {
         return await GenericUpdate(id, item);
     }
-    
+
     /// <summary>
     /// Deletes single AdmissionEducationalBackground entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteAdmissionEducationalBackground</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

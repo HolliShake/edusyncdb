@@ -11,4 +11,7 @@ public class Room
     // Fk Building
     public int BuildingId { get; set; }
     public Building Building { get; set; }
+
+    // Nav ScheduleAssignment
+    public ICollection<ScheduleAssignment> ScheduleAssignments { get; set; }
 }

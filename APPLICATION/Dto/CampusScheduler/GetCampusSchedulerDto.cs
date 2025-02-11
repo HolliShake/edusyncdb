@@ -14,8 +14,4 @@ public class GetCampusSchedulerDto
     // Fk (Campus)
     public int CampusId { get; set; }
     public GetCampusDto Campus { get; set; }
-
-    // Fk (ScheduleAssignment)
-    public int ScheduleAssignementId { get; set; }
-    public GetScheduleAssignmentDto ScheduleAssignment { get; set; }
 }

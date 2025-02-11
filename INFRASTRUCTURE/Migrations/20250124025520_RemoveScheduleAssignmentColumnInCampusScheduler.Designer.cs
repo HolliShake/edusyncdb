@@ -4,6 +4,7 @@ using INFRASTRUCTURE.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace INFRASTRUCTURE.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250124025520_RemoveScheduleAssignmentColumnInCampusScheduler")]
+    partial class RemoveScheduleAssignmentColumnInCampusScheduler
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -932,6 +935,9 @@ namespace INFRASTRUCTURE.Migrations
                     b.Property<string>("EvaluatedByUserId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("OtherSchoolId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Remarks")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -945,9 +951,9 @@ namespace INFRASTRUCTURE.Migrations
 
                     b.HasIndex("CreditToUserId");
 
-                    b.HasIndex("CreditedFromSchoolId");
-
                     b.HasIndex("EvaluatedByUserId");
+
+                    b.HasIndex("OtherSchoolId");
 
                     b.ToTable("CourseCreditings");
                 });
@@ -4186,24 +4192,24 @@ namespace INFRASTRUCTURE.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DOMAIN.Model.OtherSchool", "CreditedFromSchool")
-                        .WithMany()
-                        .HasForeignKey("CreditedFromSchoolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DOMAIN.Model.User", "EvaluatedByUser")
                         .WithMany()
                         .HasForeignKey("EvaluatedByUserId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("DOMAIN.Model.OtherSchool", "OtherSchool")
+                        .WithMany()
+                        .HasForeignKey("OtherSchoolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Course");
 
                     b.Navigation("CreditToUser");
 
-                    b.Navigation("CreditedFromSchool");
-
                     b.Navigation("EvaluatedByUser");
+
+                    b.Navigation("OtherSchool");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.CourseFee", b =>
@@ -5004,7 +5010,7 @@ namespace INFRASTRUCTURE.Migrations
             modelBuilder.Entity("DOMAIN.Model.Room", b =>
                 {
                     b.HasOne("DOMAIN.Model.Building", "Building")
-                        .WithMany("Rooms")
+                        .WithMany()
                         .HasForeignKey("BuildingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5042,7 +5048,7 @@ namespace INFRASTRUCTURE.Migrations
             modelBuilder.Entity("DOMAIN.Model.ScheduleAssignment", b =>
                 {
                     b.HasOne("DOMAIN.Model.Room", "Room")
-                        .WithMany("ScheduleAssignments")
+                        .WithMany()
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -5536,11 +5542,6 @@ namespace INFRASTRUCTURE.Migrations
                     b.Navigation("Campuses");
                 });
 
-            modelBuilder.Entity("DOMAIN.Model.Building", b =>
-                {
-                    b.Navigation("Rooms");
-                });
-
             modelBuilder.Entity("DOMAIN.Model.Course", b =>
                 {
                     b.Navigation("CourseRequisites");
@@ -5589,11 +5590,6 @@ namespace INFRASTRUCTURE.Migrations
             modelBuilder.Entity("DOMAIN.Model.ParameterSubCategory", b =>
                 {
                     b.Navigation("Parameters");
-                });
-
-            modelBuilder.Entity("DOMAIN.Model.Room", b =>
-                {
-                    b.Navigation("ScheduleAssignments");
                 });
 
             modelBuilder.Entity("DOMAIN.Model.Schedule", b =>

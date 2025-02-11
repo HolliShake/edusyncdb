@@ -1,4 +1,5 @@
 using APPLICATION.Dto.Building;
+using APPLICATION.Dto.ScheduleAssignment;
 
 namespace APPLICATION.Dto.Room;
 public class GetRoomDto
@@ -12,4 +13,7 @@ public class GetRoomDto
     // Fk Building
     public int BuildingId { get; set; }
     public GetBuildingDto Building { get; set; }
+
+    // Nav ScheduleAssignment
+    public ICollection<GetScheduleAssignmentDto> ScheduleAssignments { get; set; }
 }

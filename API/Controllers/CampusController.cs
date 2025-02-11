@@ -27,6 +27,7 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     /// Get all data.
     /// </summary>
     /// <returns>Array[Campus]</returns>
+    /// <operationId>getAllCampus</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
@@ -34,7 +35,7 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
         var data = _mapper.Map<ICollection<GetCampusDto>>(items);
         foreach (var item in data)
         {
-            item.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, item.Id);
+            item.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, item.Id.ToString());
         }
         return Ok(data);
     }
@@ -43,13 +44,14 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     /// Get all campus by agency id.
     /// </summary>
     /// <returns>Array[Campus]</returns>
+    /// <operationId>getAllCampusByAgencyId</operationId>
     [HttpGet("Agency/{agencyId:int}")]
     public async Task<ActionResult> GetCampusesByAgencyId(int agencyId)
     {
         var items = await _repo.GetCampusByAgendyId(agencyId);
         foreach (var item in items)
         {
-            item.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, item.Id);
+            item.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, item.Id.ToString());
         }
         return Ok(items);
     }
@@ -58,6 +60,7 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
     /// Get specific data (Campus) by id.
     /// </summary>
     /// <returns>Array[Campus]></returns>
+    /// <operationId>getCampusById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
@@ -68,15 +71,16 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
         }
 
         var data = _mapper.Map<GetCampusDto>(result);
-        data.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, data.Id);
+        data.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, data.Id.ToString());
 
         return Ok(data);
     }
-    
+
     /// <summary>
     /// Creates new Campus entry.
     /// </summary>
     /// <returns>Campus</returns>
+    /// <operationId>createCampus</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction([FromForm] CampusDto item, [FromForm] List<IFormFile> files)
     {
@@ -89,7 +93,7 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
             goto end;
         }
 
-        var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.CampusImagesScope, model.Id, files);
+        var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.CampusImagesScope, model.Id.ToString(), files);
         if (fileResult != null)
         {
            result.Images = fileResult.ToList()!;
@@ -100,7 +104,7 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
             ? Ok(result)
             : BadRequest("Something went wrong!");
     }
-    
+
     /*
     /// <summary>
     /// Creates multiple instance of Campus.
@@ -112,11 +116,12 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of Campus.
     /// </summary>
     /// <returns>Campus</returns>
+    /// <operationId>updateCampus</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, [FromForm] CampusDto item, [FromForm] List<IFormFile> files)
     {
@@ -139,9 +144,9 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
 
         if (files.Count > 0)
         {
-            var default_files = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, model.Id);
+            var default_files = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, model.Id.ToString());
 
-            var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.CampusImagesScope, model.Id, files);
+            var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.CampusImagesScope, model.Id.ToString(), files);
             if (fileResult != null)
             {
                 result.Images = fileResult.ToList()!;
@@ -150,7 +155,7 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
         }
         else
         {
-            result.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, model.Id);
+            result.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.CampusImagesScope, model.Id.ToString());
         }
 
         end:;
@@ -158,11 +163,12 @@ public class CampusController : GenericController<Campus, ICampusService, Campus
             ? Ok(result)
             : BadRequest("Something went wrong!");
     }
-    
+
     /// <summary>
     /// Deletes single Campus entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteCampus</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

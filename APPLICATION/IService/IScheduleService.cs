@@ -10,6 +10,7 @@ public interface IScheduleService:IGenericService<Schedule, GetScheduleDto>
     public Task<bool> CreateAllWithUserIdAsync(string userId, List<Schedule> newItems);
     public Task<ICollection<GetScheduleDto>> GetByCreatedByUserId(string createdByUserId);
     public Task<object> GetSchedulesByCampusId(int campusId);
+    public Task<object> GetSchedulesByCampusAndCycleId(int campusId, int cycleId);
     public Task<ICollection<GetScheduleDto>> GetSchedulesBySectionNameAndCycleId(string sectionName, int cycleId);
     public Task<object> GetSchedulesByCurriculumAndCycleIdAndYearLevel(int curriculumId, int cycleId, int yearLevel);
     public Task<ICollection<GetScheduleDto>> GetSchedulesByAcademicProgramId(int academicProgramId);

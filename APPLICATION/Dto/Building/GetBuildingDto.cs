@@ -1,5 +1,6 @@
 using APPLICATION.Dto.Campus;
 using APPLICATION.Dto.FileManager;
+using APPLICATION.Dto.Room;
 using System.ComponentModel.DataAnnotations;
 
 namespace APPLICATION.Dto.Building;
@@ -15,4 +16,7 @@ public class GetBuildingDto
     // Fk Campus
     public int CampusId { get; set; }
     public GetCampusDto Campus { get; set; }
+
+    // Nav Rroom
+    public ICollection<GetRoomDto> Rooms { get; set; }
 }

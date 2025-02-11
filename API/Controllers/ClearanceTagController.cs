@@ -44,6 +44,7 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
     /// Get all data.
     /// </summary>
     /// <returns>Array[ClearanceTag]</returns>
+    /// <operationId>getAllClearanceTag</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
@@ -54,6 +55,7 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
     /// Get ClearanceTag by ClearanceType id.
     /// </summary>
     /// <returns>Array[ClearanceTag]</returns>
+    /// <operationId>getClearanceTagByClearanceTypeId</operationId>
     [HttpGet("ClearanceType/{clearanceTypeId:int}")]
     public async Task<ActionResult> GetClearanceTagByClearanceTypeId(int clearanceTypeId)
     {
@@ -64,16 +66,18 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
     /// Get specific data (ClearanceTag) by id.
     /// </summary>
     /// <returns>Array[ClearanceTag]></returns>
+    /// <operationId>getClearanceTagById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
     }
-    
+
     /// <summary>
     /// Creates new ClearanceTag entry.
     /// </summary>
     /// <returns>ClearanceTag</returns>
+    /// <operationId>createClearanceTag</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(ClearanceTagByUserDto item)
     {
@@ -99,6 +103,7 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
     /// </summary>
     /// <param name="clearanceTagId"></param>
     /// <returns></returns>
+    /// <operationId>markClearanceTagAsClearedById</operationId>
     [HttpPatch("MarkAsCleared/{clearanceTagId:int}")]
     public async Task<ActionResult> MarkAsCleared(int clearanceTagId)
     {
@@ -113,6 +118,7 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
     /// </summary>
     /// <param name="clearanceTagId"></param>
     /// <returns></returns>
+    /// <operationId>markClearanceTagAsUnClearedById</operationId>
     [HttpPatch("MarkAsUnCleared/{clearanceTagId:int}")]
     public async Task<ActionResult> MarkAsUnCleared(int clearanceTagId)
     {
@@ -138,6 +144,7 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
     /// Updates multiple property of ClearanceTag.
     /// </summary>
     /// <returns>ClearanceTag</returns>
+    /// <operationId>updateClearanceTag</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, ClearanceTagByUserDto item)
     {
@@ -157,11 +164,12 @@ public class ClearanceTagController : GenericController<ClearanceTag, IClearance
             DuWhoTagId = GetUserId()
         });
     }
-    
+
     /// <summary>
     /// Deletes single ClearanceTag entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteClearanceTag</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

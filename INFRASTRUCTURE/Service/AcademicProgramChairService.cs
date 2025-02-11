@@ -1,7 +1,6 @@
 
 using APPLICATION.Dto.AcademicProgram;
 using APPLICATION.Dto.AcademicProgramChair;
-using APPLICATION.Dto.Course;
 using APPLICATION.Dto.Curriculum;
 using APPLICATION.Dto.Cycle;
 using APPLICATION.Dto.Instrument;
@@ -19,13 +18,18 @@ public class AcademicProgramChairService:GenericService<AcademicProgramChair, Ge
     {
     }
 
+    public async Task<bool> IsProgramChair(string userId)
+    {
+        return await _dbModel.Where(apc => apc.UserId == userId).AnyAsync();
+    }
+
     public async Task<GetAcademicProgramDto?> GetAcademicProgramByUserId(string userId)
     {
-        return _mapper.Map<GetAcademicProgramDto>(await _dbModel
+        return await _dbModel
             .Include(apc => apc.AcademicProgram)
             .Where(apc => apc.UserId == userId)
             .Select(apc => _mapper.Map<GetAcademicProgramDto>(apc.AcademicProgram))
-            .SingleOrDefaultAsync());
+            .SingleOrDefaultAsync();
     }
 
     public async Task<object> GetStudentsByAcademicProgram(int academicProgramId, int limit)

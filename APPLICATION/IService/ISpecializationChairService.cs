@@ -6,6 +6,8 @@ using DOMAIN.Model;
 namespace APPLICATION.IService;
 public interface ISpecializationChairService:IGenericService<SpecializationChair, GetSpecializationChairDto>
 {
+    public Task<bool> IsSpecializationChair(string userId);
+
     public Task<GetSkillsFrameworkTrackSpecializationDto> GetTrackSpecializationByUserId(string userId);
 
     public Task<object> GetAllPendingCourseCrediting(string userId, int trackSpecializationId);

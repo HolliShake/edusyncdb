@@ -30,13 +30,14 @@ public class CollegeDeanModuleController : ControllerBase
     {
         var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
         var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        return int.Parse(principal.Item1.FindFirst(c => c.Type.Equals("CollegeId"))?.Value ?? "0");
+        return int.Parse(principal.Item1.FindFirst(c => c.Type.Equals("CampudId"))?.Value ?? "0");
     }
 
     /// <summary>
     /// Get all college deans.
     /// </summary>
     /// <returns></returns>
+    /// <operationId>academicProgramChairMy</operationId>
     [HttpGet("AcademicProgramChair/My")]
     public async Task<ActionResult> GetAllAcademicProgramChair()
     {
@@ -48,6 +49,7 @@ public class CollegeDeanModuleController : ControllerBase
     /// Get all students in this college.
     /// </summary>
     /// <returns></returns>
+    /// <operationId>studentsMy</operationId>
     [HttpGet("Students/My")]
     public async Task<ActionResult> GetAllStudentsByCollegeId()
     {
@@ -59,6 +61,7 @@ public class CollegeDeanModuleController : ControllerBase
     /// Get all teachers in this college.
     /// </summary>
     /// <returns></returns>
+    /// <operationId>teachersMy</operationId>
     [HttpGet("Teachers/My")]
     public async Task<ActionResult> GetAllTeachersByCollegeId()
     {
@@ -70,6 +73,7 @@ public class CollegeDeanModuleController : ControllerBase
     /// Get all students with eclerance status
     /// </summary>
     /// <returns></returns>
+    /// <operationId>studentEClearanceMy</operationId>
     [HttpGet("EClearance/Students/My")]
     public async Task<ActionResult> GetStudentsEClearanceWithStatus()
     {
@@ -81,6 +85,7 @@ public class CollegeDeanModuleController : ControllerBase
     /// Get all curriculum group by academic program
     /// </summary>
     /// <returns></returns>
+    /// <operationId>academicProgramCurriculumMy</operationId>
     [HttpGet("Curriculum/AcademicProgram/My")]
     public async Task<ActionResult> GetCurriculumAcademicProgram()
     {

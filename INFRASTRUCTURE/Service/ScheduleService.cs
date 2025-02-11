@@ -164,7 +164,43 @@ public class ScheduleService:GenericService<Schedule, GetScheduleDto>, ISchedule
                         .ThenInclude(ap => ap.College)
                             .ThenInclude(c => c.Campus)
             .Include(s => s.Cycle)
+            .Include(s => s.ScheduleAssignments)
             .Where(s => s.CurriculumDetail.Curriculum.AcademicProgram.College.CampusId == campusId)
+            .Select(s => new
+            {
+                Id = s.Id,
+                GeneratedSection = s.GeneratedSection,
+                GeneratedReference = s.GeneratedReference,
+                AcademicProgram = new AcademicProgram
+                {
+                    Id = s.CurriculumDetail.Curriculum.AcademicProgram.Id,
+                    ProgramName = s.CurriculumDetail.Curriculum.AcademicProgram.ProgramName,
+                    ShortName = s.CurriculumDetail.Curriculum.AcademicProgram.ShortName,
+                    YearFirstImplemented = s.CurriculumDetail.Curriculum.AcademicProgram.YearFirstImplemented,
+                },
+                CourseId = s.CurriculumDetail.CourseId,
+                Course = s.CurriculumDetail.Course,
+                //
+                CycleId = s.CycleId,
+                Cycle = s.Cycle
+            })
+            .ToListAsync();
+    }
+
+    public async Task<object> GetSchedulesByCampusAndCycleId(int campusId, int cycleId)
+    {
+        return await _dbModel
+            .Include(s => s.CurriculumDetail)
+                .ThenInclude(cd => cd.Course)
+            .Include(s => s.CurriculumDetail)
+                .ThenInclude(cd => cd.Curriculum)
+                    .ThenInclude(c => c.AcademicProgram)
+                        .ThenInclude(ap => ap.College)
+                            .ThenInclude(c => c.Campus)
+            .Include(s => s.Cycle)
+            .Include(s => s.ScheduleAssignments)
+            .Where(s => s.CurriculumDetail.Curriculum.AcademicProgram.College.CampusId == campusId)
+            .Where(s => s.CycleId == cycleId)
             .Select(s => new
             {
                 Id = s.Id,

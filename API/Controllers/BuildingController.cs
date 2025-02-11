@@ -30,36 +30,40 @@ public class BuildingController : GenericController<Building, IBuildingService, 
     /// Get all data.
     /// </summary>
     /// <returns>Array[Building]</returns>
+    /// <operationId>getAllBuilding</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
     }
-    
+
     /// <summary>
     /// Get Building by Campus id.
     /// </summary>
     /// <returns>Array[Building]</returns>
+    /// <operationId>getAllBuildingByCampusId</operationId>
     [HttpGet("Campus/{campusId:int}")]
     public async Task<ActionResult> GetBuildingByCampusId(int campusId)
     {
         return Ok(await _repo.GetBuildingByCampusId(campusId));
     }
-    
+
     /// <summary>
     /// Get specific data (Building) by id.
     /// </summary>
     /// <returns>Array[Building]></returns>
+    /// <operationId>getBuildingById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
     }
-    
+
     /// <summary>
     /// Creates new Building entry.
     /// </summary>
-    /// <returns>Building</returns>
+    /// <returns>Building</returns
+    /// <operationId>createBuilding</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction([FromForm] BuildingDto item, [FromForm] List<IFormFile> files)
     {
@@ -75,7 +79,7 @@ public class BuildingController : GenericController<Building, IBuildingService, 
 
         var data = _mapper.Map<GetBuildingDto>(model);
 
-        var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.BuildingImagesScope, model.Id, files);
+        var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.BuildingImagesScope, model.Id.ToString(), files);
         if (fileResult != null)
         {
             data.Images = fileResult.ToList()!;
@@ -83,11 +87,12 @@ public class BuildingController : GenericController<Building, IBuildingService, 
 
         return Ok(data);
     }
-    
+
     /// <summary>
     /// Updates multiple property of Building.
     /// </summary>
     /// <returns>Building</returns>
+    /// <operationId>updateBuilding</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, [FromForm] BuildingDto item, [FromForm] List<IFormFile> files)
     {
@@ -112,9 +117,9 @@ public class BuildingController : GenericController<Building, IBuildingService, 
 
         if (files.Count > 0)
         {
-            var default_files = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.BuildingImagesScope, model.Id);
+            var default_files = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.BuildingImagesScope, model.Id.ToString());
 
-            var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.BuildingImagesScope, model.Id, files);
+            var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.BuildingImagesScope, model.Id.ToString(), files);
             if (fileResult != null)
             {
                 data.Images = fileResult.ToList()!;
@@ -123,16 +128,17 @@ public class BuildingController : GenericController<Building, IBuildingService, 
         }
         else
         {
-            data.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.BuildingImagesScope, model.Id);
+            data.Images = await _fileManagerService.GetFileByScopeAndReferenceId(FileScope.BuildingImagesScope, model.Id.ToString());
         }
 
         return Ok(data);
     }
-    
+
     /// <summary>
     /// Deletes single Building entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteBuilding</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

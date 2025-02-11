@@ -16,4 +16,5 @@ public class ScheduleAssignment
     // Fk Schedule
     public int ScheduleId { get; set; }
     public Schedule Schedule { get; set; }
+
 }

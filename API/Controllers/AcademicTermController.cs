@@ -22,32 +22,35 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
     /// Get all data.
     /// </summary>
     /// <returns>Array[AcademicTerm]</returns>
+    /// <operationId>getAllAcademicTerm</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
     }
-    
+
     /// <summary>
     /// Get specific data (AcademicTerm) by id.
     /// </summary>
     /// <returns>Array[AcademicTerm]></returns>
+    /// <operationId>getAcademicTermById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
     }
-    
+
     /// <summary>
     /// Creates new AcademicTerm entry.
     /// </summary>
     /// <returns>AcademicTerm</returns>
+    /// <operationId>createAcademicTerm</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AcademicTermDto item)
     {
         return await GenericCreate(item);
     }
-    
+
     /*
     /// <summary>
     /// Creates multiple instance of AcademicTerm.
@@ -59,21 +62,23 @@ public class AcademicTermController : GenericController<AcademicTerm, IAcademicT
         return await GenericCreateAll(items);
     }
     */
-    
+
     /// <summary>
     /// Updates multiple property of AcademicTerm.
     /// </summary>
     /// <returns>AcademicTerm</returns>
+    /// <operationId>updateAcademicTerm</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AcademicTermDto item)
     {
         return await GenericUpdate(id, item);
     }
-    
+
     /// <summary>
     /// Deletes single AcademicTerm entry.
     /// </summary>
-    /// <returns>Null</returns>
+    /// <returns>Null</returns
+    /// <operationId>deleteAcademicTerm</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

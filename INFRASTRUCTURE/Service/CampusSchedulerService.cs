@@ -1,10 +1,12 @@
 
+using APPLICATION.Dto.Building;
 using APPLICATION.Dto.Campus;
 using APPLICATION.Dto.CampusScheduler;
 using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
+using INFRASTRUCTURE.ErrorHandler;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
@@ -12,6 +14,28 @@ public class CampusSchedulerService:GenericService<CampusScheduler, GetCampusSch
 {
     public CampusSchedulerService(AppDbContext context, IMapper mapper):base(context, mapper)
     {
+    }
+
+    public async Task<bool> IsScheduler(string userId)
+    {
+        return await _dbModel.Where(sc => sc.SchedulerUserId == userId).AnyAsync();
+    }
+
+    public async new Task<ICollection<GetCampusSchedulerDto>> GetAllAsync()
+    {
+        return _mapper.Map<ICollection<GetCampusSchedulerDto>>(await _dbModel
+            .Include(cs => cs.Campus)
+            .Include(cs => cs.SchedulerUser)
+            .ToListAsync());
+    }
+
+    public async Task<GetCampusDto> GetScheduleByUserId(string userId)
+    {
+        return await _dbModel
+                .Include(cs => cs.Campus)
+                .Where(cs => cs.SchedulerUserId == userId)
+                .Select(cs => _mapper.Map<GetCampusDto>(cs.Campus))
+                .SingleOrDefaultAsync();
     }
 
     public async Task<ICollection<GetCampusDto>> GetCampusesByUserId(string userId) 
@@ -25,117 +49,158 @@ public class CampusSchedulerService:GenericService<CampusScheduler, GetCampusSch
             .ToListAsync());
     }
 
-    public async Task<object> GetMergedSchedulesBySchedulerUserAndCampusId(string userId, int campusId) 
+    public async Task<object> GetBuildingWithinRoomsSchedulesByUserAndCampusId(string userId, int campusId)
     {
-        // Step 1: Query schedules with necessary filters and tracking
-        var uniqueScheduleIds = await _dbModel
-            .Where(cs => cs.SchedulerUserId == userId && cs.CampusId == campusId)
-            .Select(cs => cs.ScheduleAssignment.ScheduleId)
-            .Distinct()
-            .ToListAsync();
-
-        // Step 2: Query merged schedules with filtered IDs
-        var mergedSchedules = await _dbContext.ScheduleMerges
-            .Include(sm => sm.Schedule)
-                .ThenInclude(s => s.ScheduleAssignments)
-            .Where(sm => uniqueScheduleIds.Contains(sm.ScheduleId)) // Filter directly in the database
-            .GroupBy(sm => sm.MergeCode)
-            .ToListAsync();
-
-        // Step 3: Process schedules in-memory
-        return mergedSchedules.Select(g =>
+        var result = await _dbContext.Buildings
+        .Include(b => b.Rooms)
+            .ThenInclude(r => r.ScheduleAssignments)
+                .ThenInclude(sa => sa.Schedule)
+                    .ThenInclude(s => s.CurriculumDetail)
+                        .ThenInclude(cd => cd.Curriculum)
+                            .ThenInclude(c => c.AcademicProgram)
+                                .ThenInclude(ap => ap.College)
+        .Where(b => b.CampusId == campusId) // Filter by CampusId
+        .Select(b => new
         {
-            var assignments = g.SelectMany(sm => sm.Schedule.ScheduleAssignments)
-                .Select(sa => new {
-                    sa.RoomId,
-                    sa.Room,
-                    sa.DaySchedule,
-                    sa.TimeScheduleIn,
-                    sa.TimeScheduleOut,
-                    sa.ExpiryDate
-                })
-                .GroupBy(a => new { a.RoomId, a.DaySchedule, a.TimeScheduleIn, a.TimeScheduleOut, a.ExpiryDate }) // Group by all properties
-                .Where(group => group.Count() == g.Count()) // Only keep schedules that are identical across all merged schedules
-                .Select(group => group.Key) // Select the grouped key (unique schedules)
-                .ToList();
+            BuildingId = b.Id,
+            BuildingName = b.BuildingName,
+            Longitude = b.Longitude,
+            Latitude = b.Latitude,
+            CampusId = b.CampusId,
+            Campus = b.Campus,
+            Rooms = b.Rooms.Select(r => new
+            {
+                RoomId = r.Id,
+                RoomName = r.RoomName,
+                Capacity = r.Capacity,
+                BuildingId = r.BuildingId,
+                Building = r.Building,
+                IsLab = r.IsLab,
+                IsEspecializedLab = r.IsEspecializedLab,
+                ScheduleAssignments = r.ScheduleAssignments
+                    .Where(sa => sa.Schedule.CreatedByUserId == userId) // Filter by userId
+                    .Select(sa => new
+                    {
+                        ScheduleId = sa.Schedule.Id,
+                        Schedule = sa.Schedule,
+                        DaySchedule = sa.DaySchedule,
+                        TimeScheduleIn = sa.TimeScheduleIn,
+                        TimeScheduleOut = sa.TimeScheduleOut,
+                        ExpiryDate = sa.ExpiryDate,
+                        MergeCode = sa.MergeCode,
+                        RoomId = sa.RoomId,
+                        Room = sa.Room,
+                    })
+            })
+        })
+        .ToListAsync();
 
-            return new {
-                MergeCode = g.Key,
-                MergedSchedules = g.Select(sm => new
+        return result;
+    }
+
+    public async Task<object> GetMergedSchedulesBySchedulerUserAndCampusId(string userId, int campusId) 
+    { 
+        var schedulerProfile = await _dbModel
+            .Where(cs => cs.SchedulerUserId == userId && cs.CampusId == campusId)
+            .SingleOrDefaultAsync();
+
+        if (schedulerProfile == null)
+        {
+            throw new Error404("NotFound");
+        }
+
+        var schedules = await _dbContext.ScheduleMerges
+                .Include(sm => sm.Schedule)
+                .Where(sm => sm.Schedule.CreatedByUserId == schedulerProfile.SchedulerUserId)
+                .GroupBy(sm => sm.MergeCode)
+                .Select(sm => new
                 {
-                    Id = sm.Schedule.Id,
-                    GeneratedReference = sm.Schedule.GeneratedReference,
-                    GeneratedSection = sm.Schedule.GeneratedSection,
-                }),
-                ScheduleAssignments = assignments // Assign filtered assignments here
-            };
-        });
+                    MergeCode = sm.Key,
+                    schedules = sm.Select(s => new
+                    {
+                        Id = s.ScheduleId,
+                        GeneratedReference = s.Schedule.GeneratedReference,
+                        GeneratedSection = s.Schedule.GeneratedSection,
+                    }).ToList(),
+                    MaxStudent = sm.Select(x => x.Schedule.MaxStudent).ToList().Sum(),
+                    MinStudent = Math.Floor((float) sm.Select(x => x.Schedule.MaxStudent).ToList().Sum() / sm.Count()),
+                    CycleId = sm.First().Schedule.CycleId,
+                    Cycle = sm.First().Schedule.Cycle,
+                    CurriculumDetailId = sm.First().Schedule.CurriculumDetailId,
+                    CurriculumDetail = sm.First().Schedule.CurriculumDetail 
+                }).ToListAsync();
+
+        return schedules;
     }
 
     public async Task<object> GetClassScheduleBySchedulerUserAndCampusId(string userId, int campusId) 
     {
-        var result = await _dbModel
-            .Include(s => s.ScheduleAssignment)
-                .ThenInclude(sa => sa.Schedule)
-            .Where(cs => cs.SchedulerUserId == userId)
-            .Where(cs => cs.CampusId == campusId)
-            .AsNoTracking()
+        var result = await _dbContext.Schedules
+            .Include(s => s.CurriculumDetail)
+                .ThenInclude(cd => cd.Curriculum)
+                    .ThenInclude(c => c.AcademicProgram)
+                        .ThenInclude(ap => ap.College)
+            .Include(s => s.ScheduleAssignments)
+            .Where(s => s.CreatedByUserId == userId)
+            .Where(s => s.CurriculumDetail.Curriculum.AcademicProgram.College.CampusId == campusId)
             .ToListAsync();
-        return result.GroupBy(cs => cs.ScheduleAssignment.Schedule)
-            .Select(g =>
+
+        return result.Select(g =>
             {
-                var items = g.Select(cs => cs.ScheduleAssignment)
-                    .Where(sa => sa.ExpiryDate == null)
-                    .ToList();
-                return new {
-                    g.Key.Id,
-                    g.Key.GeneratedReference,
-                    g.Key.GeneratedSection,
-                    g.Key.MinStudent,
-                    g.Key.MaxStudent,
-                    g.Key.IsPetitionSchedule,
-                    g.Key.IsExclusive,
-                    g.Key.CreatedByUserId,
-                    g.Key.CreatedByUser,
-                    g.Key.CycleId,
-                    g.Key.Cycle,
-                    g.Key.CurriculumDetailId,
-                    g.Key.CurriculumDetail,
-                    ScheduleAssignments = items
+                return new
+                {
+                    g.Id,
+                    g.GeneratedReference,
+                    g.GeneratedSection,
+                    g.MinStudent,
+                    g.MaxStudent,
+                    g.IsPetitionSchedule,
+                    g.IsExclusive,
+                    g.CreatedByUserId,
+                    g.CreatedByUser,
+                    g.CycleId,
+                    g.Cycle,
+                    g.CurriculumDetailId,
+                    g.CurriculumDetail,
+                    ScheduleAssignments = g.ScheduleAssignments.Where(sa => sa.ExpiryDate == null).ToList(),
                 };
             });
     }
 
     public async Task<object> GetExamScheduleBySchedulerUserAndCampusId(string userId, int campusId) {
-        var result = await _dbModel
-            .Include(s => s.ScheduleAssignment)
-                .ThenInclude(sa => sa.Schedule)
-            .Where(cs => cs.SchedulerUserId == userId)
-            .Where(cs => cs.CampusId == campusId)
-            .AsNoTracking()
+        var result = await _dbContext.Schedules
+            .Include(s => s.CurriculumDetail)
+                .ThenInclude(cd => cd.Curriculum)
+                    .ThenInclude(c => c.AcademicProgram)
+                        .ThenInclude(ap => ap.College)
+                            .ThenInclude(c => c.CampusId == campusId)
+            .Include(s => s.ScheduleAssignments)
+            .Where(s => s.CreatedByUserId == userId)
+            .Where(s => s.CurriculumDetail.Curriculum.AcademicProgram.College.CampusId == campusId)
             .ToListAsync();
-        return result.GroupBy(cs => cs.ScheduleAssignment.Schedule)
-            .Select(g => {
-                var items = g.Select(cs => cs.ScheduleAssignment)
+
+        return result.Select(g =>
+        {
+            return new
+            {
+                g.Id,
+                g.GeneratedReference,
+                g.GeneratedSection,
+                g.MinStudent,
+                g.MaxStudent,
+                g.IsPetitionSchedule,
+                g.IsExclusive,
+                g.CreatedByUserId,
+                g.CreatedByUser,
+                g.CycleId,
+                g.Cycle,
+                g.CurriculumDetailId,
+                g.CurriculumDetail,
+                ScheduleAssignments = g.ScheduleAssignments
                     .Where(sa => sa.ExpiryDate != null)
                     .Where(sa => sa.ExpiryDate <= DateTime.Now)
-                    .ToList();
-                return new {
-                    g.Key.Id,
-                    g.Key.GeneratedReference,
-                    g.Key.GeneratedSection,
-                    g.Key.MinStudent,
-                    g.Key.MaxStudent,
-                    g.Key.IsPetitionSchedule,
-                    g.Key.IsExclusive,
-                    g.Key.CreatedByUserId,
-                    g.Key.CreatedByUser,
-                    g.Key.CycleId,
-                    g.Key.Cycle,
-                    g.Key.CurriculumDetailId,
-                    g.Key.CurriculumDetail,
-                    ScheduleAssignments = items
-                };
-            });
+                    .ToList()
+            };
+        });
     }
 }

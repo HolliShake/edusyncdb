@@ -2,8 +2,6 @@ using APPLICATION.Dto.Course;
 using APPLICATION.Dto.OtherSchool;
 using APPLICATION.Dto.User;
 using DOMAIN.Model;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace APPLICATION.Dto.CourseCrediting;
 public class GetCourseCreditingDto
@@ -29,7 +27,8 @@ public class GetCourseCreditingDto
     // Fk Course
     public int CourseId { get; set; }
     public GetCourseDto Course { get; set; }
+
     // Fk OtherSchool
     public int CreditedFromSchoolId { get; set; }
-    public GetOtherSchoolDto OtherSchool { get; set; }
+    public GetOtherSchoolDto CreditedFromSchool { get; set; }
 }

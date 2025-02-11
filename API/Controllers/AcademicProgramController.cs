@@ -22,6 +22,7 @@ public class AcademicProgramController : GenericController<AcademicProgram, IAca
     /// Get all data.
     /// </summary>
     /// <returns>Array[AcademicProgram]</returns>
+    /// <operationId>getAllAcademicProgram</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {

@@ -13,6 +13,7 @@ using API.Utility;
 using APPLICATION.IService;
 using Microsoft.EntityFrameworkCore;
 using Google.Apis.Util;
+using INFRASTRUCTURE.Service;
 
 namespace API.Controllers;
 
@@ -25,38 +26,44 @@ public class AuthController:ControllerBase
     private readonly IJwtAuthManager _jwtAuthManager;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly IUserAccessGroupDetailsService _userAccessGroupDetails;
+    private readonly IUserAccessGroupDetailsService _userAccessGroupDetailsService;
     private readonly IAcademicProgramChairService _academicProgramChairService;
-    private readonly IScheduleTeacherService _scheduleTeacher;
-    private readonly IEnrollmentService _enrollment;
-    private readonly ICollegeDeanService _collegeDean;
-    private readonly ISpecializationChairService _specializationChair;
+    private readonly IScheduleTeacherService _scheduleTeacherServiceService;
+    private readonly IEnrollmentService _enrollmentService;
+    private readonly ICollegeDeanService _collegeDeanServiceService;
+    private readonly ISpecializationChairService _specializationChairService;
+    private readonly ICampusSchedulerService _campusSchedulerService;
+    private readonly IFileManagerService _fileManagerService;
     
     public AuthController(
-        ConfigurationManager config, 
-        IMapper mapper, 
-        IJwtAuthManager jwtAuthManager, 
-        UserManager<User> userManager, 
-        SignInManager<User> signInManager, 
-        IUserAccessGroupDetailsService userAccessGroupDetails,
-        IAcademicProgramChairService academicProgramChairService,
-        IScheduleTeacherService scheduleTeacher,
-        IEnrollmentService enrollment,
-        ICollegeDeanService collegeDean,
-        ISpecializationChairService specializationChairService
+        ConfigurationManager           config, 
+        IMapper                        mapper, 
+        IJwtAuthManager                jwtAuthManager, 
+        UserManager<User>              userManager, 
+        SignInManager<User>            signInManager, 
+        IUserAccessGroupDetailsService userAccessGroupDetailsService,
+        IAcademicProgramChairService   academicProgramChairService,
+        IScheduleTeacherService        scheduleTeacherService,
+        IEnrollmentService             enrollmentService,
+        ICollegeDeanService            collegeDeanService,
+        ISpecializationChairService    specializationChairService,
+        ICampusSchedulerService        campusSchedulerService,
+        IFileManagerService            fileManagerService
     )
     {
-        _config = config;
-        _mapper = mapper;
-        _jwtAuthManager = jwtAuthManager;
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _userAccessGroupDetails = userAccessGroupDetails;
-        _academicProgramChairService = academicProgramChairService;
-        _scheduleTeacher = scheduleTeacher;
-        _enrollment = enrollment;
-        _collegeDean = collegeDean;
-        _specializationChair = specializationChairService;
+        _config                        = config;
+        _mapper                        = mapper;
+        _jwtAuthManager                = jwtAuthManager;
+        _userManager                   = userManager;
+        _signInManager                 = signInManager;
+        _userAccessGroupDetailsService = userAccessGroupDetailsService;
+        _academicProgramChairService   = academicProgramChairService;
+        _scheduleTeacherServiceService = scheduleTeacherService;
+        _enrollmentService             = enrollmentService;
+        _collegeDeanServiceService     = collegeDeanService;
+        _specializationChairService    = specializationChairService;
+        _campusSchedulerService        = campusSchedulerService;
+        _fileManagerService            = fileManagerService;
     }
     
     /// <summary>
@@ -84,7 +91,7 @@ public class AuthController:ControllerBase
         // Set as alternative to Not Found to prevent brute forcing...
         return BadRequest("Invalid username or password");
 
-    Ok:;
+        Ok:;
         // If allow email verification
         // if (!user.EmailConfirmed)
         // {
@@ -92,7 +99,7 @@ public class AuthController:ControllerBase
         // }
 
         var userData = _mapper.Map<AuthDataDto>(user);
-        var access = await _userAccessGroupDetails.GetUserAccessGroupByUserGuid(userData.Id);
+        var access = await _userAccessGroupDetailsService.GetUserAccessGroupByUserGuid(userData.Id);
 
         userData.UserAccessGroupDetails = access;
 
@@ -101,18 +108,29 @@ public class AuthController:ControllerBase
             user.Id,
             user.Email,
             user.Role,
+            (await _collegeDeanServiceService  .GetCollegeByUserId(userData.Id))?.Id,
             (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
-            (await _collegeDean.GetCollegeByUserId(userData.Id))?.Id,
-            (await _specializationChair.GetTrackSpecializationByUserId(userData.Id))?.Id,
-            (await _scheduleTeacher.IsTeacher(userData.Id)),
-            (await _enrollment.IsStudent(userData.Id))
+            (await _specializationChairService .GetTrackSpecializationByUserId(userData.Id))?.Id,
+            (await _campusSchedulerService     .GetScheduleByUserId(userData.Id))?.Id,
+            // Flags
+            (await _collegeDeanServiceService    .IsCollegeDean(userData.Id)),
+            (await _academicProgramChairService  .IsProgramChair(userData.Id)),
+            (await _scheduleTeacherServiceService.IsTeacher(userData.Id)),
+            (await _enrollmentService            .IsStudent(userData.Id)),
+            (await _specializationChairService   .IsSpecializationChair(userData.Id)),
+            (await _campusSchedulerService       .IsScheduler(userData.Id))
         );
-      
+
+        var profiles = await _fileManagerService.GetFileByScopeAndReferenceId("User:Profile", user.Id.ToString());
+
+
         userData.IsGoogle = false;
         userData.AccessToken = /**/
             token.AccessToken;
         userData.RefreshToken = /**/
             token.RefreshToken.TokenString;
+
+        userData.ProfileImage = profiles.FirstOrDefault()?.ScopePath;
 
         var accessListString = userData.AccessListString;
         userData.UserAccessGroupDetails = [];
@@ -190,7 +208,7 @@ public class AuthController:ControllerBase
         */
 
         var userData = _mapper.Map<AuthDataDto>(user);
-        var access = await _userAccessGroupDetails.GetUserAccessGroupByUserGuid(userData.Id);
+        var access = await _userAccessGroupDetailsService.GetUserAccessGroupByUserGuid(userData.Id);
 
         userData.UserAccessGroupDetails = access;
 
@@ -199,18 +217,28 @@ public class AuthController:ControllerBase
             user.Id,
             user.Email,
             user.Role,
+            (await _collegeDeanServiceService  .GetCollegeByUserId(userData.Id))?.Id,
             (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
-            (await _collegeDean.GetCollegeByUserId(userData.Id))?.Id,
-            (await _specializationChair.GetTrackSpecializationByUserId(userData.Id))?.Id,
-            (await _scheduleTeacher.IsTeacher(userData.Id)),
-            (await _enrollment.IsStudent(userData.Id))
+            (await _specializationChairService .GetTrackSpecializationByUserId(userData.Id))?.Id,
+            (await _campusSchedulerService     .GetScheduleByUserId(userData.Id))?.Id,
+            // Flags
+            (await _collegeDeanServiceService    .IsCollegeDean(userData.Id)),
+            (await _academicProgramChairService  .IsProgramChair(userData.Id)),
+            (await _scheduleTeacherServiceService.IsTeacher(userData.Id)),
+            (await _enrollmentService            .IsStudent(userData.Id)),
+            (await _specializationChairService   .IsSpecializationChair(userData.Id)),
+            (await _campusSchedulerService       .IsScheduler(userData.Id))
         );
+
+        var profiles = await _fileManagerService.GetFileByScopeAndReferenceId("User:Profile", user.Id.ToString());
 
         userData.IsGoogle = true;
         userData.AccessToken = /**/
             token.AccessToken;
         userData.RefreshToken = /**/
             token.RefreshToken.TokenString;
+
+        userData.ProfileImage = profiles.FirstOrDefault()?.ScopePath;
 
         var accessListString = userData.AccessListString;
         userData.UserAccessGroupDetails = [];
@@ -227,13 +255,13 @@ public class AuthController:ControllerBase
     [HttpPost("generate/{secret}")]
     public async Task<ActionResult> GenerateAdmin(string secret)
     {
-        var old = await _userManager.FindByEmailAsync(_config["Admin:Email"]);
+        var old  = await _userManager.FindByEmailAsync(_config["Admin:Email"]);
         var user = new User
         {
-            Email = _config["Admin:Email"],
-            UserName = _config["Admin:Username"],
+            Email     = _config["Admin:Email"    ],
+            UserName  = _config["Admin:Username" ],
             FirstName = _config["Admin:Firstname"],
-            LastName = _config["Admin:Lastname"],
+            LastName  = _config["Admin:Lastname" ],
             EmailConfirmed = true,
             Role = Role.SuperAdmin
         };
@@ -305,24 +333,34 @@ public class AuthController:ControllerBase
         
         ok:;
         var userData = _mapper.Map<AuthDataDto>(user);
-            userData.UserAccessGroupDetails = await _userAccessGroupDetails.GetUserAccessGroupByUserGuid(userData.Id); ;
+            userData.UserAccessGroupDetails = await _userAccessGroupDetailsService.GetUserAccessGroupByUserGuid(userData.Id); ;
 
         var token = JwtGenerator.GenerateToken(
            _jwtAuthManager,
-           user.Id,
-           user.Email,
-           user.Role,
-           (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
-           (await _collegeDean.GetCollegeByUserId(userData.Id))?.Id,
-           (await _specializationChair.GetTrackSpecializationByUserId(userData.Id))?.Id,
-           (await _scheduleTeacher.IsTeacher(userData.Id)),
-           (await _enrollment.IsStudent(userData.Id))
+            user.Id,
+            user.Email,
+            user.Role,
+            (await _collegeDeanServiceService  .GetCollegeByUserId(userData.Id))?.Id,
+            (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
+            (await _specializationChairService .GetTrackSpecializationByUserId(userData.Id))?.Id,
+            (await _campusSchedulerService     .GetScheduleByUserId(userData.Id))?.Id,
+            // Flags
+            (await _collegeDeanServiceService    .IsCollegeDean(userData.Id)),
+            (await _academicProgramChairService  .IsProgramChair(userData.Id)),
+            (await _scheduleTeacherServiceService.IsTeacher(userData.Id)),
+            (await _enrollmentService            .IsStudent(userData.Id)),
+            (await _specializationChairService   .IsSpecializationChair(userData.Id)),
+            (await _campusSchedulerService       .IsScheduler(userData.Id))
         );
+
+        var profiles = await _fileManagerService.GetFileByScopeAndReferenceId("User:Profile", user.Id.ToString());
 
         userData.AccessToken = /**/
             token.AccessToken;
         userData.RefreshToken = /**/
             token.RefreshToken.TokenString;
+
+        userData.ProfileImage = profiles.FirstOrDefault()?.ScopePath;
 
         var accessListString = userData.AccessListString;
         userData.UserAccessGroupDetails = [];

@@ -22,26 +22,29 @@ public class AdmissionApplicantController : GenericController<AdmissionApplicant
     /// Get all data.
     /// </summary>
     /// <returns>Array[AdmissionApplicant]</returns>
+    /// <operationId>getAllAdmissionApplicant</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
         return await GenericGetAll();
     }
-    
+
     /// <summary>
     /// Get specific data (AdmissionApplicant) by id.
     /// </summary>
     /// <returns>Array[AdmissionApplicant]></returns>
+    /// <operationId>getAdmissionApplicationById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
     }
-    
+
     /// <summary>
     /// Creates new AdmissionApplicant entry.
     /// </summary>
     /// <returns>AdmissionApplicant</returns>
+    /// <operationId>createAdmissionApplicant</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AdmissionApplicantDto item)
     {
@@ -52,6 +55,7 @@ public class AdmissionApplicantController : GenericController<AdmissionApplicant
     /// Apply Admission.
     /// </summary>
     /// <returns>AdmissionApplicant</returns>
+    /// <operationId>applyAdmissionApplicant</operationId>
     [HttpPost("apply")]
     public async Task<ActionResult> CreateGroupApplyAction(AdmissionApplicantGroupedDto group)
     {
@@ -77,16 +81,18 @@ public class AdmissionApplicantController : GenericController<AdmissionApplicant
     /// Updates multiple property of AdmissionApplicant.
     /// </summary>
     /// <returns>AdmissionApplicant</returns>
+    /// <operationId>updateAdmissionApplicant</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AdmissionApplicantDto item)
     {
         return await GenericUpdate(id, item);
     }
-    
+
     /// <summary>
     /// Deletes single AdmissionApplicant entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteAdmissionApplicant</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

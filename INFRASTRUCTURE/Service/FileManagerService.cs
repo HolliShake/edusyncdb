@@ -5,9 +5,11 @@ using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
+using INFRASTRUCTURE.ErrorHandler;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace INFRASTRUCTURE.Service;
 
@@ -17,17 +19,22 @@ public class FileManagerService : GenericService<FileTable, GetFileManagerTableD
     {
     }
 
+    public async Task<List<GetFileManagerTableDto>> GetFileByScopeAndRefereneId(string scope, string refId)
+    {
+        return _mapper.Map<List<GetFileManagerTableDto>>(await _dbModel.Where(file => file.ReferenceId == refId).Where(file => file.Scope.Equals(scope)).ToListAsync());
+    }
+
     public async Task<List<GetFileManagerTableDto>> GetFileByScope(string scope)
     {
         return _mapper.Map<List<GetFileManagerTableDto>>(await _dbModel.Where(file => file.Scope.Equals(scope)).ToListAsync());
     }
 
-    public async Task<List<GetFileManagerTableDto>> GetFileByScopeAndReferenceId(string scope, int referenceId)
+    public async Task<List<GetFileManagerTableDto>> GetFileByScopeAndReferenceId(string scope, string referenceId)
     {
         return _mapper.Map<List<GetFileManagerTableDto>>(await _dbModel.Where(file => file.Scope.Equals(scope) && file.ReferenceId.Equals(referenceId.ToString())).ToListAsync());
     }
 
-    public async Task<GetFileManagerTableDto?> UploadFile(ConfigurationManager configuration, string scope, int referenceId, IFormFile file)
+    public async Task<GetFileManagerTableDto?> UploadFile(ConfigurationManager configuration, string scope, string referenceId, IFormFile file)
     {
         var uploadPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             ? Path.Combine(configuration["File:LocationWIN32"], configuration["File:DestinationWIN32"])
@@ -81,7 +88,7 @@ public class FileManagerService : GenericService<FileTable, GetFileManagerTableD
             FileName = fileName,
             FileType = extension,
             Scope = scope,
-            ReferenceId = referenceId.ToString(),
+            ReferenceId = referenceId,
             UploadDate = DateTime.Now
         });
 
@@ -92,7 +99,7 @@ public class FileManagerService : GenericService<FileTable, GetFileManagerTableD
             : null;
     }
 
-    public async Task<ICollection<GetFileManagerTableDto>?> UploadMultipleFile(ConfigurationManager configuration, string scope, int referenceId, List<IFormFile> files)
+    public async Task<ICollection<GetFileManagerTableDto>?> UploadMultipleFile(ConfigurationManager configuration, string scope, string referenceId, List<IFormFile> files)
     {
         var uploadPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
             ? Path.Combine(configuration["File:LocationWIN32"], configuration["File:DestinationWIN32"])
@@ -146,7 +153,7 @@ public class FileManagerService : GenericService<FileTable, GetFileManagerTableD
                     FileName = fileName,
                     FileType = extension,
                     Scope = scope,
-                    ReferenceId = referenceId.ToString()
+                    ReferenceId = referenceId
                 });
             }
             catch (Exception)
@@ -160,5 +167,102 @@ public class FileManagerService : GenericService<FileTable, GetFileManagerTableD
         return (await Save())
             ? _mapper.Map<ICollection<GetFileManagerTableDto>>(items)
             : null;
+    }
+
+    public async Task<GetFileManagerTableDto?> UpdateFile(ConfigurationManager configuration, int id, IFormFile file)
+    {
+        var oldRecord = await _dbModel.FindAsync(id);
+
+        if (oldRecord == null)
+        {
+            return null;
+        }
+
+        var uploadPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? Path.Combine(configuration["File:LocationWIN32"], configuration["File:DestinationWIN32"])
+            : Path.Combine(configuration["File:LocationLINUX"], configuration["File:DestinationLINUX"]);
+
+        var reader = new StreamReader(file.OpenReadStream(), Encoding.UTF8);
+
+        var names = file.FileName.Split('.');
+        var extension = "." + names[^1];
+
+        string fileName;
+        try
+        {
+            var content = reader.ReadToEnd();
+
+            fileName = Path.GetRandomFileName() + $"-{Guid.NewGuid()}" + extension;
+            var targetPath = Path.Combine(uploadPath, "");
+
+            var segments = oldRecord.Scope.Split(":");
+            foreach (var segment in segments)
+            {
+                targetPath = Path.Combine(targetPath, segment);
+
+                if (!Directory.Exists(targetPath))
+                {
+                    Directory.CreateDirectory(targetPath);
+                }
+            }
+
+            if (!Directory.Exists(targetPath))
+            {
+                Directory.CreateDirectory(targetPath);
+
+                var stream = new FileStream(Path.Combine(targetPath, fileName), FileMode.Create);
+                await file.CopyToAsync(stream);
+            }
+            else
+            {
+                // Store
+                var stream = new FileStream(Path.Combine(targetPath, fileName), FileMode.Create);
+                await file.CopyToAsync(stream);
+            }
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+
+        var oldFile = oldRecord.FileName;
+
+        oldRecord.FileName = fileName;
+        oldRecord.FileType = extension;
+
+        var result = await UpdateAsync(oldRecord);
+
+        if ((result != null) && await DeleteFile(configuration, oldRecord.Scope, oldRecord.ReferenceId, oldFile));
+
+        return result;
+    }
+
+    public async Task<bool> DeleteFile(ConfigurationManager configuration, string scope, string refId, string fileName)
+    {
+        var uploadPath = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? Path.Combine(configuration["File:LocationWIN32"], configuration["File:DestinationWIN32"])
+            : Path.Combine(configuration["File:LocationLINUX"], configuration["File:DestinationLINUX"]);
+
+        var file = _mapper.Map<GetFileManagerTableDto>(await _dbModel
+            .Where(ft => ft.ReferenceId == refId)
+            .Where(ft => ft.Scope       == scope)
+            .Where(ft => ft.FileName    == fileName)
+            .FirstOrDefaultAsync());
+
+
+        if (file == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            System.IO.File.Delete(Path.Combine(uploadPath, file.ScopePath));
+            return true;
+        }
+        catch (Exception ex)
+        {
+            return false;
+        }
     }
 }

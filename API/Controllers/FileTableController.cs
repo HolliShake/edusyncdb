@@ -5,6 +5,8 @@ using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using API.Constant;
+using INFRASTRUCTURE.ErrorHandler;
 
 namespace API.Controllers;
 
@@ -24,6 +26,22 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
     }
 
     /****************** ACTION ROUTES ******************/
+    
+    /// <summary>
+    /// Get all valid scopes
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Scopes")]
+    public ActionResult GetAllValidScope()
+    {
+        List<string> scopes = [
+            FileScope.UserProfileScope   ,   
+            FileScope.CampusImagesScope  ,
+            FileScope.BuildingImagesScope,
+        ];
+        return Ok(scopes);
+    }
+
     /// <summary>
     /// Get all data.
     /// </summary>
@@ -41,8 +59,8 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
     /// <param name="referenceId"></param>
     /// <param name="file"></param>
     /// <returns></returns>
-    [HttpPost("upload/{scope}/{referenceId:int}")]
-    public async Task<ActionResult> UploadAction(string scope, int referenceId, IFormFile file)
+    [HttpPost("upload/{scope}/{referenceId}")]
+    public async Task<ActionResult> UploadAction(string scope, string referenceId, IFormFile file)
     {
         if (file.Length <= 0)
         {
@@ -62,6 +80,18 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
     public async Task<ActionResult> GetAction(int id)
     {
         return await GenericGet(id);
+    }
+
+    /// <summary>
+    /// Get Files by scope and referenceId
+    /// </summary>
+    /// <param name="scope"></param>
+    /// <param name="refId"></param>
+    /// <returns></returns>
+    [HttpGet("{scope}/{refId}")]
+    public async Task<ActionResult> GetByReferenceId(string scope, string refId)
+    {
+        return Ok(await _fileManagerService.GetFileByScopeAndRefereneId(scope, refId));
     }
     
     /*
@@ -88,17 +118,25 @@ public class FileTableController : GenericController<FileTable, IFileTableServic
     }
     */
     
-    /*
     /// <summary>
     /// Updates multiple property of FileTable.
     /// </summary>
+    /// <operationId>updateFileTable</operationId>
     /// <returns>FileTable</returns>
     [HttpPut("update/{id:int}")]
-    public async Task<ActionResult> UpdateAction(int id, FileTableDto item)
+    public async Task<ActionResult> UpdateAction(int id, IFormFile file)
     {
-        return await GenericUpdate(id, item);
+        if (file.Length <= 0)
+        {
+            return BadRequest("File is empty!");
+        }
+
+        var upload = await _fileManagerService.UpdateFile(_configurationManager, id, file);
+        
+        return (upload != null)
+            ? Ok(upload)
+            : BadRequest("Failed to update file");
     }
-    */
     
     /// <summary>
     /// Deletes single FileTable entry.

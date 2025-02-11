@@ -11,8 +11,4 @@ public class CampusScheduler
     // Fk (Campus)
     public int CampusId { get; set; }
     public Campus Campus { get; set; }
-
-    // Fk (ScheduleAssignment)
-    public int ScheduleAssignementId { get; set; }
-    public ScheduleAssignment ScheduleAssignment { get; set; }
 }

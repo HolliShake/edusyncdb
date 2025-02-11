@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DOMAIN.Model;
+﻿namespace DOMAIN.Model;
 
 public enum GlobalValidityStatusEnum
 {
-    PENDING,
-    APPROVED,
-    REJECTED,
-    RETURNED
+    PENDING , // 0
+    APPROVED, // 1
+    REJECTED, // 2
+    RETURNED, // 3
 }

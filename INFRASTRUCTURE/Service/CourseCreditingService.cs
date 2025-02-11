@@ -82,6 +82,6 @@ public class CourseCreditingService:GenericService<CourseCrediting, GetCourseCre
 
     public async Task<object> GetCourseCreditingByStatusAndAssignToUserId(GlobalValidityStatusEnum status, string userId)
     {
-        return _mapper.Map<ICollection<GetCourseCreditingDto>>(await _dbModel.Where(cc => cc.Status == status && cc.CreditToUserId == userId).ToListAsync());
+        return _mapper.Map<ICollection<GetCourseCreditingDto>>(await _dbModel.Include(d => d.Course).Include(d => d.CreditedFromSchool).Where(cc => cc.Status == status && cc.CreditToUserId == userId).ToListAsync());
     }
 }

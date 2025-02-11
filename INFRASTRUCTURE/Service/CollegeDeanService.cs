@@ -9,6 +9,8 @@ using APPLICATION.Dto.User;
 using APPLICATION.Dto.AcademicProgram;
 using APPLICATION.Dto.College;
 using APPLICATION.Dto.Curriculum;
+using APPLICATION.Dto.FileTable;
+using APPLICATION.Dto.FileManager;
 
 namespace INFRASTRUCTURE.Service;
 public class CollegeDeanService:GenericService<CollegeDean, GetCollegeDeanDto>, ICollegeDeanService
@@ -34,6 +36,17 @@ public class CollegeDeanService:GenericService<CollegeDean, GetCollegeDeanDto>, 
             .Where(apc => apc.UserId == userId)
             .Select(apc => _mapper.Map<GetCollegeDto>(apc.College))
             .SingleOrDefaultAsync());
+    }
+
+    public async new Task<ICollection<GetCollegeDeanDto>> GetAllAsync()
+    {
+        return _mapper.Map<ICollection<GetCollegeDeanDto>>(await _dbModel.Include(cd => cd.College).ThenInclude(c => c.Campus).Include(cd => cd.User).ToListAsync())
+            .Select(cd =>
+            {
+                var data = _dbContext.FileTables.Where(ft => ft.ReferenceId == cd.UserId).Where(ft => ft.Scope == "User:Profile").FirstOrDefault();
+                cd.User.ProfileImage = _mapper.Map<GetFileManagerTableDto>(data)?.ScopePath ?? string.Empty;
+                return cd;
+            }).ToList();
     }
 
     public async Task<object> GetAllProgramChairByCollegeId(int collegeId)

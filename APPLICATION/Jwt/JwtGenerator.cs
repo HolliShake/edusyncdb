@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 namespace APPLICATION.Jwt;
 
@@ -10,35 +9,50 @@ public abstract class JwtGenerator
         string id, 
         string userEmail,
         string role,
-        int? academicProgramId,
-        int? collegeId,
-        int? specializationId,
+        // Ids for special designation
+        int? collegeDeanCollegeId,
+        int? academicProgramChairProgramId,
+        int? specializationChairTrackSpecializationId,
+        int? schedulerCampusId,
+        // Flags
+        bool isCollegeDean,
+        bool isProgramChair,
         bool isFaculty,
-        bool isStudent
+        bool isStudent,
+        bool isSpecializationChair,
+        bool isScheduler
     )
     {
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, id),
             new Claim(ClaimTypes.Email, userEmail),
-            new Claim(ClaimTypes.Role, role),
+            new Claim(ClaimTypes.Role , role),
             // Flags for College Dean
-            new Claim("CollegeId", ((collegeId != null) ? collegeId.ToString() : "0")!),
+            new Claim("CollegeId",
+                ((collegeDeanCollegeId  !=  null)
+                ? collegeDeanCollegeId.ToString() 
+                : "0")!),
             // Flags for Program Chair
-            new Claim("AcademicProgramId", ((academicProgramId != null) ? academicProgramId.ToString() : "0")!),
-            // Flags for Faculty
-            new Claim("SpecializationId", ((specializationId != null) ? specializationId.ToString() : "0")!),
-            //
-            new Claim("IsProgramChair", (
-                 academicProgramId.ToString() != "0"    &&
-                 academicProgramId.ToString() != "null" &&
-                !academicProgramId.ToString().IsNullOrEmpty()).ToString()),
-            new Claim("IsFaculty", isFaculty.ToString()),
-            new Claim("IsStudent", isStudent.ToString()),
-            new Claim("IsCollegeDean", (
-                 collegeId.ToString() != "0"    &&
-                 collegeId.ToString() != "null" &&
-                !collegeId.ToString().IsNullOrEmpty()).ToString()),
+            new Claim("AcademicProgramId", 
+                ((academicProgramChairProgramId  !=  null) 
+                ? academicProgramChairProgramId.ToString() 
+                : "0")!),
+            // Flags for Specialization Chair
+            new Claim("TrackSpecializationId", 
+                ((specializationChairTrackSpecializationId  !=  null)
+                ? specializationChairTrackSpecializationId.ToString()
+                : "0")!),
+            // Flags for Scheduler
+            new Claim("SchedulerCampusId", 0.ToString()),
+
+            // Flags for Admin
+            new Claim("IsAdmin"       , "True"),
+            new Claim("IsCollegeDean" , isCollegeDean .ToString()),
+            new Claim("IsProgramChair", isProgramChair.ToString()),
+            new Claim("IsFaculty"     , isFaculty     .ToString()),
+            new Claim("IsStudent"     , isStudent     .ToString()),
+            new Claim("IsScheduler"   , isScheduler   .ToString())
         };
 
         return ijwAuthManager.GenerateTokens(userEmail, claims, DateTime.Now);

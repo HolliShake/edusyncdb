@@ -1,6 +1,5 @@
 ﻿using API.Attributes;
 using APPLICATION.Dto.AccessGroup;
-using APPLICATION.Dto.AccessGroup;
 using APPLICATION.IService;
 using AutoMapper;
 using DOMAIN.Model;
@@ -23,6 +22,7 @@ public class AccessGroupController : GenericController<AccessGroup, IAccessGroup
     /// Get all data.
     /// </summary>
     /// <returns>Array[AccessGroup]</returns>
+    /// <operationId>getAllAccessGroup</operationId>
     [HttpGet("all")]
     public async Task<ActionResult> GetAllAction()
     {
@@ -33,6 +33,7 @@ public class AccessGroupController : GenericController<AccessGroup, IAccessGroup
     /// Get specific data (AccessGroup) by id.
     /// </summary>
     /// <returns>Array[AccessGroup]></returns>
+    /// <operationId>getAccessGroupById</operationId>
     [HttpGet("{id:int}")]
     public async Task<ActionResult> GetAction(int id)
     {
@@ -43,6 +44,7 @@ public class AccessGroupController : GenericController<AccessGroup, IAccessGroup
     /// Creates new AccessGroup entry.
     /// </summary>
     /// <returns>AccessGroup</returns>
+    /// <operationId>createAccessGroup</operationId>
     [HttpPost("create")]
     public async Task<ActionResult> CreateAction(AccessGroupDto item)
     {
@@ -65,6 +67,7 @@ public class AccessGroupController : GenericController<AccessGroup, IAccessGroup
     /// Updates multiple property of AccessGroup.
     /// </summary>
     /// <returns>AccessGroup</returns>
+    /// <operationId>updateAccessGroup</operationId>
     [HttpPut("update/{id:int}")]
     public async Task<ActionResult> UpdateAction(int id, AccessGroupDto item)
     {
@@ -75,6 +78,7 @@ public class AccessGroupController : GenericController<AccessGroup, IAccessGroup
     /// Deletes single AccessGroup entry.
     /// </summary>
     /// <returns>Null</returns>
+    /// <operationId>deleteAccessGroup</operationId>
     [HttpDelete("delete/{id:int}")]
     public async Task<ActionResult> DeleteAction(int id)
     {

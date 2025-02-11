@@ -34,45 +34,57 @@ public class SchedulerModuleController : ControllerBase {
     }
 
     /// <summary>
-    /// Get All campuses that I am assigned to as a scheduler.
+    /// Get current scheduler user
     /// </summary>
     /// <returns></returns>
-    [HttpGet("Campuses/My")]
-    public async Task<IActionResult> GetMyCampusesAction()
+    protected int GetCampusId()
     {
-        return Ok(await _repo.GetCampusesByUserId(GetUserId()));
+        var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
+        var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
+        return int.Parse(principal.Item1.FindFirst(c => c.Type.Equals("SchedulerCampusId"))?.Value ?? "0");
+    }
+
+    /// <summary>
+    /// Get all buildings including Schedule per room
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("/Buildings/Schedules/My")]
+    public async Task<ActionResult> GetBuildingRoomSchedules()
+    {
+        var campusId = GetCampusId();
+        return Ok(await _repo.GetBuildingWithinRoomsSchedulesByUserAndCampusId(GetUserId(), campusId));
     }
 
     /// <summary>
     /// Get all schedules for a specific campus.
     /// </summary>
-    /// <param name="campusId"></param>
     /// <returns></returns>
-    [HttpGet("MergedSchedules/Campus/{campusId:int}")]
-    public async Task<IActionResult> GetMergedSchedules(int campusId)
+    [HttpGet("MergedSchedules/Campus/My")]
+    public async Task<IActionResult> GetMergedSchedules()
     {
+        var campusId = GetCampusId();
         return Ok(await _repo.GetMergedSchedulesBySchedulerUserAndCampusId(GetUserId(), campusId));
     }
 
     /// <summary>
     /// Get all schedules for a specific campus.
     /// </summary>
-    /// <param name="campusId"></param>
     /// <returns></returns>
-    [HttpGet("ClassSchedules/Campus/{campusId:int}")]
-    public async Task<IActionResult> GetClassScheduleByCampus(int campusId)
+    [HttpGet("ClassSchedules/Campus/My")]
+    public async Task<IActionResult> GetClassScheduleByCampus()
     {
+        var campusId = GetCampusId();
         return Ok(await _repo.GetClassScheduleBySchedulerUserAndCampusId(GetUserId(), campusId));
     }
 
     /// <summary>
     /// Get all examination schedules for a specific campus.
     /// </summary>
-    /// <param name="campusId"></param>
     /// <returns></returns>
-    [HttpGet("ExamSchedules/Campus/{campusId:int}")]
-    public async Task<IActionResult> GetExaminationScheduleByCampus(int campusId)
+    [HttpGet("ExamSchedules/Campus/My")]
+    public async Task<IActionResult> GetExaminationScheduleByCampus()
     {
+        var campusId = GetCampusId();
         return Ok(await _repo.GetExamScheduleBySchedulerUserAndCampusId(GetUserId(), campusId));
     }
 }
