@@ -1,10 +1,8 @@
-
 using APPLICATION.Dto.CollegeDean;
-using APPLICATION.IService;
+using APPLICATION.IService.DesignationData;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using APPLICATION.Dto.CollegeDean;
 
 namespace API.Controllers;
 

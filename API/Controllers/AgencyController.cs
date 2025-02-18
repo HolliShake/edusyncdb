@@ -1,15 +1,11 @@
 
 using APPLICATION.Dto.Agency;
-using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
-using Microsoft.Net.Http.Headers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using APPLICATION.IService.CoreData;
 using APPLICATION.Jwt;
-using API.Constant;
-using System.Security.Claims;
 
 namespace API.Controllers;
 

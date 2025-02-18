@@ -1,6 +1,6 @@
 
 using APPLICATION.Dto.AdmissionApplicantFamilyDetails;
-using APPLICATION.IService;
+using APPLICATION.IService.AdmissionData;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;

@@ -1,6 +1,7 @@
 
 using APPLICATION.Dto.TemplateGradeBook;
 using APPLICATION.IService;
+using APPLICATION.IService.TemplateData;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;

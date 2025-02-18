@@ -1,10 +1,10 @@
 
 using APPLICATION.Dto.ScholarshipCycleLimit;
-using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using APPLICATION.IService.ScholarshipData;
 
 namespace API.Controllers;
 

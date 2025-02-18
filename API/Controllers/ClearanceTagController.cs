@@ -1,6 +1,4 @@
-
 using APPLICATION.Dto.ClearanceTag;
-using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Net.Http.Headers;
 using APPLICATION.Jwt;
 using System.Security.Claims;
+using APPLICATION.IService.EClearanceData;
 
 namespace API.Controllers;
 

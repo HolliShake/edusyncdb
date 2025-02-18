@@ -1,10 +1,9 @@
-
 using APPLICATION.Dto.CurriculumDetail;
-using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using APPLICATION.IService.CurriculumData;
 
 namespace API.Controllers;
 

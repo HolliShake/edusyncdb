@@ -1,6 +1,5 @@
-
 using APPLICATION.Dto.AccessGroupAction;
-using APPLICATION.IService;
+using APPLICATION.IService.SecurityData;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;

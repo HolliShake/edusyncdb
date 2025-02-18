@@ -1,6 +1,6 @@
 ﻿using API.Attributes;
 using APPLICATION.Dto.AccessGroup;
-using APPLICATION.IService;
+using APPLICATION.IService.SecurityData;
 using AutoMapper;
 using DOMAIN.Model;
 using Microsoft.AspNetCore.Mvc;

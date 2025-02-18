@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
+using APPLICATION.IService.CourseCatalogData;
+using APPLICATION.IService.EClearanceData;
+using APPLICATION.IService.EnrollmentData;
+using APPLICATION.IService.EvaluationData;
+using APPLICATION.IService.SchedulingData;
 
 namespace API.Controllers;
 

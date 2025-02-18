@@ -1,11 +1,11 @@
-
 using APPLICATION.Dto.Campus;
-using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
 using API.Constant;
+using APPLICATION.IService.CoreData;
+using APPLICATION.IService.FileManagerData;
 
 namespace API.Controllers;
 

@@ -1,11 +1,11 @@
 using APPLICATION.Dto.Schedule;
-using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
+using APPLICATION.IService.SchedulingData;
 using APPLICATION.Jwt;
 using Microsoft.Net.Http.Headers;
 

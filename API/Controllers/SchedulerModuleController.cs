@@ -1,9 +1,9 @@
-﻿using APPLICATION.IService;
-using APPLICATION.Jwt;
+﻿using APPLICATION.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
+using APPLICATION.IService.DesignationData;
 
 namespace API.Controllers;
 

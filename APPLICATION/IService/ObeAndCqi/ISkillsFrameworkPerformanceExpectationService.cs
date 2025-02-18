@@ -1,0 +1,8 @@
+using APPLICATION.Dto.SkillsFrameworkPerformanceExpectation;
+using DOMAIN.Model;
+
+namespace APPLICATION.IService.ObeAndCqi;
+
+public interface ISkillsFrameworkPerformanceExpectationService:IGenericService<SkillsFrameworkPerformanceExpectation, GetSkillsFrameworkPerformanceExpectationDto>
+{
+}

@@ -1,10 +1,10 @@
 
 using APPLICATION.Dto.PortfolioScope;
-using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
+using APPLICATION.IService.EPortfolioData;
 
 namespace API.Controllers;
 

@@ -1,10 +1,12 @@
-﻿using APPLICATION.IService;
-using APPLICATION.Jwt;
-using DOMAIN.Model;
+﻿using APPLICATION.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
+using APPLICATION.IService.DesignationData;
+using APPLICATION.IService.EnrollmentData;
+using APPLICATION.IService.SchedulingData;
+using APPLICATION.IService.SecurityData;
 
 namespace API.Controllers;
 

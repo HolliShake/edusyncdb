@@ -1,6 +1,5 @@
-
 using APPLICATION.Dto.AcademicProgramChair;
-using APPLICATION.IService;
+using APPLICATION.IService.DesignationData;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;

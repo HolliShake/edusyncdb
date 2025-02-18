@@ -5,6 +5,7 @@ using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using APPLICATION.Dto.UserCampusDetails;
+using APPLICATION.IService.SecurityData;
 
 namespace API.Controllers;
 

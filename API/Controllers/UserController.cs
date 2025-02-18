@@ -2,6 +2,7 @@
 using API.Attributes;
 using APPLICATION.Dto.User;
 using APPLICATION.IService;
+using APPLICATION.IService.CoreData;
 using AutoMapper;
 using DOMAIN.Model;
 using Microsoft.AspNetCore.Mvc;

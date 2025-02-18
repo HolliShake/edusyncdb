@@ -1,7 +1,0 @@
-using APPLICATION.Dto.EducationalQualityAssuranceEducationalGoal;
-using DOMAIN.Model;
-
-namespace APPLICATION.IService;
-public interface IEducationalQualityAssuranceEducationalGoalService:IGenericService<EducationalQualityAssuranceEducationalGoal, GetEducationalQualityAssuranceEducationalGoalDto>
-{
-}

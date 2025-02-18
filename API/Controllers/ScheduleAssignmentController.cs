@@ -1,6 +1,5 @@
-
 using APPLICATION.Dto.ScheduleAssignment;
-using APPLICATION.IService;
+using APPLICATION.IService.SchedulingData;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;

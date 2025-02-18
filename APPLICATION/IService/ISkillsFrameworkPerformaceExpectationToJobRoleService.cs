@@ -1,7 +1,0 @@
-using APPLICATION.Dto.SkillsFrameworkPerformaceExpectationToJobRole;
-using DOMAIN.Model;
-
-namespace APPLICATION.IService;
-public interface ISkillsFrameworkPerformaceExpectationToJobRoleService:IGenericService<SkillsFrameworkPerformaceExpectationToJobRole, GetSkillsFrameworkPerformaceExpectationToJobRoleDto>
-{
-}

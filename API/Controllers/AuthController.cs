@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using API.Constant;
 using API.Attributes;
 using API.Utility;
-using APPLICATION.IService;
+using APPLICATION.IService.DesignationData;
+using APPLICATION.IService.EnrollmentData;
+using APPLICATION.IService.FileManagerData;
+using APPLICATION.IService.SecurityData;
 using Microsoft.EntityFrameworkCore;
-using Google.Apis.Util;
-using INFRASTRUCTURE.Service;
 
 namespace API.Controllers;
 

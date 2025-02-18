@@ -1,6 +1,5 @@
 ﻿using API.Attributes;
 using API.Constant;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;

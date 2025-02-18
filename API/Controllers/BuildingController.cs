@@ -1,13 +1,11 @@
 using APPLICATION.Dto.Building;
-using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
-using INFRASTRUCTURE.Service;
-using APPLICATION.Dto.FileManager;
 using API.Constant;
-using Microsoft.AspNetCore.Rewrite;
+using APPLICATION.IService.CoreData;
+using APPLICATION.IService.FileManagerData;
 
 namespace API.Controllers;
 

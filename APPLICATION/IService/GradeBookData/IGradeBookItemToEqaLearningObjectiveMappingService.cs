@@ -1,0 +1,8 @@
+using APPLICATION.Dto.GradeBookItemToEqaLearningObjectiveMapping;
+using DOMAIN.Model;
+
+namespace APPLICATION.IService.GradeBookData;
+
+public interface IGradeBookItemToEqaLearningObjectiveMappingService:IGenericService<GradeBookItemToEqaLearningObjectiveMapping, GetGradeBookItemToEqaLearningObjectiveMappingDto>
+{
+}

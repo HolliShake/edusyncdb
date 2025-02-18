@@ -1,4 +1,4 @@
-﻿using APPLICATION.IService;
+﻿using APPLICATION.IService.DesignationData;
 using APPLICATION.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;

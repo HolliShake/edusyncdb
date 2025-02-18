@@ -1,4 +1,3 @@
-
 using APPLICATION.Dto.EnrollmentFee;
 using APPLICATION.IService;
 using DOMAIN.Model;

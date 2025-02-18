@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
+using APPLICATION.IService.SecurityData;
 using APPLICATION.Jwt;
 
 namespace API.Controllers;

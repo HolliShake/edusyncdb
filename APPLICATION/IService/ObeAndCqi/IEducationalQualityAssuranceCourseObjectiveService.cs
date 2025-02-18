@@ -1,0 +1,8 @@
+using APPLICATION.Dto.EducationalQualityAssuranceCourseObjective;
+using DOMAIN.Model;
+
+namespace APPLICATION.IService.ObeAndCqi;
+
+public interface IEducationalQualityAssuranceCourseObjectiveService:IGenericService<EducationalQualityAssuranceCourseObjective, GetEducationalQualityAssuranceCourseObjectiveDto>
+{
+}

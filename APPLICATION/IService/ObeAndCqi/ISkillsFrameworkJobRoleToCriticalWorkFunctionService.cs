@@ -1,0 +1,8 @@
+using APPLICATION.Dto.SkillsFrameworkJobRoleToCriticalWorkFunction;
+using DOMAIN.Model;
+
+namespace APPLICATION.IService.ObeAndCqi;
+
+public interface ISkillsFrameworkJobRoleToCriticalWorkFunctionService:IGenericService<SkillsFrameworkJobRoleToCriticalWorkFunction, GetSkillsFrameworkJobRoleToCriticalWorkFunctionDto>
+{
+}

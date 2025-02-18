@@ -1,7 +1,6 @@
 ﻿using APPLICATION.IService;
 using AutoMapper;
 using INFRASTRUCTURE.Data;
-using INFRASTRUCTURE.ErrorHandler;
 using Microsoft.EntityFrameworkCore;
 
 namespace INFRASTRUCTURE.Service;
