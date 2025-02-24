@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
+using APPLICATION.IService.CoreData;
 using APPLICATION.IService.DesignationData;
 
 namespace API.Controllers;
@@ -12,14 +13,17 @@ namespace API.Controllers;
 public class SchedulerModuleController : ControllerBase {
     private readonly IJwtAuthManager _jwtAuthManager;
     private readonly ICampusSchedulerService _repo;
+    private readonly ICycleService _cycleService;
 
     public SchedulerModuleController(
         IJwtAuthManager jwtAuthManager,
-        ICampusSchedulerService repo
+        ICampusSchedulerService repo,
+        ICycleService cycleService
     )
     {
         _jwtAuthManager = jwtAuthManager;
         _repo = repo;
+        _cycleService = cycleService;
     }
 
     /// <summary>
@@ -43,12 +47,23 @@ public class SchedulerModuleController : ControllerBase {
         var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
         return int.Parse(principal.Item1.FindFirst(c => c.Type.Equals("SchedulerCampusId"))?.Value ?? "0");
     }
-
+    
+    /// <summary>
+    /// Get all cycles in my campus id where I am the scheduler.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Cycles/My")]
+    public async Task<ActionResult> GetCycles()
+    {
+        var campusId = GetCampusId();
+        return Ok(await _cycleService.GetCycleByCampusId(campusId));
+    }
+    
     /// <summary>
     /// Get all buildings including Schedule per room
     /// </summary>
     /// <returns></returns>
-    [HttpGet("/Buildings/Schedules/My")]
+    [HttpGet("Buildings/Schedules/My")]
     public async Task<ActionResult> GetBuildingRoomSchedules()
     {
         var campusId = GetCampusId();
