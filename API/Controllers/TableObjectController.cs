@@ -1,6 +1,5 @@
 
 using APPLICATION.Dto.TableObject;
-using APPLICATION.IService;
 using DOMAIN.Model;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;

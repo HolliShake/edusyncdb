@@ -44,7 +44,7 @@ public abstract class JwtGenerator
                 ? specializationChairTrackSpecializationId.ToString()
                 : "0")!),
             // Flags for Scheduler
-            new Claim("SchedulerCampusId", 0.ToString()),
+            new Claim("SchedulerCampusId", (schedulerCampusId ?? 0).ToString()),
 
             // Flags for Admin
             new Claim("IsAdmin"       , "True"),

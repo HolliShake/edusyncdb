@@ -36,6 +36,7 @@ public class CycleService:GenericService<Cycle, GetCycleDto>, ICycleService
         var cycles = await _dbModel
         .Include(c => c.Campus)
         .Where(c => c.CampusId == campusId)
+        .OrderBy(c => c.CycleNumber)
         .ToListAsync();
         return _mapper.Map<ICollection<GetCycleDto>>(cycles);
     }

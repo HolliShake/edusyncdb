@@ -10,11 +10,14 @@ public class GetAcademicCalendarDto
     public DateTime EndDateTime { get; set; }
     public bool IsOpenOverride { get; set; }
 
+    public string Title { get; set; }
+    public string Description { get; set; }
+
     // Fk Cycle
     public int CycleId { get; set; }
     public GetCycleDto Cycle { get; set; }
 
     // Fk GradingPeriod
-    public int GradingPeriodId { get; set; }
-    public GetGradingPeriodDto GradingPeriod { get; set; }
+    public int? GradingPeriodId { get; set; }
+    public GetGradingPeriodDto? GradingPeriod { get; set; }
 }

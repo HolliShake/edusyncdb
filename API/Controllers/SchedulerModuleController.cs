@@ -8,8 +8,8 @@ using APPLICATION.IService.DesignationData;
 
 namespace API.Controllers;
 
-[Route("api/[controller]")]
 [ApiController]
+[Route("Api/[controller]")]
 public class SchedulerModuleController : ControllerBase {
     private readonly IJwtAuthManager _jwtAuthManager;
     private readonly ICampusSchedulerService _repo;

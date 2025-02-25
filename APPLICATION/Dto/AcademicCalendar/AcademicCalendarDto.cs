@@ -10,11 +10,14 @@ public class AcademicCalendarDto
     [Required]
     public bool IsOpenOverride { get; set; }
 
+    public string Title { get; set; }
+    public string Description { get; set; }
+
     // Fk Cycle
     [Required]
     public int CycleId { get; set; }
 
     // Fk GradingPeriod
     [Required]
-    public int GradingPeriodId { get; set; }
+    public int? GradingPeriodId { get; set; }
 }
