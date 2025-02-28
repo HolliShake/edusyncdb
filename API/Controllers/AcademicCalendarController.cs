@@ -52,6 +52,20 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     }
 
     /// <summary>
+    /// Get all academic calendar by campus and cycle id with optional date range.
+    /// </summary>
+    /// <param name="campusId"></param>
+    /// <param name="cycleId"></param>
+    /// <param name="start"></param>
+    /// <param name="end"></param>
+    /// <returns>Array[AcademicCalendar]A</returns>
+    [HttpGet("Campus/{campusId:int}/Cycle/{cycleId:int}")]
+    public async Task<ActionResult> GetAcademicCalendarByCampusAndCycleId(int campusId, int cycleId, [FromQuery] DateTime? start, [FromQuery] DateTime? end)
+    {
+        return Ok(await _repo.GetAcademicCalendarsByCampusAndCycleId(start, end, campusId, cycleId));
+    }
+
+    /// <summary>
     /// Get specific data (AcademicCalendar) by id.
     /// </summary>
     /// <returns>Array[AcademicCalendar]></returns>

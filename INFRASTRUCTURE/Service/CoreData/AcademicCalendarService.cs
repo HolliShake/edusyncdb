@@ -32,6 +32,24 @@ public class AcademicCalendarService:GenericService<AcademicCalendar, GetAcademi
         return _mapper.Map<ICollection<GetAcademicCalendarDto>>(academicCalendars);
     }
 
+    public async Task<ICollection<GetAcademicCalendarDto>> GetAcademicCalendarsByCampusAndCycleId(DateTime? start, DateTime? end, int campusId, int cycleId)
+    {
+        var query = _dbModel
+            .Include(ac => ac.Cycle)
+            .Include(ac => ac.GradingPeriod)
+            .Where(ac => ac.Cycle.CampusId == campusId)
+            .Where(ac => ac.Cycle.Id == cycleId);
+
+        // Apply date filtering only if both start and end are not null
+        if (start.HasValue && end.HasValue)
+        {
+            query = query.Where(ac => ac.StartDateTime >= start.Value && ac.EndDateTime <= end.Value);
+        }
+
+        var academicCalendars = await query.ToListAsync();
+        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(academicCalendars);
+    }
+
     public async new Task<AcademicCalendar?> GetAsync(int id)
     {
         var academicCalendar = await _dbModel

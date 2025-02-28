@@ -179,6 +179,11 @@ public class AppDbContext : DbContext
             .HasIndex(u => u.SchedulerUserId)
             .IsUnique();
 
+        // Registrar
+        modelBuilder.Entity<CampusRegistrar>()
+            .HasIndex(u => u.UserId)
+            .IsUnique();
+
         base.OnModelCreating(modelBuilder);
     }
 }

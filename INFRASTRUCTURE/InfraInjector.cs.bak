@@ -1,7 +1,53 @@
 ﻿using APPLICATION.IService;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
-using INFRASTRUCTURE.Service;
+// Service
+using INFRASTRUCTURE.Service.AccountingData;
+using INFRASTRUCTURE.Service.AdmissionData;
+using INFRASTRUCTURE.Service.BillingAndFee;
+using INFRASTRUCTURE.Service.BulletinData;
+using INFRASTRUCTURE.Service.CoreData;
+using INFRASTRUCTURE.Service.CourseCatalogData;
+using INFRASTRUCTURE.Service.CurriculumData;
+using INFRASTRUCTURE.Service.DesignationData;
+using INFRASTRUCTURE.Service.EClearanceData;
+using INFRASTRUCTURE.Service.EnrollmentData;
+using INFRASTRUCTURE.Service.EPortfolioData;
+using INFRASTRUCTURE.Service.EvaluationData;
+using INFRASTRUCTURE.Service.FileManagerData;
+using INFRASTRUCTURE.Service.GradeBookData;
+using INFRASTRUCTURE.Service.GraduateData;
+using INFRASTRUCTURE.Service.MappingData;
+using INFRASTRUCTURE.Service.ObeAndCqi;
+using INFRASTRUCTURE.Service.SchedulingData;
+using INFRASTRUCTURE.Service.ScholarshipData;
+using INFRASTRUCTURE.Service.SecurityData;
+using INFRASTRUCTURE.Service.SurveyFormData;
+using INFRASTRUCTURE.Service.TemplateData;
+// IService
+using APPLICATION.IService.AccountingData;
+using APPLICATION.IService.AdmissionData;
+using APPLICATION.IService.BillingAndFee;
+using APPLICATION.IService.BulletinData;
+using APPLICATION.IService.CoreData;
+using APPLICATION.IService.CourseCatalogData;
+using APPLICATION.IService.CurriculumData;
+using APPLICATION.IService.DesignationData;
+using APPLICATION.IService.EClearanceData;
+using APPLICATION.IService.EnrollmentData;
+using APPLICATION.IService.EPortfolioData;
+using APPLICATION.IService.EvaluationData;
+using APPLICATION.IService.FileManagerData;
+using APPLICATION.IService.GradeBookData;
+using APPLICATION.IService.GraduateData;
+using APPLICATION.IService.MappingData;
+using APPLICATION.IService.ObeAndCqi;
+using APPLICATION.IService.SchedulingData;
+using APPLICATION.IService.ScholarshipData;
+using APPLICATION.IService.SecurityData;
+using APPLICATION.IService.SurveyFormData;
+using APPLICATION.IService.TemplateData;
+//
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -135,6 +181,7 @@ public class InfraInjector
 			services.AddScoped<IAcademicProgramChairService, AcademicProgramChairService>(); /* added by make.py */
 			services.AddScoped<ICollegeDeanService, CollegeDeanService>(); /* added by make.py */
 			services.AddScoped<ISpecializationChairService, SpecializationChairService>(); /* added by make.py */
+			services.AddScoped<ICampusSchedulerService, CampusSchedulerService>(); /* added by make.py */
 		#endregion
 
         // Identity

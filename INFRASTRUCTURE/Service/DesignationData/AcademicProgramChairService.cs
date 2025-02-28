@@ -23,7 +23,7 @@ public class AcademicProgramChairService:GenericService<AcademicProgramChair, Ge
         return await _dbModel.Where(apc => apc.UserId == userId).AnyAsync();
     }
 
-    public async Task<GetAcademicProgramDto?> GetAcademicProgramByUserId(string userId)
+    public async Task<GetAcademicProgramDto> GetAcademicProgramByUserId(string userId)
     {
         return await _dbModel
             .Include(apc => apc.AcademicProgram)

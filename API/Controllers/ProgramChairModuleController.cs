@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using System.Security.Claims;
 using APPLICATION.IService.DesignationData;
+using APPLICATION.IService.SharedData;
 
 namespace API.Controllers;
 
@@ -13,14 +14,17 @@ public class ProgramChairModuleController : ControllerBase
 {
     private readonly IJwtAuthManager _jwtAuthManager;
     private readonly IAcademicProgramChairService _academicProgramChairService;
+    private readonly ISharedData _sharedData;
 
     public ProgramChairModuleController(
         IJwtAuthManager jwtAuthManager,
-        IAcademicProgramChairService academicProgramChairService
+        IAcademicProgramChairService academicProgramChairService,
+        ISharedData sharedDataService
     )
     {
         _jwtAuthManager = jwtAuthManager;
         _academicProgramChairService = academicProgramChairService;
+        _sharedData = sharedDataService;
     }
 
     /// <summary>
@@ -49,11 +53,16 @@ public class ProgramChairModuleController : ControllerBase
     /// Get all academic programs where I am the chairman.
     /// </summary>
     /// <returns></returns>
-    [HttpGet("AcademicProgram/Students/My")]
-    public async Task<ActionResult> GetAllAcademicProgramsAction()
+    [HttpGet("Students/My")]
+    public async Task<ActionResult> GetAllAcademicProgramsAction([FromQuery] int page=1, [FromQuery] int rows=10)
     {
         var academicProgramId = GetAcademicProgramId();
-        return Ok(await _academicProgramChairService.GetStudentsByAcademicProgram(academicProgramId, -1));
+        return Ok(await _sharedData.GetStudentsByContext(
+            academicProgramId,
+            page,
+            rows,
+            ContextType.ProgramChair
+        ));
     }
 
     /// <summary>
@@ -61,10 +70,15 @@ public class ProgramChairModuleController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("Teachers/My")]
-    public async Task<ActionResult> GetTeachersByAcademicProgram()
+    public async Task<ActionResult> GetTeachersByAcademicProgram([FromQuery] int page = 1, [FromQuery] int rows = 10)
     {
         var academicProgramId = GetAcademicProgramId();
-        return Ok(await _academicProgramChairService.GetTeachersByAcademicProgram(academicProgramId, -1));
+        return Ok(await _sharedData.GetTeachersByContext(
+            academicProgramId,
+            page,
+            rows,
+            ContextType.ProgramChair
+        ));
     }
 
     /// <summary>
@@ -83,10 +97,15 @@ public class ProgramChairModuleController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet("Curriculum/My")]
-    public async Task<ActionResult> GetCurriculumByUserId()
+    public async Task<ActionResult> GetCurriculumByUserId([FromQuery] int page = 1, [FromQuery] int rows = 10)
     {
         var academicProgramId = GetAcademicProgramId();
-        return Ok(await _academicProgramChairService.GetCurriculumsByAcademicProgram(academicProgramId));
+        return Ok(await _sharedData.GetCurriculumByContext(
+            academicProgramId,
+            page,
+            rows,
+            ContextType.ProgramChair
+        ));
     }
 
     /// <summary>

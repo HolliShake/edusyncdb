@@ -14,13 +14,15 @@ public abstract class JwtGenerator
         int? academicProgramChairProgramId,
         int? specializationChairTrackSpecializationId,
         int? schedulerCampusId,
+        int? registrarCampusId,
         // Flags
         bool isCollegeDean,
         bool isProgramChair,
         bool isFaculty,
         bool isStudent,
         bool isSpecializationChair,
-        bool isScheduler
+        bool isScheduler,
+        bool isRegistrar
     )
     {
         var claims = new[]
@@ -45,14 +47,16 @@ public abstract class JwtGenerator
                 : "0")!),
             // Flags for Scheduler
             new Claim("SchedulerCampusId", (schedulerCampusId ?? 0).ToString()),
-
+            // Flags for Registrar
+            new Claim("RegistrarCampusId", (registrarCampusId ?? 0).ToString()),
             // Flags for Admin
             new Claim("IsAdmin"       , "True"),
             new Claim("IsCollegeDean" , isCollegeDean .ToString()),
             new Claim("IsProgramChair", isProgramChair.ToString()),
             new Claim("IsFaculty"     , isFaculty     .ToString()),
             new Claim("IsStudent"     , isStudent     .ToString()),
-            new Claim("IsScheduler"   , isScheduler   .ToString())
+            new Claim("IsScheduler"   , isScheduler   .ToString()),
+            new Claim("IsScheduler"   , isRegistrar   .ToString())
         };
 
         return ijwAuthManager.GenerateTokens(userEmail, claims, DateTime.Now);

@@ -7,4 +7,5 @@ public interface IAcademicCalendarService:IGenericService<AcademicCalendar, GetA
 {
     public Task<ICollection<GetAcademicCalendarDto>> GetAcademicCalendarsByGradingPeriodId(int graadingPeriodId);
     public Task<ICollection<GetAcademicCalendarDto>> GetAcademicCalendarsByCampusId(int campusId);
+    public Task<ICollection<GetAcademicCalendarDto>> GetAcademicCalendarsByCampusAndCycleId(DateTime? start, DateTime? end, int campusId, int cycleId);
 }

@@ -4,6 +4,8 @@ using APPLICATION.Dto.Enrollment;
 using APPLICATION.IService.EnrollmentData;
 using DOMAIN.Model;
 using INFRASTRUCTURE.Data;
+using Microsoft.EntityFrameworkCore.Internal;
+using APPLICATION.Dto.User;
 
 namespace INFRASTRUCTURE.Service.EnrollmentData;
 
@@ -16,6 +18,61 @@ public class EnrollmentService:GenericService<Enrollment, GetEnrollmentDto>, IEn
     public async Task<bool> IsStudent(string userId)
     {
         return await _dbModel.AnyAsync(e => e.StudentUserId == userId);
+    }
+
+    public async Task<object> GetEnrolledUserWithEClearanceTagByCampusIdPaginated(int campusId, string? student, int page, int rows)
+    {
+        var query = from enrollment in _dbModel
+                .Include(e => e.Schedule)
+                    .ThenInclude(s => s.Cycle)
+                .Where(e => e.Schedule.Cycle.CampusId == campusId)
+
+        join user in _dbContext.Users on enrollment.StudentUserId equals user.Id into userGroup
+        from user in userGroup.DefaultIfEmpty()
+        join clearance in _dbContext.ClearanceTags
+            .Include(ct => ct.DuWhoTag)
+            .Include(ct => ct.UserWhoCleared)
+        on enrollment.StudentUserId equals clearance.UnclearedUserId into clearanceGroup
+        select new
+        {
+            UserFullName = user != null ? $"{user.FirstName} {user.LastName}" : null,
+            EClearanceTags = clearanceGroup
+                .Select(ct => new
+                {
+                    ct.Id,
+                    UserWhoCleared = _mapper.Map<GetUserOnlyDto>(ct.UserWhoCleared),
+                    DuWhoTag = _mapper.Map<GetUserOnlyDto>(ct.DuWhoTag),
+                    ct.SettledDate,
+                    ct.DateCreated,
+                })
+        };
+
+        // Apply student name filter if provided
+        if (!string.IsNullOrEmpty(student))
+        {
+            query = query.Where(x => x.UserFullName != null && x.UserFullName.Contains(student));
+        }
+
+        // Get total count for pagination metadata
+        int totalRecords = await query.CountAsync();
+
+        // Apply pagination
+        var paginatedData = await query
+            .Skip((page - 1) * rows)
+            .Take(rows)
+            .ToListAsync();
+
+        return new
+        {
+            Data = paginatedData,
+            Meta = new
+            {
+                TotalRecords = totalRecords,
+                Page = page,
+                Rows = rows,
+                TotalPages = (int)Math.Ceiling(totalRecords / (double)rows)
+            }
+        };
     }
 
     public async Task<ICollection<GetEnrollmentDto>> GetEnrollmentsByEnrollmentRoleId(int enrollmentRoleId)

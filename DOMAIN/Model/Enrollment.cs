@@ -28,6 +28,7 @@ public class Enrollment
     // Fk EnrollmentRole
     public int EnrollmentRoleId { get; set; }
     public EnrollmentRole EnrollmentRole { get; set; }
-    // Nav
+
+    // Nav Scores
     public ICollection<GradeBookScore> GradeBookScores { get; set; }
 }

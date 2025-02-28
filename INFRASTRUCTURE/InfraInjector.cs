@@ -51,6 +51,8 @@ using APPLICATION.IService.TemplateData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using APPLICATION.IService.SharedData;
+using INFRASTRUCTURE.Service.SharedData;
 
 namespace INFRASTRUCTURE;
 
@@ -182,6 +184,8 @@ public class InfraInjector
 			services.AddScoped<ICollegeDeanService, CollegeDeanService>(); /* added by make.py */
 			services.AddScoped<ISpecializationChairService, SpecializationChairService>(); /* added by make.py */
 			services.AddScoped<ICampusSchedulerService, CampusSchedulerService>(); /* added by make.py */
+			services.AddScoped<ICampusRegistrarService, CampusRegistrarService>(); /* added by make.py */
+			services.AddScoped<ISharedData, SharedData>(); /* added by doy */
 		#endregion
 
         // Identity

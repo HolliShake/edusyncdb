@@ -42,7 +42,7 @@ public class EvaluationPeriodController : GenericController<EvaluationPeriod, IE
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
-    [HttpGet("EvaluationPeriod/Instrument/info/{id:int}")]
+    [HttpGet("Instrument/info/{id:int}")]
     public async Task<ActionResult> GetEvaluationPeriodInformation(int id)
     {
         var result = await _repo.GetEvaluationPeriodInformation(id);

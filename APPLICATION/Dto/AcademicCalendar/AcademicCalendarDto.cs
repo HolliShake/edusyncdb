@@ -18,6 +18,5 @@ public class AcademicCalendarDto
     public int CycleId { get; set; }
 
     // Fk GradingPeriod
-    [Required]
     public int? GradingPeriodId { get; set; }
 }

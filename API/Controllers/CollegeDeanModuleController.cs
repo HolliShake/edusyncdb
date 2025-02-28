@@ -30,7 +30,7 @@ public class CollegeDeanModuleController : ControllerBase
     {
         var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
         var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        return int.Parse(principal.Item1.FindFirst(c => c.Type.Equals("CampudId"))?.Value ?? "0");
+        return int.Parse(principal.Item1.FindFirst(c => c.Type.Equals("CollegeId"))?.Value ?? "0");
     }
 
     /// <summary>

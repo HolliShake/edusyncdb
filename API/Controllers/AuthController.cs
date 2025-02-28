@@ -34,6 +34,7 @@ public class AuthController:ControllerBase
     private readonly ICollegeDeanService _collegeDeanServiceService;
     private readonly ISpecializationChairService _specializationChairService;
     private readonly ICampusSchedulerService _campusSchedulerService;
+    private readonly ICampusRegistrarService _campusRegistrarService;
     private readonly IFileManagerService _fileManagerService;
     
     public AuthController(
@@ -49,6 +50,7 @@ public class AuthController:ControllerBase
         ICollegeDeanService            collegeDeanService,
         ISpecializationChairService    specializationChairService,
         ICampusSchedulerService        campusSchedulerService,
+        ICampusRegistrarService        campusRegistrarService,
         IFileManagerService            fileManagerService
     )
     {
@@ -64,6 +66,7 @@ public class AuthController:ControllerBase
         _collegeDeanServiceService     = collegeDeanService;
         _specializationChairService    = specializationChairService;
         _campusSchedulerService        = campusSchedulerService;
+        _campusRegistrarService        = campusRegistrarService;
         _fileManagerService            = fileManagerService;
     }
     
@@ -113,13 +116,15 @@ public class AuthController:ControllerBase
             (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
             (await _specializationChairService .GetTrackSpecializationByUserId(userData.Id))?.Id,
             (await _campusSchedulerService     .GetScheduleByUserId(userData.Id))?.Id,
+            (await _campusRegistrarService     .GetCampusByUserId(userData.Id))?.Id,
             // Flags
             (await _collegeDeanServiceService    .IsCollegeDean(userData.Id)),
             (await _academicProgramChairService  .IsProgramChair(userData.Id)),
             (await _scheduleTeacherServiceService.IsTeacher(userData.Id)),
             (await _enrollmentService            .IsStudent(userData.Id)),
             (await _specializationChairService   .IsSpecializationChair(userData.Id)),
-            (await _campusSchedulerService       .IsScheduler(userData.Id))
+            (await _campusSchedulerService       .IsScheduler(userData.Id)),
+            (await _campusRegistrarService       .IsCampusRegistrar(userData.Id))
         );
 
         var profiles = await _fileManagerService.GetFileByScopeAndReferenceId("User:Profile", user.Id.ToString());
@@ -218,17 +223,19 @@ public class AuthController:ControllerBase
             user.Id,
             user.Email,
             user.Role,
-            (await _collegeDeanServiceService  .GetCollegeByUserId(userData.Id))?.Id,
+            (await _collegeDeanServiceService.GetCollegeByUserId(userData.Id))?.Id,
             (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
-            (await _specializationChairService .GetTrackSpecializationByUserId(userData.Id))?.Id,
-            (await _campusSchedulerService     .GetScheduleByUserId(userData.Id))?.Id,
+            (await _specializationChairService.GetTrackSpecializationByUserId(userData.Id))?.Id,
+            (await _campusSchedulerService.GetScheduleByUserId(userData.Id))?.Id,
+            (await _campusRegistrarService.GetCampusByUserId(userData.Id))?.Id,
             // Flags
-            (await _collegeDeanServiceService    .IsCollegeDean(userData.Id)),
-            (await _academicProgramChairService  .IsProgramChair(userData.Id)),
+            (await _collegeDeanServiceService.IsCollegeDean(userData.Id)),
+            (await _academicProgramChairService.IsProgramChair(userData.Id)),
             (await _scheduleTeacherServiceService.IsTeacher(userData.Id)),
-            (await _enrollmentService            .IsStudent(userData.Id)),
-            (await _specializationChairService   .IsSpecializationChair(userData.Id)),
-            (await _campusSchedulerService       .IsScheduler(userData.Id))
+            (await _enrollmentService.IsStudent(userData.Id)),
+            (await _specializationChairService.IsSpecializationChair(userData.Id)),
+            (await _campusSchedulerService.IsScheduler(userData.Id)),
+            (await _campusRegistrarService.IsCampusRegistrar(userData.Id))
         );
 
         var profiles = await _fileManagerService.GetFileByScopeAndReferenceId("User:Profile", user.Id.ToString());
@@ -341,17 +348,19 @@ public class AuthController:ControllerBase
             user.Id,
             user.Email,
             user.Role,
-            (await _collegeDeanServiceService  .GetCollegeByUserId(userData.Id))?.Id,
+            (await _collegeDeanServiceService.GetCollegeByUserId(userData.Id))?.Id,
             (await _academicProgramChairService.GetAcademicProgramByUserId(userData.Id))?.Id,
-            (await _specializationChairService .GetTrackSpecializationByUserId(userData.Id))?.Id,
-            (await _campusSchedulerService     .GetScheduleByUserId(userData.Id))?.Id,
+            (await _specializationChairService.GetTrackSpecializationByUserId(userData.Id))?.Id,
+            (await _campusSchedulerService.GetScheduleByUserId(userData.Id))?.Id,
+            (await _campusRegistrarService.GetCampusByUserId(userData.Id))?.Id,
             // Flags
-            (await _collegeDeanServiceService    .IsCollegeDean(userData.Id)),
-            (await _academicProgramChairService  .IsProgramChair(userData.Id)),
+            (await _collegeDeanServiceService.IsCollegeDean(userData.Id)),
+            (await _academicProgramChairService.IsProgramChair(userData.Id)),
             (await _scheduleTeacherServiceService.IsTeacher(userData.Id)),
-            (await _enrollmentService            .IsStudent(userData.Id)),
-            (await _specializationChairService   .IsSpecializationChair(userData.Id)),
-            (await _campusSchedulerService       .IsScheduler(userData.Id))
+            (await _enrollmentService.IsStudent(userData.Id)),
+            (await _specializationChairService.IsSpecializationChair(userData.Id)),
+            (await _campusSchedulerService.IsScheduler(userData.Id)),
+            (await _campusRegistrarService.IsCampusRegistrar(userData.Id))
         );
 
         var profiles = await _fileManagerService.GetFileByScopeAndReferenceId("User:Profile", user.Id.ToString());
