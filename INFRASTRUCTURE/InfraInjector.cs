@@ -186,6 +186,9 @@ public class InfraInjector
 			services.AddScoped<ICampusSchedulerService, CampusSchedulerService>(); /* added by make.py */
 			services.AddScoped<ICampusRegistrarService, CampusRegistrarService>(); /* added by make.py */
 			services.AddScoped<ISharedData, SharedData>(); /* added by doy */
+			services.AddScoped<IVisionService, VisionService>(); /* added by doy */
+			services.AddScoped<IMissionService, MissionService>(); /* added by doy */
+        	services.AddScoped<IGraduateAttributesService, GraduateAttributesService>(); /* added by make.py */
 		#endregion
 
         // Identity

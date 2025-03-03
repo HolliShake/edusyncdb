@@ -8,6 +8,8 @@ public class Agency
     public string ShortName { get; set; }
     public string AgencyAddress { get; set;}
 
+    public string Code { get; set; }
+
     // Nav
     public virtual ICollection<Campus> Campuses { get; set; }
 }

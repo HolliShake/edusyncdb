@@ -66,6 +66,17 @@ public class AcademicCalendarController : GenericController<AcademicCalendar, IA
     }
 
     /// <summary>
+    /// Get Academic Calendar by CyleId.
+    /// </summary>
+    /// <param name="cycleId"></param>
+    /// <returns>Array[AcademicCalendar]</returns>
+    [HttpGet("Cycle/{cycleId:int}")]
+    public async Task<ActionResult> GetAcademicCalendarByCycleId(int cycleId)
+    {
+        return Ok(await _repo.GetAcademicCalendarsByCycleId(cycleId));
+    }
+
+    /// <summary>
     /// Get specific data (AcademicCalendar) by id.
     /// </summary>
     /// <returns>Array[AcademicCalendar]></returns>

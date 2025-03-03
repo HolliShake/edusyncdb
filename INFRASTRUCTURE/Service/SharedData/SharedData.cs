@@ -25,60 +25,99 @@ public class SharedData: ISharedData
         ContextType type
     )
     {
-        var students = _dbContext.Enrollments
-            .Include(e => e.StudentUser)
-            .Include(e => e.Schedule)
-                .ThenInclude(s => s.CurriculumDetail)
-                    .ThenInclude(cd => cd.Curriculum)
-                        .ThenInclude(c => c.AcademicProgram)
-                            .ThenInclude(c => c.College)
-                                .ThenInclude(c => c.Campus)
-            .AsQueryable();
-
-        // Apply filtering based on ContextType
-        switch (type)
+        var query = _dbContext.Enrollments
+        .AsNoTracking()
+        .Where(e => e.StudentUser != null)
+        .Select(e => new
         {
-            case ContextType.ProgramChair:
-                students = students.Where(e => e.Schedule.CurriculumDetail.Curriculum.AcademicProgramId == referenceId);
-                break;
-            case ContextType.CollegeDean:
-                students = students.Where(e => e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.CollegeId == referenceId);
-                break;
-            case ContextType.Registrar:
-                students = students.Where(e => e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.CampusId == referenceId);
-                break;
-        }
-
-        var studentData = (await students.ToListAsync())
-            .GroupBy(e => e.StudentUserId)
-            .Select(g => g.OrderByDescending(e => e.YearLevel).First())
-            .Select(e => new
+            StudentUser = e.StudentUser,
+            Curriculum = new
             {
-                Student = _mapper.Map<GetUserOnlyDto>(e.StudentUser),
-                Section = e.Schedule.GeneratedSection,
-                Curriculum = new
+                e.Schedule.CurriculumDetail.Curriculum.Id,
+                e.Schedule.CurriculumDetail.Curriculum.CurriculumName,
+                e.Schedule.CurriculumDetail.Curriculum.CurriculumCode,
+                AcademicProgram = new
                 {
-                    Id = e.Schedule.CurriculumDetail.Curriculum.Id,
-                    CurriculumName = e.Schedule.CurriculumDetail.Curriculum.CurriculumName,
-                    CurriculumCode = e.Schedule.CurriculumDetail.Curriculum.CurriculumCode
-                },
-                Campus = e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus.CampusName,
-                College = e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.CollegeName,
-                CurrentYearLevel = e.YearLevel,
-                CurrentProgram = $"{e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ProgramName} ({e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ShortName})"
+                    e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.Id,
+                    e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ProgramName,
+                    e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ShortName,
+                    College = new
+                    {
+                        e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Id,
+                        e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.CollegeName,
+                        Campus = new
+                        {
+                            e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus.Id,
+                            e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus.CampusName
+                        }
+                    }
+                }
+            }
+        });
+
+        // Apply optimized filtering
+        query = type switch
+        {
+            ContextType.ProgramChair => query.Where(e => e.Curriculum.AcademicProgram.Id == referenceId),
+            ContextType.CollegeDean => query.Where(e => e.Curriculum.AcademicProgram.College.Id == referenceId),
+            ContextType.Registrar => query.Where(e => e.Curriculum.AcademicProgram.College.Campus.Id == referenceId),
+            _ => query
+        };
+
+        // Optimized count query
+        var totalCount = await query.Select(e => e.StudentUser.Id).Distinct().CountAsync();
+
+        var dbResult = await query
+            .GroupBy(e => e.StudentUser)
+            .Select(g => new
+            {
+                StudentUser = g.Key,
+                Curriculum = g.Select(x => x.Curriculum).Distinct(),
+                Campus = g.Select(x => x.Curriculum.AcademicProgram.College.Campus).Distinct(),
+                College = g.Select(x => x.Curriculum.AcademicProgram.College).Distinct(),
+                AcademicProgram = g.Select(x => x.Curriculum.AcademicProgram).Distinct()
             })
+            .OrderBy(x => x.StudentUser.LastName)
+            .ThenBy(x => x.StudentUser.FirstName)
             .Skip((page - 1) * rows)
             .Take(rows)
-            .ToList();
+            .ToListAsync();
+
+        // Client-side transformations
+        var studentData = dbResult.Select(g => new
+        {
+            Student = _mapper.Map<GetUserOnlyDto>(g.StudentUser),
+            Curriculum = g.Curriculum.Select(c => new { c.Id, c.CurriculumName, c.CurriculumCode }),
+            Campus = g.Campus.Select(c => new { c.Id, c.CampusName }),
+            College = g.College.Select(c => new { c.Id, c.CollegeName }),
+            CurrentProgram = g.AcademicProgram.Select(p => new {
+                p.Id,
+                ProgramName = $"{p.ProgramName} ({p.ShortName})"
+            })
+        }).ToList();
+
+        // Pre-materialize filters
+        var campusFilter = studentData.SelectMany(s => s.Campus).Distinct().ToList();
+        var collegeFilter = studentData.SelectMany(s => s.College).Distinct().ToList();
+        var curriculumFilter = studentData.SelectMany(s => s.Curriculum).Distinct().ToList();
+        var programFilter = studentData.SelectMany(s => s.CurrentProgram).Distinct().ToList();
 
         return new
         {
             Data = studentData,
             PaginationMeta = new
             {
+                CampusFilter = campusFilter.Select(c => new { Label = c.CampusName, Value = c.Id }),
+                CollegeFilter = collegeFilter.Select(c => new { Label = c.CollegeName, Value = c.Id }),
+                CurriculumFilter = curriculumFilter.Select(c => new {
+                    Label = c.CurriculumName,
+                    Subtitle = c.CurriculumCode,
+                    Value = c.Id
+                }),
+                ProgramFilter = programFilter.Select(p => new { Label = p.ProgramName, Value = p.Id }),
                 Page = page,
                 Rows = rows,
-                TotalItems = studentData.Select(s => s.Student.Id).Distinct().Count()
+                TotalItems = totalCount
             }
         };
     }
@@ -90,66 +129,98 @@ public class SharedData: ISharedData
         ContextType type
     )
     {
-        var teachers = _dbContext.ScheduleTeachers
-            .OrderByDescending(e => e.Schedule.CurriculumDetail.Curriculum.CreatedDate)
-            .Include(st => st.TeacherUser)
-                .Include(st => st.Schedule)
-                    .ThenInclude(s => s.CurriculumDetail)
-                        .ThenInclude(cd => cd.Curriculum)
-            .Include(st => st.TeacherUser)
-                .Include(st => st.Schedule)
-                    .ThenInclude(s => s.CurriculumDetail)
-                        .ThenInclude(cd => cd.Course)
-            .AsQueryable();
-
-        switch (type)
+        var query = _dbContext.ScheduleTeachers
+        .AsNoTracking()
+        .Select(st => new
         {
-            case ContextType.ProgramChair:
-                teachers = teachers.Where(e => e.Schedule.CurriculumDetail.Curriculum.AcademicProgramId == referenceId);
-                break;
-            case ContextType.CollegeDean:
-                teachers = teachers.Where(e => e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.CollegeId == referenceId);
-                break;
-            case ContextType.Registrar:
-                teachers = teachers.Where(e => e.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.CampusId == referenceId);
-                break;
-        }
-
-        var teacherData = (await teachers.ToListAsync())
-            .GroupBy(t => t.TeacherUserId)
-            .Select(t => t.First())
-            .Select(st => new
+            TeacherUser = st.TeacherUser,
+            Curriculum = new
             {
-                Teacher = _mapper.Map<GetUserOnlyDto>(st.TeacherUser),
-                Curriculum = new
-                {
-                    Id = st.Schedule.CurriculumDetail.Curriculum.Id,
-                    CurriculumName = st.Schedule.CurriculumDetail.Curriculum.CurriculumName,
-                    CurriculumCode = st.Schedule.CurriculumDetail.Curriculum.CurriculumCode
-                },
-                Courses = teachers
-                    .Where(t => t.TeacherUserId == st.TeacherUserId)
-                    .OrderByDescending(t => t.Schedule.CurriculumDetail.Curriculum.CreatedDate)
-                    .Select(t => new
-                    {
-                        Id = t.Schedule.CurriculumDetail.CourseId,
-                        CourseTitle = t.Schedule.CurriculumDetail.Course.CourseTitle,
-                        CourseCode = t.Schedule.CurriculumDetail.Course.CourseCode,
-                        CourseDesscription = t.Schedule.CurriculumDetail.Course.CourseDescription,
-                    }).Distinct()
+                st.Schedule.CurriculumDetail.Curriculum.Id,
+                st.Schedule.CurriculumDetail.Curriculum.CurriculumName,
+                st.Schedule.CurriculumDetail.Curriculum.CurriculumCode
+            },
+            AcademicProgram = new
+            {
+                st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.Id,
+                st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ProgramName,
+                st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.ShortName,
+                CollegeId = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Id,
+                CollegeName = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.CollegeName,
+                CampusId = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus.Id,
+                CampusName = st.Schedule.CurriculumDetail.Curriculum.AcademicProgram.College.Campus.CampusName
+            },
+            Course = new
+            {
+                st.Schedule.CurriculumDetail.Course.Id,
+                st.Schedule.CurriculumDetail.Course.CourseTitle,
+                st.Schedule.CurriculumDetail.Course.CourseCode,
+                st.Schedule.CurriculumDetail.Course.CourseDescription
+            }
+        });
+
+        // Apply filtering
+        query = type switch
+        {
+            ContextType.ProgramChair => query.Where(e => e.AcademicProgram.Id == referenceId),
+            ContextType.CollegeDean => query.Where(e => e.AcademicProgram.CollegeId == referenceId),
+            ContextType.Registrar => query.Where(e => e.AcademicProgram.CampusId == referenceId),
+            _ => query
+        };
+
+        // Get teacher IDs for count
+        var totalCount = await query.Select(x => x.TeacherUser.Id).Distinct().CountAsync();
+
+        var teacherData = await query
+            .GroupBy(x => x.TeacherUser)
+            .Select(g => new
+            {
+                TeacherUser = g.Key,
+                Curriculum = g.Select(x => x.Curriculum).Distinct(),
+                Campus = g.Select(x => new { Id = x.AcademicProgram.CampusId, x.AcademicProgram.CampusName }).Distinct(),
+                College = g.Select(x => new { Id = x.AcademicProgram.CollegeId, x.AcademicProgram.CollegeName }).Distinct(),
+                Courses = g.Select(x => x.Course).Distinct(),
+                AcademicPrograms = g.Select(x => new { x.AcademicProgram.Id, x.AcademicProgram.ProgramName, x.AcademicProgram.ShortName }).Distinct()
             })
+            .OrderBy(x => x.TeacherUser.LastName)
             .Skip((page - 1) * rows)
             .Take(rows)
-            .ToList();
+            .ToListAsync();
+
+        // Client-side mapping
+        var resultData = teacherData.Select(t => new
+        {
+            Teacher = _mapper.Map<GetUserOnlyDto>(t.TeacherUser),
+            Curriculum = t.Curriculum,
+            Campus = t.Campus,
+            College = t.College,
+            Courses = t.Courses,
+            CurrentProgram = t.AcademicPrograms.Select(p => new {
+                p.Id,
+                ProgramName = $"{p.ProgramName} ({p.ShortName})"
+            })
+        }).ToList();
 
         return new
         {
-            Data = teacherData,
+            Data = resultData,
             PaginationMeta = new
             {
+                CampusFilter = resultData.SelectMany(sd => sd.Campus)
+                    .Distinct()
+                    .Select(c => new { Label = c.CampusName, Value = c.Id }),
+                CollegeFilter = resultData.SelectMany(sd => sd.College)
+                    .Distinct()
+                    .Select(c => new { Label = c.CollegeName, Value = c.Id }),
+                CurriculumFilter = resultData.SelectMany(sd => sd.Curriculum)
+                    .Distinct()
+                    .Select(c => new { Label = c.CurriculumName, Subtitle = c.CurriculumCode, Value = c.Id }),
+                ProgramFilter = resultData.SelectMany(sd => sd.CurrentProgram)
+                    .Distinct()
+                    .Select(p => new { Label = p.ProgramName, Value = p.Id }),
                 Page = page,
                 Rows = rows,
-                TotalItems = teacherData.Select(t => t.Teacher.Id).Distinct().Count(),
+                TotalItems = totalCount
             }
         };
     }
@@ -188,7 +259,7 @@ public class SharedData: ISharedData
             .ThenBy(c => c.AcademicProgram.ProgramName);
 
         // Group by Campus → College → Academic Programs → Curricula
-        var groupedData = sortedCurricula
+        var groupedData = await sortedCurricula
             .GroupBy(c => new
             {
                 CampusId = c.AcademicProgram.College.Campus.Id,
@@ -240,7 +311,7 @@ public class SharedData: ISharedData
             })
             .Skip((page - 1) * rows)
             .Take(rows)
-            .ToList();
+            .ToListAsync();
 
         return new
         {
@@ -249,7 +320,7 @@ public class SharedData: ISharedData
             {
                 Page = page,
                 Rows = rows,
-                TotalCount = sortedCurricula.Select(c => c.AcademicProgram.College.Campus.Id).Distinct().Count()
+                TotalItems = sortedCurricula.Select(c => c.AcademicProgram.College.Campus.Id).Distinct().Count()
             }
         };
     }

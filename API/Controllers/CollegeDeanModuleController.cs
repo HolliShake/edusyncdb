@@ -1,4 +1,5 @@
 ﻿using APPLICATION.IService.DesignationData;
+using APPLICATION.IService.SharedData;
 using APPLICATION.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -12,14 +13,17 @@ public class CollegeDeanModuleController : ControllerBase
 {
     private readonly IJwtAuthManager _jwtAuthManager;
     private readonly ICollegeDeanService _collegeDeanService;
+    private readonly ISharedData _sharedData;
 
     public CollegeDeanModuleController(
         IJwtAuthManager jwtAuthManager,
-        ICollegeDeanService collegeDeanService
+        ICollegeDeanService collegeDeanService,
+        ISharedData sharedData
     )
     {
         _jwtAuthManager = jwtAuthManager;
         _collegeDeanService = collegeDeanService;
+        _sharedData = sharedData;
     }
 
     /// <summary>
@@ -34,7 +38,7 @@ public class CollegeDeanModuleController : ControllerBase
     }
 
     /// <summary>
-    /// Get all college deans.
+    /// Get all academic program chair under my college.
     /// </summary>
     /// <returns></returns>
     /// <operationId>academicProgramChairMy</operationId>
@@ -46,27 +50,51 @@ public class CollegeDeanModuleController : ControllerBase
     }
 
     /// <summary>
-    /// Get all students in this college.
+    /// Get all student in my college
     /// </summary>
     /// <returns></returns>
-    /// <operationId>studentsMy</operationId>
     [HttpGet("Students/My")]
-    public async Task<ActionResult> GetAllStudentsByCollegeId()
+    public async Task<ActionResult> GetAllAcademicProgramsAction([FromQuery] int page = 1, [FromQuery] int rows = 10)
     {
         var collegeId = GetCollegeId();
-        return Ok(await _collegeDeanService.GetStudentByCollegeId(collegeId));
+        return Ok(await _sharedData.GetStudentsByContext(
+            collegeId,
+            page,
+            rows,
+            ContextType.CollegeDean
+        ));
     }
 
     /// <summary>
-    /// Get all teachers in this college.
+    /// Get all teachers in my college.
     /// </summary>
     /// <returns></returns>
-    /// <operationId>teachersMy</operationId>
     [HttpGet("Teachers/My")]
-    public async Task<ActionResult> GetAllTeachersByCollegeId()
+    public async Task<ActionResult> GetTeachersByAcademicProgram([FromQuery] int page = 1, [FromQuery] int rows = 10)
     {
         var collegeId = GetCollegeId();
-        return Ok(await _collegeDeanService.GetTeacherByCollegeId(collegeId));
+        return Ok(await _sharedData.GetTeachersByContext(
+            collegeId,
+            page,
+            rows,
+            ContextType.CollegeDean
+        ));
+    }
+
+    /// <summary>
+    /// Get all curriculums in my academic program.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Curriculum/My")]
+    public async Task<ActionResult> GetCurriculumByUserId([FromQuery] int page = 1, [FromQuery] int rows = 10)
+    {
+        var collegeId = GetCollegeId();
+        return Ok(await _sharedData.GetCurriculumByContext(
+            collegeId,
+            page,
+            rows,
+            ContextType.CollegeDean
+        ));
     }
 
     /// <summary>

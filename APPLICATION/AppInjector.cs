@@ -133,6 +133,9 @@ public class AppInjector
 			services.AddAutoMapper(typeof(SpecializationChairMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(CampusSchedulerMapper)); /* added by make.py */
 			services.AddAutoMapper(typeof(CampusRegistrarMapper)); /* added by make.py */
+			services.AddAutoMapper(typeof(MissionMapper)); /* added by doy */
+			services.AddAutoMapper(typeof(VisionMapper)); /* added by doy */
+        	services.AddAutoMapper(typeof(GraduateAttributesMapper)); /* added by make.py */
 		#endregion
 
         // Jwt

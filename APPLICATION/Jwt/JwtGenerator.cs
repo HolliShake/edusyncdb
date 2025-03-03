@@ -50,7 +50,7 @@ public abstract class JwtGenerator
             // Flags for Registrar
             new Claim("RegistrarCampusId", (registrarCampusId ?? 0).ToString()),
             // Flags for Admin
-            new Claim("IsAdmin"       , "True"),
+            new Claim("IsAdmin"       , (role == "SuperAdmin").ToString()),
             new Claim("IsCollegeDean" , isCollegeDean .ToString()),
             new Claim("IsProgramChair", isProgramChair.ToString()),
             new Claim("IsFaculty"     , isFaculty     .ToString()),

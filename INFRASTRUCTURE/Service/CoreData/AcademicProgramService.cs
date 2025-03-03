@@ -28,6 +28,17 @@ public class AcademicProgramService:GenericService<AcademicProgram, GetAcademicP
         .Include(ap => ap.College)
         .Where(ap => ap.College.CampusId == campusId)
         .OrderBy(ap => ap.ProgramName)
+        .AsNoTracking()
+        .ToListAsync();
+        return _mapper.Map<ICollection<GetAcademicProgramDto>>(academicPrograms);
+    }
+
+    public async Task<ICollection<GetAcademicProgramDto>> GetAcademicProgramByCollegeId(int collegeId)
+    {
+        var academicPrograms = await _dbModel
+        .Where(ap => ap.CollegeId == collegeId)
+        .OrderBy(ap => ap.ProgramName)
+        .AsNoTracking()
         .ToListAsync();
         return _mapper.Map<ICollection<GetAcademicProgramDto>>(academicPrograms);
     }

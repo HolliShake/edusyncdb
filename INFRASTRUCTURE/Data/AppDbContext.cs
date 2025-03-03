@@ -81,6 +81,10 @@ public class AppDbContext : DbContext
     public DbSet<Instrument> Instruments { get; set; }
     // L
     public DbSet<LikertQuestion> LikertQuestions { get; set; }
+
+    // M
+    public DbSet<Mission> Missions { get; set; }
+
     // O
     public DbSet<OtherSchool> OtherSchools { get; set; }
     // P
@@ -141,6 +145,7 @@ public class AppDbContext : DbContext
     public DbSet<UserCampusDetails> UserCampusDetails { get; set; }
     public DbSet<UserAccessGroupDetails> UserAccessGroupDetails { get; set; }
     // V
+    public DbSet<Vision> Visions { get; set; }
     public DbSet<Voucher> Vouchers { get; set; }
     public DbSet<VoucherApplied> VoucherApplied { get; set; }
 

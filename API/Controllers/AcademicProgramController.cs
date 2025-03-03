@@ -38,7 +38,18 @@ public class AcademicProgramController : GenericController<AcademicProgram, IAca
     {
         return Ok(await _repo.GetAcademicProgramByCampusId(campusId));
     }
-   
+
+    /// <summary>
+    /// Get AcademicProgram by CollegeId.
+    /// </summary>
+    /// <param name="campusId"></param>
+    /// <returns>Array[AcademicProgram]</returns>
+    [HttpGet("College/{collegeId:int}")]
+    public async Task<ActionResult> GetAcademicProgramByCollegeId(int collegeId)
+    {
+        return Ok(await _repo.GetAcademicProgramByCollegeId(collegeId));
+    }
+
     /// <summary>
     /// Get specific data (AcademicProgram) by id.
     /// </summary>

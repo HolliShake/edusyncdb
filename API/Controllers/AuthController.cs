@@ -194,6 +194,7 @@ public class AuthController:ControllerBase
             UserName = payload.Email,
             FirstName = payload.GivenName,
             LastName = payload.FamilyName,
+            Address = "",
             EmailConfirmed = payload.EmailVerified,
             Role = Role.User
         };

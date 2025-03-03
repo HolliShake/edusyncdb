@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using API.Attributes;
 using APPLICATION.IService.CoreData;
 using APPLICATION.Jwt;
+using API.Constant;
+using APPLICATION.Dto.Building;
+using INFRASTRUCTURE.Service.FileManagerData;
+using APPLICATION.IService.FileManagerData;
 
 namespace API.Controllers;
 
@@ -14,10 +18,15 @@ namespace API.Controllers;
 [Casl("SuperAdmin:all")]
 public class AgencyController : GenericController<Agency, IAgencyService, AgencyDto, GetAgencyDto>
 {
+    private readonly ConfigurationManager _configurationManager;
     private readonly IJwtAuthManager _jwtAuthManager;
-    public AgencyController(IMapper mapper, IAgencyService repo, IJwtAuthManager jwtAuthManager) :base(mapper, repo)
+    private readonly IFileManagerService _fileManagerService;
+
+    public AgencyController(ConfigurationManager configurationManager, IMapper mapper, IAgencyService repo, IJwtAuthManager jwtAuthManager, IFileManagerService fileManagerService) :base(mapper, repo)
     {
+        _configurationManager = configurationManager;
         _jwtAuthManager = jwtAuthManager;
+        _fileManagerService = fileManagerService;
     }
 
     /****************** ACTION ROUTES ******************/
@@ -49,9 +58,27 @@ public class AgencyController : GenericController<Agency, IAgencyService, Agency
     /// <returns>Agency</returns>
     /// <operationId>createAgency</operationId>
     [HttpPost("create")]
-    public async Task<ActionResult> CreateAction(AgencyDto item)
+    public async Task<ActionResult> CreateAction([FromForm] AgencyDto item, [FromForm] List<IFormFile> files)
     {
-        return await GenericCreate(item);
+        var model = _mapper.Map<Agency>(item);
+
+        var result = /**/
+            await _repo.CreateAsync(model);
+
+        if (result == null)
+        {
+            return BadRequest("Something went wrong!");
+        }
+
+        var data = _mapper.Map<GetAgencyDto>(model);
+
+        var fileResult = await _fileManagerService.UploadMultipleFile(_configurationManager, FileScope.AgencyLogoScope, model.Id.ToString(), files);
+        if (fileResult != null)
+        {
+            data.Images = fileResult.ToList()!;
+        }
+
+        return Ok(data);
     }
 
     /// <summary>

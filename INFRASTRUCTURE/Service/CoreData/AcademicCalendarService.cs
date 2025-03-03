@@ -50,6 +50,17 @@ public class AcademicCalendarService:GenericService<AcademicCalendar, GetAcademi
         return _mapper.Map<ICollection<GetAcademicCalendarDto>>(academicCalendars);
     }
 
+
+    public async Task<ICollection<GetAcademicCalendarDto>> GetAcademicCalendarsByCycleId(int cycleId)
+    {
+        var result = await _dbModel
+            .Include(ac => ac.Cycle)
+            .Include(ac => ac.GradingPeriod)
+            .Where(ac => ac.Cycle.Id == cycleId)
+            .ToListAsync();
+        return _mapper.Map<ICollection<GetAcademicCalendarDto>>(result);
+    }
+
     public async new Task<AcademicCalendar?> GetAsync(int id)
     {
         var academicCalendar = await _dbModel

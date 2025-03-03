@@ -1,6 +1,7 @@
 ﻿using APPLICATION.IService.CoreData;
 using APPLICATION.IService.CourseCatalogData;
 using APPLICATION.IService.EnrollmentData;
+using APPLICATION.IService.SharedData;
 using APPLICATION.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -18,13 +19,15 @@ public class RegistrarModuleController : ControllerBase
     private readonly IEnrollmentService _enrollmentService;
     private readonly ICourseService _courseService;
     private readonly IAcademicProgramService _academicProgram;
+    private readonly ISharedData _sharedData;
 
     public RegistrarModuleController(
         IJwtAuthManager jwtAuthManager,
         ICycleService cycleService,
         IEnrollmentService enrollmentService,
         ICourseService courseService,
-        IAcademicProgramService academicProgram
+        IAcademicProgramService academicProgram,
+        ISharedData sharedData
     )
     {
         _jwtAuthManager = jwtAuthManager;
@@ -32,6 +35,7 @@ public class RegistrarModuleController : ControllerBase
         _enrollmentService = enrollmentService;
         _courseService = courseService;
         _academicProgram = academicProgram;
+        _sharedData = sharedData;
     }
 
     /// <summary>
@@ -42,7 +46,7 @@ public class RegistrarModuleController : ControllerBase
     {
         var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace($"{JwtBearerDefaults.AuthenticationScheme} ", String.Empty);
         var principal = _jwtAuthManager.DecodeJwtToken(accessToken);
-        return int.Parse(principal.Item1.FindFirst(c => c.Type.Equals("CampusId"))?.Value ?? "0");
+        return int.Parse(principal.Item1.FindFirst(c => c.Type.Equals("RegistrarCampusId"))?.Value ?? "0");
     }
 
     /// <summary>
@@ -70,6 +74,54 @@ public class RegistrarModuleController : ControllerBase
     )
     {
         return Ok(await _enrollmentService.GetEnrolledUserWithEClearanceTagByCampusIdPaginated(GetCampusId(), studentFullname, Page??1, Rows??10));
+    }
+
+    /// <summary>
+    /// Get all curriculums in my Campus.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Curriculum/My")]
+    public async Task<ActionResult> GetCurriculumByUserId([FromQuery] int page = 1, [FromQuery] int rows = 10)
+    {
+        var campusId = GetCampusId();
+        return Ok(await _sharedData.GetCurriculumByContext(
+            campusId,
+            page,
+            rows,
+            ContextType.Registrar
+        ));
+    }
+
+    /// <summary>
+    /// Get all student in my campus
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Students/My")]
+    public async Task<ActionResult> GetAllAcademicProgramsAction([FromQuery] int page = 1, [FromQuery] int rows = 10)
+    {
+        var campusId = GetCampusId();
+        return Ok(await _sharedData.GetStudentsByContext(
+            campusId,
+            page,
+            rows,
+            ContextType.Registrar
+        ));
+    }
+
+    /// <summary>
+    /// Get all teachers in my campus
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Teachers/My")]
+    public async Task<ActionResult> GetTeachersByAcademicProgram([FromQuery] int page = 1, [FromQuery] int rows = 10)
+    {
+        var campusId = GetCampusId();
+        return Ok(await _sharedData.GetTeachersByContext(
+            campusId,
+            page,
+            rows,
+            ContextType.Registrar
+        ));
     }
 
     /// <summary>
